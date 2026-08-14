@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flotation Bench v2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #1C1B19;
+    --panel: #242220;
+    --panel-raised: #2C2A27;
+    --ochre: #B8863B;
+    --ochre-bright: #D9A24E;
+    --blue: #4A7FA6;
+    --blue-bright: #6FA3C9;
+    --mineral-white: #EDE7DD;
+    --text-dim: #9A9488;
+    --text-mid: #C4BEB2;
+    --red-warn: #B85C3B;
+    --green-good: #7A9B5C;
+    --border: #3A372F;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--mineral-white);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  header {
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  header h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.02em; }
+  header h1 span { color: var(--ochre-bright); font-family: 'JetBrains Mono', monospace; font-weight: 400; }
+  header .tagline { font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.03em; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 1px;
+    background: var(--border);
+    min-height: calc(100vh - 68px);
+  }
+
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .controls {
+    background: var(--panel);
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-height: calc(100vh - 68px);
+    overflow-y: auto;
+  }
+
+  .control-group label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 7px;
+  }
+
+  select {
+    width: 100%;
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    color: var(--mineral-white);
+    padding: 9px 11px;
+    border-radius: 3px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+  select:focus { outline: 2px solid var(--ochre); outline-offset: 1px; }
+
+  .ph-row, .dose-row { display: flex; align-items: center; gap: 10px; }
+
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: linear-gradient(90deg, var(--red-warn), var(--text-dim) 50%, var(--blue-bright));
+    border-radius: 2px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: var(--ochre-bright);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+  }
+
+  .ph-value, .dose-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--ochre-bright);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .mineral-card {
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 13px;
+    font-size: 0.76rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .mineral-card .row { display: flex; justify-content: space-between; margin-bottom: 4px; gap: 8px; }
+  .mineral-card .row span:first-child { color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; white-space: nowrap; }
+  .mineral-card .row span:last-child { color: var(--mineral-white); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-align: right; }
+
+  .surface-split {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .surface-pill {
+    flex: 1;
+    padding: 6px 8px;
+    border-radius: 3px;
+    font-size: 0.68rem;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stage-wrap {
+    background: var(--panel);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    max-height: calc(100vh - 68px);
+  }
+
+  .stage {
+    background: radial-gradient(ellipse at 50% 30%, #262420 0%, #1a1917 100%);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    height: 340px;
+    position: relative;
+    overflow: hidden;
+  }
+  #stage3d { width: 100%; height: 100%; display: block; cursor: grab; }
+  #stage3d:active { cursor: grabbing; }
+
+  .stage-label {
+    position: absolute; top: 12px; left: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.66rem;
+    color: var(--text-dim); letter-spacing: 0.05em; text-transform: uppercase;
+    pointer-events: none;
+  }
+  .stage-hint {
+    position: absolute; bottom: 12px; right: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    color: var(--text-dim); pointer-events: none;
+  }
+
+  .confidence-strip {
+    position: absolute; top: 12px; right: 14px;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.64rem;
+    padding: 4px 10px; border-radius: 20px;
+  }
+  .conf-high { background: rgba(122,155,92,0.15); color: var(--green-good); border: 1px solid rgba(122,155,92,0.35); }
+  .conf-medium { background: rgba(184,134,59,0.15); color: var(--ochre-bright); border: 1px solid rgba(184,134,59,0.35); }
+  .conf-low { background: rgba(184,92,59,0.15); color: var(--red-warn); border: 1px solid rgba(184,92,59,0.35); }
+
+  .readout {
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 22px;
+  }
+  .readout-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .bond-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    padding: 5px 10px; border-radius: 3px; text-transform: uppercase;
+    letter-spacing: 0.04em; font-weight: 500;
+  }
+  .badge-strong { background: rgba(122,155,92,0.15); color: var(--green-good); border: 1px solid rgba(122,155,92,0.35); }
+  .badge-moderate { background: rgba(184,134,59,0.15); color: var(--ochre-bright); border: 1px solid rgba(184,134,59,0.35); }
+  .badge-weak { background: rgba(184,92,59,0.15); color: var(--red-warn); border: 1px solid rgba(184,92,59,0.35); }
+  .badge-suppressed { background: rgba(74,127,166,0.15); color: var(--blue-bright); border: 1px solid rgba(74,127,166,0.35); }
+
+  .readout h3 { font-size: 1rem; font-weight: 600; }
+  .readout p { font-size: 0.86rem; line-height: 1.62; color: var(--text-mid); margin-bottom: 10px; }
+  .readout p:last-child { margin-bottom: 0; }
+
+  .sub-block {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+  .sub-block .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.64rem;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .metric .k { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .metric .v { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: var(--mineral-white); }
+
+  .caveat-box {
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    padding: 12px 14px;
+    border-radius: 0 4px 4px 0;
+    margin-top: 4px;
+  }
+  .caveat-low { background: rgba(184,92,59,0.08); border-left: 2px solid var(--red-warn); }
+  .caveat-medium { background: rgba(184,134,59,0.08); border-left: 2px solid var(--ochre); }
+  .caveat-high { background: rgba(122,155,92,0.08); border-left: 2px solid var(--green-good); }
+
+  .disclaimer {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    padding: 12px 14px;
+    background: var(--panel-raised);
+    border-left: 2px solid var(--ochre);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .citation {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FLOTATION BENCH <span>// v2 — anisotropy + depressant model</span></h1>
+  <div class="tagline">rule-based surface chemistry reasoning — not a DFT solver</div>
+</header>
+
+<div class="layout">
+  <div class="controls">
+
+    <div class="control-group">
+      <label>Mineral surface</label>
+      <select id="mineralSelect"></select>
+    </div>
+
+    <div class="control-group">
+      <label>Collector</label>
+      <select id="collectorSelect"></select>
+    </div>
+
+    <div class="control-group">
+      <label>Depressant <span class="mono" style="color:var(--text-dim)">(optional)</span></label>
+      <select id="depressantSelect"></select>
+    </div>
+
+    <div class="control-group" id="doseGroup">
+      <label>Depressant dose <span class="mono" style="color:var(--text-dim)">(relative)</span></label>
+      <div class="dose-row">
+        <input type="range" id="doseSlider" min="0" max="10" step="1" value="0">
+        <div class="dose-value mono" id="doseValue">0</div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>pH <span class="mono" style="color:var(--text-dim)">(pulp conditions)</span></label>
+      <div class="ph-row">
+        <input type="range" id="phSlider" min="1" max="13" step="0.5" value="7">
+        <div class="ph-value mono" id="phValue">7.0</div>
+      </div>
+    </div>
+
+    <div class="mineral-card" id="mineralInfo"></div>
+
+    <div class="disclaimer" id="mainDisclaimer">
+      Models known HSAB / electrostatic / competitive-adsorption rules. Not a substitute for zeta-potential measurement, IR spectroscopy of adsorbed species, or bench-scale flotation on your actual sample.
+    </div>
+  </div>
+
+  <div class="stage-wrap">
+    <div class="stage">
+      <div class="stage-label">Surface — collector bonding, live</div>
+      <div class="confidence-strip" id="confidenceStrip">—</div>
+      <canvas id="stage3d"></canvas>
+      <div class="stage-hint">drag to rotate</div>
+    </div>
+
+    <div class="readout">
+      <div class="readout-header">
+        <h3 id="bondMode">—</h3>
+        <span class="bond-badge" id="strengthBadge">—</span>
+      </div>
+      <p id="explanation"></p>
+
+      <div class="sub-block" id="depressantBlock" style="display:none;">
+        <div class="label">Depressant competition</div>
+        <p id="depressantExplanation" style="margin-bottom:0;"></p>
+      </div>
+
+      <div class="sub-block" id="anisotropyBlock" style="display:none;">
+        <div class="label">Surface anisotropy</div>
+        <p id="anisotropyExplanation" style="margin-bottom:0;"></p>
+      </div>
+
+      <div class="metrics-row">
+        <div class="metric"><div class="k">Surface charge</div><div class="v" id="metricCharge">—</div></div>
+        <div class="metric"><div class="k">&Delta; from PZC</div><div class="v" id="metricDelta">—</div></div>
+        <div class="metric"><div class="k">HSAB pairing</div><div class="v" id="metricHsab">—</div></div>
+      </div>
+
+      <div class="caveat-box" id="caveatBox"></div>
+      <div class="citation" id="citationLine"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== CHEMISTRY REFERENCE DATA v2 ====================
+// PZC values are literature-reported ranges for pure minerals — teaching-grade
+// estimates, not substitutes for zeta-potential measurement on your sample.
+//
+// v2 changes from v1:
+//  1. Anisotropic minerals (kaolinite) now carry separate basal/edge surface
+//     definitions with an area-fraction blend, instead of one PZC for the
+//     whole particle.
+//  2. Depressants are modeled as competing adsorbates — same HSAB/affinity
+//     logic as collectors, and whichever binds the surface site harder wins.
+//  3. Every prediction carries a confidenceFlag (high/medium/low) plus a
+//     stated reason, for effects the rule engine cannot represent at all
+//     (aggregation, particle liberation, hydrodynamics).
+
+const MINERALS = {
+  gibbsite: {
+    name: "Gibbsite", formula: "Al(OH)\u2083", class: "Bauxite \u2014 aluminum hydroxide",
+    anisotropic: false, pzc: 9.0, surfaceSite: "Al-OH", metalIon: "Al\u00b3\u207a", hsab: "hard",
+    notes: "Dominant phase in gibbsitic bauxite. Surface Al-OH amphoteric groups."
+  },
+  boehmite: {
+    name: "Boehmite", formula: "\u03b3-AlO(OH)", class: "Bauxite \u2014 aluminum oxyhydroxide",
+    anisotropic: false, pzc: 8.5, surfaceSite: "Al-OH", metalIon: "Al\u00b3\u207a", hsab: "hard",
+    notes: "Common in diasporic/boehmitic bauxites, denser than gibbsite."
+  },
+  diaspore: {
+    name: "Diaspore", formula: "\u03b1-AlO(OH)", class: "Bauxite \u2014 aluminum oxyhydroxide",
+    anisotropic: false, pzc: 7.3, surfaceSite: "Al-OH", metalIon: "Al\u00b3\u207a", hsab: "hard",
+    notes: "Harder to float selectively from kaolinite due to close PZC."
+  },
+  hematite: {
+    name: "Hematite", formula: "Fe\u2082O\u2083", class: "Iron oxide impurity",
+    anisotropic: false, pzc: 6.7, surfaceSite: "Fe-OH", metalIon: "Fe\u00b3\u207a", hsab: "borderline",
+    notes: "Common bauxite/iron ore impurity, key preg-robbing / reagent-consuming phase."
+  },
+  kaolinite: {
+    name: "Kaolinite", formula: "Al\u2082Si\u2082O\u2085(OH)\u2084", class: "Clay gangue mineral (anisotropic)",
+    anisotropic: true,
+    basal: { pzc: null, chargeSign: "negative", surfaceSite: "Si-O basal (isomorphic substitution)", hsab: "hard", note: "Permanently negative \u2014 not pH-driven, from Al\u00b3\u207a/Si\u2074\u207a lattice substitution." },
+    edge: { pzc: 6.5, surfaceSite: "Al-OH edge", metalIon: "Al\u00b3\u207a", hsab: "hard", note: "pH-responsive edge sites, minority of total surface area." },
+    basalFraction: 0.85,
+    notes: "Layered clay \u2014 basal faces are permanently negative regardless of pH; only edges (\u224815% of area) respond to pH. Also prone to particle aggregation at low pH, a separate physical effect this model doesn't simulate."
+  },
+  quartz: {
+    name: "Quartz", formula: "SiO\u2082", class: "Silicate gangue mineral",
+    anisotropic: false, pzc: 2.0, surfaceSite: "Si-OH", metalIon: "Si\u2074\u207a", hsab: "hard",
+    notes: "Strongly negative above pH 3 \u2014 classic amine-collector target."
+  },
+  chalcopyrite: {
+    name: "Chalcopyrite", formula: "CuFeS\u2082", class: "Sulfide ore mineral",
+    anisotropic: false, pzc: 4.2, surfaceSite: "Cu-S / Fe-S", metalIon: "Cu\u207a / Fe\u00b2\u207a", hsab: "soft",
+    notes: "Classic xanthate-collector target \u2014 soft metal sites bond covalently with soft S-donor collectors."
+  },
+  galena: {
+    name: "Galena", formula: "PbS", class: "Sulfide ore mineral",
+    anisotropic: false, pzc: 5.5, surfaceSite: "Pb-S", metalIon: "Pb\u00b2\u207a", hsab: "soft",
+    notes: "Xanthate collectors chemisorb strongly via soft-soft Pb-S interaction."
+  }
+};
+
+// ---- Pair-level confidence table ----
+// Confidence is a property of a specific MINERAL+COLLECTOR pair, not the mineral
+// alone \u2014 the same mineral can be well-documented with one collector and
+// speculative with another. Each entry cites the actual source backing the rating.
+// A missing pair falls back to a generic HSAB-only confidence (see defaultConfidenceFor).
+const PAIR_NOTES = {
+  "gibbsite|hydroxamate": {
+    confidence: "high",
+    reason: "Directly documented industrial process: Paragominas bauxite bench/pilot tests floated gibbsite at pH 10.5 with alkyl hydroxamate-fatty acid, sodium silicate depressant, sodium carbonate dispersant, yielding Al\u2082O\u2083:SiO\u2082 concentrate ratios of 8.44.",
+    citation: "Marino et al., \"The Flotation of Marginal Gibbsitic Bauxite Ores from Paragominas \u2013 Brazil\" (Univ. of Utah thesis repository)."
+  },
+  "gibbsite|fatty_acid": {
+    confidence: "medium",
+    reason: "Oleic acid is documented as workable for gibbsite flotation (Bittencourt 1989), but separate bench data using a different collector class (CTAB) measured only 37% gibbsite recovery under nominally favorable conditions \u2014 suggests recovery ceilings this rule engine doesn't quantify.",
+    citation: "Bittencourt (1989), cited in Paragominas bauxite thesis; Rodrigues et al., REM Int. Eng. J. 69(3), 2016."
+  },
+  "kaolinite|amine": {
+    confidence: "low",
+    reason: "Mechanism direction is correct (electrostatic, matches CTAB recovery up to 80% at pH 4\u201310) but real recovery is significantly driven by particle aggregation/clustering \u2014 a physical effect this model doesn't simulate \u2014 not surface chemistry alone.",
+    citation: "Rodrigues et al., REM Int. Eng. J. 69(3), 2016 (SciELO); Xu & Liu, Int. J. Miner. Process. 2015 (aggregation mechanism)."
+  },
+  "kaolinite|hydroxamate": {
+    confidence: "low",
+    reason: "Same anisotropy/aggregation caveat as kaolinite+amine \u2014 basal/edge blending is a simplification and doesn't capture particle-particle clustering effects reported in the literature.",
+    citation: "Xu & Liu, Int. J. Miner. Process. 2015."
+  },
+  "diaspore|amine": {
+    confidence: "medium",
+    reason: "Reverse flotation of diaspore-associated kaolinite with dodecylamine is documented, but diaspore's own recovery is sensitive to depressant competition (SHMP) not fully captured by a single affinity score.",
+    citation: "s11771-005-0175-x, J. Cent. South Univ. Technol. 2005 (SHMP-diaspore P-O-Al bonding study)."
+  },
+  "chalcopyrite|xanthate": {
+    confidence: "high",
+    reason: "Extremely well-documented: multiple independent studies report chalcopyrite recovery above 84\u201393% with xanthate collectors across pH 3\u201311, with FTIR/XPS-confirmed Cu-S covalent chemisorption.",
+    citation: "Multiple sources, e.g. Sci. Reports/ScienceDirect chalcopyrite-xanthate H\u2082O\u2082 study (2017); Minerals 15(11), 2025 (BX/ADD study, >90% recovery)."
+  },
+  "galena|xanthate": {
+    confidence: "high",
+    reason: "Textbook soft-soft chemisorption case \u2014 xanthate-galena is among the most thoroughly characterized systems in flotation chemistry, extensively confirmed by FTIR and adsorption studies.",
+    citation: "Long-standing consensus across sulfide flotation literature; consistent with chalcopyrite-xanthate mechanism studies above."
+  },
+  "quartz|amine": {
+    confidence: "high",
+    reason: "Well-validated electrostatic mechanism \u2014 multiple studies report quartz recovery in the 92\u201398% range with amine collectors, mechanism confirmed via zeta potential and FTIR as electrostatic attraction to the negatively charged surface.",
+    citation: "ScienceDirect, quartz-collophane amine separation study (2017), 98.24% recovery; ResearchGate, DACL-quartz QCM-D/zeta-potential study."
+  }
+};
+
+function defaultConfidenceFor(mineral, collector, hsabMatch) {
+  // Fallback for pairs without a specific literature citation on file.
+  if (mineral.anisotropic) {
+    return { confidence: "low", reason: "Anisotropic mineral without a specific literature citation for this exact collector pairing \u2014 basal/edge blending is a model simplification.", citation: "General anisotropic clay surface chemistry \u2014 no pair-specific source on file." };
+  }
+  if (hsabMatch) {
+    return { confidence: "medium", reason: "HSAB pairing is theoretically sound but this specific mineral+collector combination isn't backed by a specific bench-scale citation on file \u2014 treat as a reasonable extrapolation from established theory, not a confirmed result.", citation: "General HSAB theory \u2014 no pair-specific source on file." };
+  }
+  return { confidence: "medium", reason: "No specific literature citation on file for this pairing. Prediction follows standard electrostatic/HSAB rules but hasn't been cross-checked against a bench study.", citation: "General flotation theory \u2014 no pair-specific source on file." };
+}
+
+const COLLECTORS = {
+  fatty_acid: { name: "Fatty acid (e.g. oleic acid / sunflower-oil derived)", charge: "anionic", headGroup: "-COO\u207b", hsab: "hard", affinityScore: 6, mechanism: "chelation + electrostatic", notes: "Carboxylate head chelates hard metal ions (Al\u00b3\u207a, Fe\u00b3\u207a) directly. This is your thesis reagent class." },
+  hydroxamate: { name: "Hydroxamate", charge: "anionic", headGroup: "-C(=O)NHOH", hsab: "hard", affinityScore: 8, mechanism: "strong chelation", notes: "Bidentate chelator, very selective for Fe/Al oxide-hydroxide surfaces \u2014 used industrially to separate gibbsite from kaolinite at pH 9\u201310." },
+  amine: { name: "Amine (cationic, e.g. dodecylamine)", charge: "cationic", headGroup: "-NH\u2083\u207a", hsab: "hard", affinityScore: 4, mechanism: "electrostatic", notes: "Classic silicate/quartz/kaolinite collector \u2014 needs a negatively charged surface, mechanism is almost purely electrostatic." },
+  xanthate: { name: "Xanthate", charge: "anionic", headGroup: "-OCS\u2082\u207b", hsab: "soft", affinityScore: 8, mechanism: "covalent chemisorption", notes: "Soft sulfur donor \u2014 bonds covalently to soft sulfide metal sites, largely charge-independent." },
+  sulfonate: { name: "Sulfonate", charge: "anionic", headGroup: "-SO\u2083\u207b", hsab: "hard", affinityScore: 3, mechanism: "electrostatic", notes: "Weaker chelator than carboxylate/hydroxamate, mostly electrostatic." }
+};
+
+const DEPRESSANTS = {
+  none: { name: "None", affinityScore: 0, hsab: "hard", notes: "No depressant in system." },
+  sodium_silicate: { name: "Sodium silicate", affinityScore: 7, hsab: "hard", notes: "Classic silicate depressant \u2014 competes for hard Al-OH/Si-OH sites, used to depress kaolinite in direct bauxite flotation." },
+  starch: { name: "Starch", affinityScore: 5, hsab: "hard", notes: "Hydrogen-bonds to hydroxylated oxide surfaces \u2014 used to depress gibbsite/diaspore in reverse flotation of kaolinite." },
+  shmp: { name: "Sodium hexametaphosphate (SHMP)", affinityScore: 9, hsab: "hard", notes: "Forms P-O-Al bridging bonds directly with Al sites \u2014 strong competitor, documented to suppress diaspore recovery even under favorable collector conditions (Springer 2005)." }
+};
+
+function surfaceStateFor(mineral, pH) {
+  // Returns array of {label, fraction, pzc, chargeSign, surfaceSite, metalIon, hsab}
+  if (!mineral.anisotropic) {
+    const chargeSign = pH > mineral.pzc ? "negative" : pH < mineral.pzc ? "positive" : "neutral";
+    return [{ label: "surface", fraction: 1, pzc: mineral.pzc, chargeSign, surfaceSite: mineral.surfaceSite, metalIon: mineral.metalIon, hsab: mineral.hsab }];
+  }
+  const edgeCharge = pH > mineral.edge.pzc ? "negative" : pH < mineral.edge.pzc ? "positive" : "neutral";
+  return [
+    { label: "basal", fraction: mineral.basalFraction, pzc: null, chargeSign: mineral.basal.chargeSign, surfaceSite: mineral.basal.surfaceSite, hsab: mineral.basal.hsab },
+    { label: "edge", fraction: 1 - mineral.basalFraction, pzc: mineral.edge.pzc, chargeSign: edgeCharge, surfaceSite: mineral.edge.surfaceSite, metalIon: mineral.edge.metalIon, hsab: mineral.edge.hsab }
+  ];
+}
+
+function bondForSurface(surface, collector, pH, mineralPzcForDelta) {
+  const collectorChargeSign = collector.charge === "anionic" ? "negative" : "positive";
+  const electrostaticFavorable = surface.chargeSign !== "neutral" && surface.chargeSign !== collectorChargeSign;
+  const hsabMatch = (surface.hsab === "hard" && collector.hsab === "hard") || (surface.hsab === "soft" && collector.hsab === "soft");
+
+  let bondMode, strength;
+  if (collector.mechanism.includes("chelation") && hsabMatch) {
+    bondMode = "chemisorption (chelation)";
+    strength = electrostaticFavorable ? "strong" : "moderate-to-strong";
+  } else if (collector.mechanism === "covalent chemisorption" && hsabMatch) {
+    bondMode = "covalent chemisorption"; strength = "strong";
+  } else if (electrostaticFavorable) {
+    bondMode = "electrostatic (physisorption)";
+    const delta = surface.pzc !== null ? Math.abs(pH - surface.pzc) : 3;
+    strength = delta > 2 ? "moderate-to-strong" : "weak-to-moderate";
+  } else {
+    bondMode = "unfavorable / minimal adsorption"; strength = "weak";
+  }
+  return { bondMode, strength, electrostaticFavorable, hsabMatch };
+}
+
+function strengthScore(s) {
+  if (s === "strong") return 3;
+  if (s === "moderate-to-strong") return 2.5;
+  if (s === "weak-to-moderate") return 1.5;
+  return 1;
+}
+
+function predictBonding(mineralKey, collectorKey, pH, depressantKey, depressantDose) {
+  const mineral = MINERALS[mineralKey];
+  const collector = COLLECTORS[collectorKey];
+  const depressant = DEPRESSANTS[depressantKey] || DEPRESSANTS.none;
+  if (!mineral || !collector) return null;
+
+  const surfaces = surfaceStateFor(mineral, pH);
+  const surfaceResults = surfaces.map(s => ({ ...s, ...bondForSurface(s, collector, pH) }));
+
+  // Area-weighted blended result (for anisotropic minerals)
+  const blendedScore = surfaceResults.reduce((sum, s) => sum + strengthScore(s.strength) * s.fraction, 0);
+  const dominant = surfaceResults.reduce((a, b) => (b.fraction > a.fraction ? b : a));
+
+  let bondMode = surfaces.length > 1
+    ? `blended: ${surfaceResults.map(s => `${s.label} ${s.strength}`).join(", ")}`
+    : surfaceResults[0].bondMode;
+
+  let strength = blendedScore >= 2.6 ? "strong" : blendedScore >= 1.9 ? "moderate-to-strong" : blendedScore >= 1.3 ? "weak-to-moderate" : "weak";
+
+  // ---- Depressant competition ----
+  let depressantSuppressed = false;
+  let depressantExplanation = "";
+  if (depressant.affinityScore > 0 && depressantDose > 0) {
+    const collectorPull = collector.affinityScore;
+    const depressantPull = depressant.affinityScore * (depressantDose / 10);
+    if (depressantPull > collectorPull) {
+      depressantSuppressed = true;
+      const tiers = ["weak", "weak-to-moderate", "moderate-to-strong", "strong"];
+      const idx = Math.max(0, tiers.indexOf(strength) - 1);
+      strength = tiers[idx];
+      bondMode = "suppressed by depressant";
+      depressantExplanation = `${depressant.name} (affinity ${depressant.affinityScore}/10, dose-scaled to ${depressantPull.toFixed(1)}) out-competes ${collector.name} (affinity ${collector.affinityScore}/10) for the same surface sites. This mirrors documented cases like SHMP forming P-O-Al bridging bonds that suppress diaspore recovery even under nominally favorable collector conditions.`;
+    } else {
+      depressantExplanation = `${depressant.name} is present but at this dose (${depressantDose}/10) its site affinity (${depressantPull.toFixed(1)}) doesn't overcome ${collector.name}'s pull (${collector.affinityScore}/10) \u2014 collector adsorption should still dominate.`;
+    }
+  }
+
+  // ---- Confidence flag (pair-level: mineral + collector, not mineral alone) ----
+  const pairKey = `${mineralKey}|${collectorKey}`;
+  const pairNote = PAIR_NOTES[pairKey] || defaultConfidenceFor(mineral, collector, surfaceResults[0].hsabMatch);
+  let confidence = pairNote.confidence;
+  let confidenceReason = pairNote.reason;
+  let confidenceCitation = pairNote.citation;
+  if (depressantSuppressed) {
+    confidence = confidence === "high" ? "medium" : confidence;
+    confidenceReason += " Depressant competition adds further uncertainty beyond simple affinity comparison \u2014 real systems involve dose-response curves this linear model approximates crudely.";
+  }
+
+  const explanation = surfaces.length > 1
+    ? `${mineral.name} is anisotropic: ${surfaceResults.map(s => `${s.label} face (${(s.fraction*100).toFixed(0)}% of area, ${s.chargeSign}) shows ${s.bondMode} \u2014 ${s.strength}`).join("; ")}. Blended particle-level behavior is dominated by the ${dominant.label} face since it's ${(dominant.fraction*100).toFixed(0)}% of surface area.`
+    : `${collector.name}'s ${collector.headGroup} head group ${surfaceResults[0].bondMode.includes("chelation") ? "chelates onto" : surfaceResults[0].bondMode.includes("covalent") ? "bonds covalently to" : "is electrostatically drawn to"} ${mineral.surfaceSite} sites on ${mineral.name}. Surface is ${surfaceResults[0].chargeSign} at pH ${pH} (PZC ${mineral.pzc}).`;
+
+  return {
+    mineral, collector, depressant, pH, depressantDose,
+    surfaceResults, bondMode, strength,
+    surfaceChargeSign: dominant.chargeSign,
+    deltaFromPZC: dominant.pzc !== null ? Math.abs(pH - dominant.pzc) : null,
+    explanation, depressantSuppressed, depressantExplanation,
+    isAnisotropic: mineral.anisotropic,
+    confidence, confidenceReason, confidenceCitation
+  };
+}
+
+// ==================== APP LOGIC ====================
+const mineralSelect = document.getElementById('mineralSelect');
+const collectorSelect = document.getElementById('collectorSelect');
+const depressantSelect = document.getElementById('depressantSelect');
+const phSlider = document.getElementById('phSlider');
+const phValue = document.getElementById('phValue');
+const doseSlider = document.getElementById('doseSlider');
+const doseValue = document.getElementById('doseValue');
+
+for (const [key, m] of Object.entries(MINERALS)) {
+  const opt = document.createElement('option');
+  opt.value = key; opt.textContent = `${m.name} (${m.formula})`;
+  mineralSelect.appendChild(opt);
+}
+mineralSelect.value = 'gibbsite';
+
+for (const [key, c] of Object.entries(COLLECTORS)) {
+  const opt = document.createElement('option');
+  opt.value = key; opt.textContent = c.name;
+  collectorSelect.appendChild(opt);
+}
+collectorSelect.value = 'fatty_acid';
+
+for (const [key, d] of Object.entries(DEPRESSANTS)) {
+  const opt = document.createElement('option');
+  opt.value = key; opt.textContent = d.name;
+  depressantSelect.appendChild(opt);
+}
+depressantSelect.value = 'none';
+
+// ---------- Canvas 3D-ish scene ----------
+const canvas = document.getElementById('stage3d');
+const ctx = canvas.getContext('2d');
+let rotY = 0.4, rotX = 0.15, dragging = false, lastX = 0, lastY = 0;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+}
+window.addEventListener('resize', resizeCanvas);
+canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+window.addEventListener('pointerup', () => dragging = false);
+window.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  rotY += (e.clientX - lastX) * 0.008;
+  rotX += (e.clientY - lastY) * 0.006;
+  rotX = Math.max(-0.6, Math.min(0.6, rotX));
+  lastX = e.clientX; lastY = e.clientY;
+});
+
+function project(x, y, z, w, h) {
+  const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+  const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+  let x1 = x * cosY - z * sinY;
+  let z1 = x * sinY + z * cosY;
+  let y1 = y * cosX - z1 * sinX;
+  let z2 = y * sinX + z1 * cosX;
+  const scale = 260 / (260 + z2);
+  return { x: w/2 + x1 * scale, y: h/2 + y1 * scale, scale, z: z2 };
+}
+
+let animT = 0;
+let currentResult = null;
+
+function surfaceColor(hsab) {
+  if (hsab === 'hard') return '#7A6248';
+  if (hsab === 'soft') return '#5C6E7A';
+  return '#6E6858';
+}
+
+function drawScene() {
+  const w = canvas.width / devicePixelRatio, h = canvas.height / devicePixelRatio;
+  ctx.clearRect(0, 0, w, h);
+  if (!currentResult) { requestAnimationFrame(drawScene); return; }
+
+  animT += 0.015;
+  if (!dragging) rotY += 0.0025;
+
+  const { mineral, collector, strength, surfaceResults, depressantSuppressed } = currentResult;
+  const favorable = strength !== 'weak';
+  const gridN = 6, spacing = 26;
+  const pts = [];
+
+  for (let i = -gridN; i <= gridN; i++) {
+    for (let j = -gridN; j <= gridN; j++) {
+      // For anisotropic minerals, alternate region = edge vs basal (simple banding by |i|)
+      const isEdgeRegion = mineral.anisotropic && (Math.abs(i) >= gridN - 1 || Math.abs(j) >= gridN - 1);
+      pts.push({ gx: i, gy: j, x: i * spacing, y: 0, z: j * spacing, isEdgeRegion });
+    }
+  }
+  pts.sort((a, b) => {
+    const pa = project(a.x, a.y, a.z, w, h), pb = project(b.x, b.y, b.z, w, h);
+    return pa.z - pb.z;
+  });
+
+  for (const p of pts) {
+    const proj = project(p.x, p.y, p.z, w, h);
+    const r = 3.2 * proj.scale;
+    let col = surfaceColor(mineral.anisotropic ? (p.isEdgeRegion ? surfaceResults[1].hsab : surfaceResults[0].hsab) : mineral.hsab);
+    if (mineral.anisotropic && p.isEdgeRegion) col = '#8A7550'; // edge highlight
+    ctx.beginPath();
+    ctx.arc(proj.x, proj.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.55 + proj.scale * 0.3;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  for (let i = -gridN; i <= gridN; i += 2) {
+    for (let j = -gridN; j <= gridN; j += 2) {
+      const isEdgeRegion = mineral.anisotropic && (Math.abs(i) >= gridN - 1 || Math.abs(j) >= gridN - 1);
+      const surf = mineral.anisotropic ? (isEdgeRegion ? surfaceResults[1] : surfaceResults[0]) : surfaceResults[0];
+      const chargeColor = surf.chargeSign === 'negative' ? '#B85C3B' : surf.chargeSign === 'positive' ? '#4A7FA6' : '#9A9488';
+      const x = i * spacing, z = j * spacing;
+      const pulse = (Math.sin(animT * 1.5 + i + j) + 1) / 2;
+      const proj = project(x, -2, z, w, h);
+      ctx.beginPath();
+      ctx.arc(proj.x, proj.y, (5 + pulse * 3) * proj.scale, 0, Math.PI * 2);
+      ctx.strokeStyle = chargeColor;
+      ctx.globalAlpha = 0.25 * proj.scale;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  const collectorSites = [];
+  for (let i = -3; i <= 3; i++) {
+    for (let j = -3; j <= 3; j++) {
+      if ((i + j) % 2 === 0) collectorSites.push({ x: i * spacing * 1.5, z: j * spacing * 1.5 });
+    }
+  }
+
+  const headColor = depressantSuppressed ? '#6FA3C9' : (collector.charge === 'anionic' ? '#D9A24E' : '#6FA3C9');
+  const tailLen = favorable ? 46 : 30;
+  const bondGap = favorable ? 4 : 16;
+
+  const molecules = collectorSites.map(s => {
+    const bobOffset = favorable ? Math.sin(animT * 2 + s.x) * 1.5 : Math.sin(animT * 4 + s.x) * 5 + 8;
+    return { ...s, headY: -bondGap - bobOffset };
+  });
+  molecules.sort((a, b) => {
+    const pa = project(a.x, a.headY, a.z, w, h), pb = project(b.x, b.headY, b.z, w, h);
+    return pa.z - pb.z;
+  });
+
+  for (const m of molecules) {
+    const headProj = project(m.x, m.headY, m.z, w, h);
+    const tailProj = project(m.x, m.headY - tailLen, m.z, w, h);
+
+    ctx.beginPath();
+    ctx.moveTo(headProj.x, headProj.y);
+    ctx.lineTo(tailProj.x, tailProj.y);
+    ctx.strokeStyle = '#8A8578';
+    ctx.lineWidth = 2 * headProj.scale;
+    ctx.globalAlpha = 0.7;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    ctx.beginPath();
+    ctx.arc(headProj.x, headProj.y, 5 * headProj.scale, 0, Math.PI * 2);
+    ctx.fillStyle = headColor;
+    ctx.fill();
+
+    if (favorable) {
+      const surfProj = project(m.x, 0, m.z, w, h);
+      ctx.beginPath();
+      ctx.moveTo(headProj.x, headProj.y);
+      ctx.lineTo(surfProj.x, surfProj.y);
+      ctx.strokeStyle = depressantSuppressed ? '#4A7FA6' : (strength.includes('strong') ? '#7A9B5C' : '#D9A24E');
+      ctx.lineWidth = 2.5 * headProj.scale;
+      ctx.globalAlpha = 0.8;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  requestAnimationFrame(drawScene);
+}
+
+function badgeClass(strength, suppressed) {
+  if (suppressed) return 'badge-suppressed';
+  if (strength.includes('strong')) return 'badge-strong';
+  if (strength === 'weak') return 'badge-weak';
+  return 'badge-moderate';
+}
+
+function confClass(c) {
+  if (c === 'high') return 'conf-high';
+  if (c === 'low') return 'conf-low';
+  return 'conf-medium';
+}
+
+function update() {
+  const mineralKey = mineralSelect.value;
+  const collectorKey = collectorSelect.value;
+  const depressantKey = depressantSelect.value;
+  const pH = parseFloat(phSlider.value);
+  const dose = parseInt(doseSlider.value);
+  phValue.textContent = pH.toFixed(1);
+  doseValue.textContent = dose;
+  document.getElementById('doseGroup').style.opacity = depressantKey === 'none' ? '0.4' : '1';
+
+  const mineral = MINERALS[mineralKey];
+
+  let mineralInfoHtml = `
+    <div class="row"><span>CLASS</span><span>${mineral.class}</span></div>`;
+  if (!mineral.anisotropic) {
+    mineralInfoHtml += `
+    <div class="row"><span>PZC</span><span>pH ${mineral.pzc}</span></div>
+    <div class="row"><span>SURFACE SITE</span><span>${mineral.surfaceSite}</span></div>
+    <div class="row"><span>HSAB</span><span>${mineral.hsab}</span></div>`;
+  } else {
+    mineralInfoHtml += `
+    <div class="row"><span>BASAL (${(mineral.basalFraction*100).toFixed(0)}%)</span><span>always negative</span></div>
+    <div class="row"><span>EDGE (${((1-mineral.basalFraction)*100).toFixed(0)}%)</span><span>PZC pH ${mineral.edge.pzc}</span></div>
+    <div class="surface-split">
+      <div class="surface-pill" style="background:rgba(184,92,59,0.15); color:var(--red-warn); border:1px solid rgba(184,92,59,0.35);">basal: fixed \u2212</div>
+      <div class="surface-pill" style="background:rgba(74,127,166,0.15); color:var(--blue-bright); border:1px solid rgba(74,127,166,0.35);">edge: pH-driven</div>
+    </div>`;
+  }
+  mineralInfoHtml += `<div style="margin-top:8px; color:var(--text-dim); font-size:0.72rem; line-height:1.5;">${mineral.notes}</div>`;
+  document.getElementById('mineralInfo').innerHTML = mineralInfoHtml;
+
+  const result = predictBonding(mineralKey, collectorKey, pH, depressantKey, dose);
+  currentResult = result;
+
+  document.getElementById('bondMode').textContent = result.bondMode;
+  const badge = document.getElementById('strengthBadge');
+  badge.textContent = result.depressantSuppressed ? `${result.strength} (suppressed)` : result.strength;
+  badge.className = 'bond-badge ' + badgeClass(result.strength, result.depressantSuppressed);
+
+  document.getElementById('explanation').textContent = result.explanation;
+
+  const depressantBlock = document.getElementById('depressantBlock');
+  if (depressantKey !== 'none' && dose > 0) {
+    depressantBlock.style.display = 'block';
+    document.getElementById('depressantExplanation').textContent = result.depressantExplanation;
+  } else {
+    depressantBlock.style.display = 'none';
+  }
+
+  const anisotropyBlock = document.getElementById('anisotropyBlock');
+  if (result.isAnisotropic) {
+    anisotropyBlock.style.display = 'block';
+    document.getElementById('anisotropyExplanation').textContent =
+      `Basal and edge faces respond independently to the collector \u2014 shown in the visualization as a darker basal region (fixed negative charge) vs. a lighter edge band (pH-responsive). Real particles also aggregate at low pH via particle-particle attraction, which drives additional recovery this model doesn't simulate.`;
+  } else {
+    anisotropyBlock.style.display = 'none';
+  }
+
+  document.getElementById('metricCharge').textContent = result.surfaceChargeSign;
+  document.getElementById('metricDelta').textContent = result.deltaFromPZC !== null ? result.deltaFromPZC.toFixed(1) + ' units' : 'n/a (basal)';
+  document.getElementById('metricHsab').textContent = `${result.isAnisotropic ? 'mixed' : mineral.hsab} / ${result.collector.hsab}`;
+
+  const confStrip = document.getElementById('confidenceStrip');
+  confStrip.textContent = `confidence: ${result.confidence}`;
+  confStrip.className = 'confidence-strip ' + confClass(result.confidence);
+
+  const caveatBox = document.getElementById('caveatBox');
+  caveatBox.className = 'caveat-box caveat-' + result.confidence;
+  caveatBox.textContent = result.confidenceReason;
+
+  document.getElementById('citationLine').textContent = 'Basis: ' + result.confidenceCitation;
+}
+
+mineralSelect.addEventListener('change', update);
+collectorSelect.addEventListener('change', update);
+depressantSelect.addEventListener('change', update);
+phSlider.addEventListener('input', update);
+doseSlider.addEventListener('input', update);
+
+resizeCanvas();
+update();
+requestAnimationFrame(drawScene);
+</script>
+
+</body>
+</html>
