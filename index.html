@@ -416,12 +416,16 @@ const PAIR_NOTES = {
   "gibbsite|hydroxamate": {
     confidence: "high",
     reason: "Directly documented industrial process: Paragominas bauxite bench/pilot tests floated gibbsite at pH 10.5 with alkyl hydroxamate-fatty acid, sodium silicate depressant, sodium carbonate dispersant, yielding Al\u2082O\u2083:SiO\u2082 concentrate ratios of 8.44.",
-    citation: "Marino et al., \"The Flotation of Marginal Gibbsitic Bauxite Ores from Paragominas \u2013 Brazil\" (Univ. of Utah thesis repository)."
+    citation: "Marino et al., \"The Flotation of Marginal Gibbsitic Bauxite Ores from Paragominas \u2013 Brazil\" (Univ. of Utah thesis repository).",
+    testedPH: 9.5, testedRange: [8.5, 10.5],
+    testedPHNote: "Separate direct-flotation bench study found optimum near pH 9.5, with performance dropping off below 8.5 or above 10.5 \u2014 a real effect (site availability, dispersant behavior) this model's electrostatics/HSAB terms don't fully capture on their own."
   },
   "gibbsite|fatty_acid": {
     confidence: "medium",
     reason: "Oleic acid is documented as workable for gibbsite flotation (Bittencourt 1989), but separate bench data using a different collector class (CTAB) measured only 37% gibbsite recovery under nominally favorable conditions \u2014 suggests recovery ceilings this rule engine doesn't quantify.",
-    citation: "Bittencourt (1989), cited in Paragominas bauxite thesis; Rodrigues et al., REM Int. Eng. J. 69(3), 2016."
+    citation: "Bittencourt (1989), cited in Paragominas bauxite thesis; Rodrigues et al., REM Int. Eng. J. 69(3), 2016.",
+    testedPH: 9.5, testedRange: [8.5, 10.5],
+    testedPHNote: "Assumed to track the same pH-optimum window reported for direct gibbsite flotation generally \u2014 not independently confirmed for oleic acid specifically."
   },
   "kaolinite|amine": {
     confidence: "low",
@@ -436,17 +440,23 @@ const PAIR_NOTES = {
   "diaspore|amine": {
     confidence: "medium",
     reason: "Reverse flotation of diaspore-associated kaolinite with dodecylamine is documented, but diaspore's own recovery is sensitive to depressant competition (SHMP) not fully captured by a single affinity score.",
-    citation: "s11771-005-0175-x, J. Cent. South Univ. Technol. 2005 (SHMP-diaspore P-O-Al bonding study)."
+    citation: "s11771-005-0175-x, J. Cent. South Univ. Technol. 2005 (SHMP-diaspore P-O-Al bonding study).",
+    testedPH: 6.0, testedRange: [5.5, 8.5],
+    testedPHNote: "SHMP-diaspore adsorption in this study peaked near pH 6.0; reverse flotation with DDA reported effective in the pH 5.5\u20138.5 window."
   },
   "chalcopyrite|xanthate": {
     confidence: "high",
     reason: "Extremely well-documented: multiple independent studies report chalcopyrite recovery above 84\u201393% with xanthate collectors across pH 3\u201311, with FTIR/XPS-confirmed Cu-S covalent chemisorption.",
-    citation: "Multiple sources, e.g. Sci. Reports/ScienceDirect chalcopyrite-xanthate H\u2082O\u2082 study (2017); Minerals 15(11), 2025 (BX/ADD study, >90% recovery)."
+    citation: "Multiple sources, e.g. Sci. Reports/ScienceDirect chalcopyrite-xanthate H\u2082O\u2082 study (2017); Minerals 15(11), 2025 (BX/ADD study, >90% recovery).",
+    testedPH: 10.5, testedRange: [3, 11],
+    testedPHNote: "Reported effective across a wide pH 3\u201311 range \u2014 covalent chemisorption is genuinely more pH-tolerant here, so the window is widest of any pair on file, not just under-modeled."
   },
   "galena|xanthate": {
     confidence: "high",
     reason: "Textbook soft-soft chemisorption case \u2014 xanthate-galena is among the most thoroughly characterized systems in flotation chemistry, extensively confirmed by FTIR and adsorption studies.",
-    citation: "Long-standing consensus across sulfide flotation literature; consistent with chalcopyrite-xanthate mechanism studies above."
+    citation: "Long-standing consensus across sulfide flotation literature; consistent with chalcopyrite-xanthate mechanism studies above.",
+    testedPH: 9.2, testedRange: [6, 10],
+    testedPHNote: "Most FTIR/XPS adsorption studies (e.g. spectroelectrochemical work) were run near pH 9.2; effective flotation is reported roughly pH 6\u201310, narrowing at strongly acidic or alkaline extremes."
   },
   "quartz|amine": {
     confidence: "high",
@@ -494,25 +504,71 @@ function surfaceStateFor(mineral, pH) {
   ];
 }
 
-function bondForSurface(surface, collector, pH, mineralPzcForDelta) {
+function bondForSurface(surface, collector, pH, pairNote) {
   const collectorChargeSign = collector.charge === "anionic" ? "negative" : "positive";
   const electrostaticFavorable = surface.chargeSign !== "neutral" && surface.chargeSign !== collectorChargeSign;
   const hsabMatch = (surface.hsab === "hard" && collector.hsab === "hard") || (surface.hsab === "soft" && collector.hsab === "soft");
 
-  let bondMode, strength;
+  // Reference point for the ELECTROSTATIC term stays PZC — that's genuinely what
+  // sets surface charge sign, so it's still correct there.
+  const pzcDelta = surface.pzc !== null ? Math.abs(pH - surface.pzc) : 0;
+
+  let bondMode, strength, usedTestedPH = false;
   if (collector.mechanism.includes("chelation") && hsabMatch) {
     bondMode = "chemisorption (chelation)";
-    strength = electrostaticFavorable ? "strong" : "moderate-to-strong";
+    // Chemisorption doesn't degrade with distance-from-PZC the way physisorption
+    // does — PZC only sets surface charge, it isn't the reason a chelation bond
+    // forms or fails. What actually degrades performance away from the literature
+    // conditions is chemistry the model doesn't otherwise capture (site density,
+    // dispersant/depressant behavior, particle liberation) — so where a
+    // literature-tested pH is on file, grade distance from THAT instead of PZC.
+    // This was the actual bug: gibbsite's PZC (9.0) sits too close to both pH 8.5
+    // and 9.5 to tell them apart, even though the cited bench study shows a real
+    // dropoff at 8.5 relative to its 9.5 optimum. Falling back to PZC-distance
+    // when no tested pH is on file is still an approximation, flagged via
+    // confidence/usedTestedPH rather than presented as equally solid.
+    if (pairNote && pairNote.testedPH !== undefined) {
+      usedTestedPH = true;
+      const delta = Math.abs(pH - pairNote.testedPH);
+      const [lo, hi] = pairNote.testedRange || [pairNote.testedPH - 1, pairNote.testedPH + 1];
+      const halfRange = Math.max((hi - lo) / 2, 0.5);
+      if (delta <= halfRange * 0.5) strength = "strong";
+      else if (delta <= halfRange) strength = "moderate-to-strong";
+      else if (delta <= halfRange * 2) strength = "weak-to-moderate";
+      else strength = "weak";
+    } else {
+      if (pzcDelta <= 1.5) strength = "strong";
+      else if (pzcDelta <= 3.5) strength = "moderate-to-strong";
+      else if (pzcDelta <= 5.5) strength = "weak-to-moderate";
+      else strength = "weak";
+    }
   } else if (collector.mechanism === "covalent chemisorption" && hsabMatch) {
-    bondMode = "covalent chemisorption"; strength = "strong";
+    bondMode = "covalent chemisorption";
+    // Same fix as chelation, same reasoning: grade from tested pH/range when known
+    // (covalent sulfide bonds are genuinely pH-tolerant per the literature, so
+    // pairs like chalcopyrite|xanthate keep a wide strong window on their own
+    // merit — that's real chemistry, not the bug). Previously hardcoded to
+    // "strong" unconditionally, the least defensible version of this issue.
+    if (pairNote && pairNote.testedPH !== undefined) {
+      usedTestedPH = true;
+      const delta = Math.abs(pH - pairNote.testedPH);
+      const [lo, hi] = pairNote.testedRange || [pairNote.testedPH - 2, pairNote.testedPH + 2];
+      const halfRange = Math.max((hi - lo) / 2, 1);
+      if (delta <= halfRange * 0.6) strength = "strong";
+      else if (delta <= halfRange) strength = "moderate-to-strong";
+      else strength = "weak-to-moderate";
+    } else {
+      if (pzcDelta <= 2.5) strength = "strong";
+      else if (pzcDelta <= 5) strength = "moderate-to-strong";
+      else strength = "weak-to-moderate";
+    }
   } else if (electrostaticFavorable) {
     bondMode = "electrostatic (physisorption)";
-    const delta = surface.pzc !== null ? Math.abs(pH - surface.pzc) : 3;
-    strength = delta > 2 ? "moderate-to-strong" : "weak-to-moderate";
+    strength = pzcDelta > 2 ? "moderate-to-strong" : "weak-to-moderate";
   } else {
     bondMode = "unfavorable / minimal adsorption"; strength = "weak";
   }
-  return { bondMode, strength, electrostaticFavorable, hsabMatch };
+  return { bondMode, strength, electrostaticFavorable, hsabMatch, usedTestedPH };
 }
 
 function strengthScore(s) {
@@ -528,8 +584,14 @@ function predictBonding(mineralKey, collectorKey, pH, depressantKey, depressantD
   const depressant = DEPRESSANTS[depressantKey] || DEPRESSANTS.none;
   if (!mineral || !collector) return null;
 
+  // Pair note is looked up before bonding now (previously after) so the
+  // literature-tested pH/range, when on file, can actually inform strength
+  // grading instead of always falling back to PZC-only distance.
+  const pairKey = `${mineralKey}|${collectorKey}`;
+  const pairNote = PAIR_NOTES[pairKey] || defaultConfidenceFor(mineral, collector, mineral.hsab === collector.hsab);
+
   const surfaces = surfaceStateFor(mineral, pH);
-  const surfaceResults = surfaces.map(s => ({ ...s, ...bondForSurface(s, collector, pH) }));
+  const surfaceResults = surfaces.map(s => ({ ...s, ...bondForSurface(s, collector, pH, pairNote) }));
 
   // Area-weighted blended result (for anisotropic minerals)
   const blendedScore = surfaceResults.reduce((sum, s) => sum + strengthScore(s.strength) * s.fraction, 0);
@@ -560,8 +622,6 @@ function predictBonding(mineralKey, collectorKey, pH, depressantKey, depressantD
   }
 
   // ---- Confidence flag (pair-level: mineral + collector, not mineral alone) ----
-  const pairKey = `${mineralKey}|${collectorKey}`;
-  const pairNote = PAIR_NOTES[pairKey] || defaultConfidenceFor(mineral, collector, surfaceResults[0].hsabMatch);
   let confidence = pairNote.confidence;
   let confidenceReason = pairNote.reason;
   let confidenceCitation = pairNote.citation;
@@ -570,9 +630,14 @@ function predictBonding(mineralKey, collectorKey, pH, depressantKey, depressantD
     confidenceReason += " Depressant competition adds further uncertainty beyond simple affinity comparison \u2014 real systems involve dose-response curves this linear model approximates crudely.";
   }
 
+  const usedTestedPH = surfaceResults.some(s => s.usedTestedPH);
+  const testedPHNote = usedTestedPH && pairNote.testedPHNote
+    ? ` ${pairNote.testedPHNote}`
+    : "";
+
   const explanation = surfaces.length > 1
-    ? `${mineral.name} is anisotropic: ${surfaceResults.map(s => `${s.label} face (${(s.fraction*100).toFixed(0)}% of area, ${s.chargeSign}) shows ${s.bondMode} \u2014 ${s.strength}`).join("; ")}. Blended particle-level behavior is dominated by the ${dominant.label} face since it's ${(dominant.fraction*100).toFixed(0)}% of surface area.`
-    : `${collector.name}'s ${collector.headGroup} head group ${surfaceResults[0].bondMode.includes("chelation") ? "chelates onto" : surfaceResults[0].bondMode.includes("covalent") ? "bonds covalently to" : "is electrostatically drawn to"} ${mineral.surfaceSite} sites on ${mineral.name}. Surface is ${surfaceResults[0].chargeSign} at pH ${pH} (PZC ${mineral.pzc}).`;
+    ? `${mineral.name} is anisotropic: ${surfaceResults.map(s => `${s.label} face (${(s.fraction*100).toFixed(0)}% of area, ${s.chargeSign}) shows ${s.bondMode} \u2014 ${s.strength}`).join("; ")}. Blended particle-level behavior is dominated by the ${dominant.label} face since it's ${(dominant.fraction*100).toFixed(0)}% of surface area.${testedPHNote}`
+    : `${collector.name}'s ${collector.headGroup} head group ${surfaceResults[0].bondMode.includes("chelation") ? "chelates onto" : surfaceResults[0].bondMode.includes("covalent") ? "bonds covalently to" : "is electrostatically drawn to"} ${mineral.surfaceSite} sites on ${mineral.name}. Surface is ${surfaceResults[0].chargeSign} at pH ${pH} (PZC ${mineral.pzc}).${testedPHNote}`;
 
   return {
     mineral, collector, depressant, pH, depressantDose,
