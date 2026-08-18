@@ -1,0 +1,747 @@
+<!-- minerals.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+Flotation Simulation Hub | Mineral Database
+
+</title>
+
+<meta name="description"
+content="Mineral database for flotation, surface chemistry and collector selection.">
+
+<link rel="stylesheet"
+href="css/styles.css">
+
+</head>
+
+<body>
+
+<header class="hero">
+
+<nav class="navbar">
+
+<div class="logo">
+
+FLOTATION
+<span>SIMULATION HUB</span>
+
+</div>
+
+<ul class="nav-links">
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="literature.html">Literature</a></li>
+
+<li><a href="collectors.html">Collectors</a></li>
+
+<li><a href="chemistry.html">Surface Chemistry</a></li>
+
+<li><a href="references.html">References</a></li>
+
+</ul>
+
+</nav>
+
+<div class="hero-content">
+
+<h1>
+
+Mineral Database
+
+</h1>
+
+<p>
+
+Explore flotation behavior,
+surface chemistry,
+point of zero charge,
+collector selection
+and adsorption mechanisms.
+
+</p>
+
+</div>
+
+</header>
+
+<main>
+
+<section>
+
+<h2>
+
+Aluminum-Bearing Minerals
+
+</h2>
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>
+
+Boehmite
+
+</h3>
+
+<p>
+
+Formula:
+
+AlO(OH)
+
+</p>
+
+<p>
+
+PZC:
+
+≈9
+
+</p>
+
+<p>
+
+HSAB:
+
+Hard acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Hydroxamate,
+Fatty acid,
+Amine
+
+</p>
+
+<p>
+
+Mechanism:
+
+Chelation
+
+</p>
+
+<button
+onclick="showMineral('boehmite')">
+
+More Information
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Gibbsite
+
+</h3>
+
+<p>
+
+Formula:
+
+Al(OH)₃
+
+</p>
+
+<p>
+
+PZC:
+
+≈10
+
+</p>
+
+<p>
+
+HSAB:
+
+Hard acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Hydroxamate,
+Fatty acid
+
+</p>
+
+<p>
+
+Mechanism:
+
+Chemisorption
+
+</p>
+
+<button
+onclick="showMineral('gibbsite')">
+
+More Information
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Diaspore
+
+</h3>
+
+<p>
+
+Formula:
+
+AlO(OH)
+
+</p>
+
+<p>
+
+PZC:
+
+≈8
+
+</p>
+
+<p>
+
+HSAB:
+
+Hard acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Hydroxamate,
+Amine
+
+</p>
+
+<p>
+
+Mechanism:
+
+Surface complexation
+
+</p>
+
+<button
+onclick="showMineral('diaspore')">
+
+More Information
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Silicate Minerals
+
+</h2>
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>
+
+Kaolinite
+
+</h3>
+
+<p>
+
+Formula:
+
+Al₂Si₂O₅(OH)₄
+
+</p>
+
+<p>
+
+PZC:
+
+≈4
+
+</p>
+
+<p>
+
+HSAB:
+
+Hard acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Amine,
+Hydroxamate
+
+</p>
+
+<p>
+
+Mechanism:
+
+Electrostatic attraction
+
+</p>
+
+<button
+onclick="showMineral('kaolinite')">
+
+More Information
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Quartz
+
+</h3>
+
+<p>
+
+Formula:
+
+SiO₂
+
+</p>
+
+<p>
+
+PZC:
+
+≈2
+
+</p>
+
+<p>
+
+HSAB:
+
+Hard acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Amine
+
+</p>
+
+<p>
+
+Mechanism:
+
+Electrostatic attraction
+
+</p>
+
+<button
+onclick="showMineral('quartz')">
+
+More Information
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Ore Minerals
+
+</h2>
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>
+
+Hematite
+
+</h3>
+
+<p>
+
+Formula:
+
+Fe₂O₃
+
+</p>
+
+<p>
+
+PZC:
+
+≈8
+
+</p>
+
+<p>
+
+HSAB:
+
+Hard acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Hydroxamate,
+Fatty acid
+
+</p>
+
+<p>
+
+Mechanism:
+
+Chelation
+
+</p>
+
+<button
+onclick="showMineral('hematite')">
+
+More Information
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Galena
+
+</h3>
+
+<p>
+
+Formula:
+
+PbS
+
+</p>
+
+<p>
+
+PZC:
+
+≈6
+
+</p>
+
+<p>
+
+HSAB:
+
+Soft acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Xanthate
+
+</p>
+
+<p>
+
+Mechanism:
+
+Chemisorption
+
+</p>
+
+<button
+onclick="showMineral('galena')">
+
+More Information
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Chalcopyrite
+
+</h3>
+
+<p>
+
+Formula:
+
+CuFeS₂
+
+</p>
+
+<p>
+
+PZC:
+
+≈5
+
+</p>
+
+<p>
+
+HSAB:
+
+Soft acid
+
+</p>
+
+<p>
+
+Typical collectors:
+
+Xanthate
+
+</p>
+
+<p>
+
+Mechanism:
+
+Chemisorption
+
+</p>
+
+<button
+onclick="showMineral('chalcopyrite')">
+
+More Information
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Mineral Information
+
+</h2>
+
+<div
+class="result-box"
+id="mineralDetails">
+
+Select a mineral to view
+additional information.
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<p>
+
+© 2026 Flotation Simulation Hub
+
+</p>
+
+</footer>
+
+<script>
+
+const minerals = {
+
+boehmite:
+
+`Industrial importance:
+
+Major aluminum-bearing mineral.
+
+Surface sites:
+
+Al-OH groups.
+
+Compatible collectors:
+
+Hydroxamates and fatty acids.`,
+
+gibbsite:
+
+`Industrial importance:
+
+Principal ore of aluminum.
+
+Surface sites:
+
+Hydroxyl groups.
+
+Compatible collectors:
+
+Hydroxamates.`,
+
+diaspore:
+
+`Industrial importance:
+
+Important bauxite mineral.
+
+Surface sites:
+
+Al-OH groups.
+
+Compatible collectors:
+
+Hydroxamates and amines.`,
+
+kaolinite:
+
+`Industrial importance:
+
+Clay mineral.
+
+Surface sites:
+
+Siloxane and aluminol surfaces.
+
+Compatible collectors:
+
+Amines.`,
+
+quartz:
+
+`Industrial importance:
+
+Most abundant gangue mineral.
+
+Surface sites:
+
+Silanol groups.
+
+Compatible collectors:
+
+Amines.`,
+
+hematite:
+
+`Industrial importance:
+
+Major iron ore.
+
+Surface sites:
+
+Fe-OH groups.
+
+Compatible collectors:
+
+Hydroxamates and fatty acids.`,
+
+galena:
+
+`Industrial importance:
+
+Lead ore.
+
+Surface sites:
+
+Lead sulfide.
+
+Compatible collectors:
+
+Xanthates.`,
+
+chalcopyrite:
+
+`Industrial importance:
+
+Copper ore.
+
+Surface sites:
+
+Copper-iron sulfide.
+
+Compatible collectors:
+
+Xanthates.`
+
+};
+
+function showMineral(name){
+
+document.getElementById(
+"mineralDetails"
+).innerText=
+
+minerals[name];
+
+}
+
+</script>
+
+</body>
+
+</html>
