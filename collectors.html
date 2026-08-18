@@ -1,0 +1,562 @@
+<!-- collectors.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+Flotation Simulation Hub | Collector Database
+
+</title>
+
+<meta name="description"
+content="Hydroxamate, fatty acid, amine, xanthate and sulfonate collector database.">
+
+<link rel="stylesheet"
+href="css/styles.css">
+
+</head>
+
+<body>
+
+<header class="hero">
+
+<nav class="navbar">
+
+<div class="logo">
+
+FLOTATION
+<span>SIMULATION HUB</span>
+
+</div>
+
+<ul class="nav-links">
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="literature.html">Literature</a></li>
+
+<li><a href="minerals.html">Minerals</a></li>
+
+<li><a href="chemistry.html">Surface Chemistry</a></li>
+
+<li><a href="references.html">References</a></li>
+
+</ul>
+
+</nav>
+
+<div class="hero-content">
+
+<h1>
+
+Collector Database
+
+</h1>
+
+<p>
+
+Explore collector chemistry,
+adsorption mechanisms,
+surface interactions
+and flotation behavior.
+
+</p>
+
+</div>
+
+</header>
+
+<main>
+
+<section>
+
+<h2>
+
+Collector Families
+
+</h2>
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>
+
+Hydroxamate
+
+</h3>
+
+<p>
+
+Chelating collector widely used
+for oxide minerals.
+
+</p>
+
+<ul>
+
+<li>Charge: Anionic</li>
+
+<li>HSAB: Hard base</li>
+
+<li>Typical pH: 7-10</li>
+
+<li>Mechanism: Chelation</li>
+
+<li>Industrial use: Bauxite and iron ores</li>
+
+</ul>
+
+<button
+onclick="showCollector('hydroxamate')">
+
+View Details
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Fatty Acid
+
+</h3>
+
+<p>
+
+Anionic surfactant used in oxide
+and non-sulfide flotation.
+
+</p>
+
+<ul>
+
+<li>Charge: Anionic</li>
+
+<li>HSAB: Hard base</li>
+
+<li>Typical pH: 8-11</li>
+
+<li>Mechanism: Chemisorption</li>
+
+<li>Industrial use: Oxide minerals</li>
+
+</ul>
+
+<button
+onclick="showCollector('fatty')">
+
+View Details
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Amine
+
+</h3>
+
+<p>
+
+Cationic collector commonly used
+for silicate flotation.
+
+</p>
+
+<ul>
+
+<li>Charge: Cationic</li>
+
+<li>HSAB: Lewis base</li>
+
+<li>Typical pH: 6-10</li>
+
+<li>Mechanism: Electrostatic attraction</li>
+
+<li>Industrial use: Quartz and clay minerals</li>
+
+</ul>
+
+<button
+onclick="showCollector('amine')">
+
+View Details
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Xanthate
+
+</h3>
+
+<p>
+
+The classical collector for
+sulfide flotation.
+
+</p>
+
+<ul>
+
+<li>Charge: Anionic</li>
+
+<li>HSAB: Soft base</li>
+
+<li>Typical pH: 7-11</li>
+
+<li>Mechanism: Chemisorption</li>
+
+<li>Industrial use: Sulfide ores</li>
+
+</ul>
+
+<button
+onclick="showCollector('xanthate')">
+
+View Details
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Sulfonate
+
+</h3>
+
+<p>
+
+Anionic collector for selected
+industrial applications.
+
+</p>
+
+<ul>
+
+<li>Charge: Anionic</li>
+
+<li>HSAB: Hard base</li>
+
+<li>Typical pH: 6-10</li>
+
+<li>Mechanism: Surface complexation</li>
+
+<li>Industrial use: Oxides and silicates</li>
+
+</ul>
+
+<button
+onclick="showCollector('sulfonate')">
+
+View Details
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Compatible Minerals
+
+</h2>
+
+<div class="paper-grid">
+
+<div class="paper-card">
+
+<h3>
+
+Hydroxamate
+
+</h3>
+
+<p>
+
+Boehmite
+
+</p>
+
+<p>
+
+Gibbsite
+
+</p>
+
+<p>
+
+Diaspore
+
+</p>
+
+<p>
+
+Hematite
+
+</p>
+
+</div>
+
+<div class="paper-card">
+
+<h3>
+
+Amine
+
+</h3>
+
+<p>
+
+Quartz
+
+</p>
+
+<p>
+
+Kaolinite
+
+</p>
+
+</div>
+
+<div class="paper-card">
+
+<h3>
+
+Xanthate
+
+</h3>
+
+<p>
+
+Galena
+
+</p>
+
+<p>
+
+Chalcopyrite
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Collector Comparison
+
+</h2>
+
+<table>
+
+<tr>
+
+<th>Collector</th>
+
+<th>Charge</th>
+
+<th>Mechanism</th>
+
+<th>Typical pH</th>
+
+</tr>
+
+<tr>
+
+<td>Hydroxamate</td>
+
+<td>Anionic</td>
+
+<td>Chelation</td>
+
+<td>7-10</td>
+
+</tr>
+
+<tr>
+
+<td>Fatty Acid</td>
+
+<td>Anionic</td>
+
+<td>Chemisorption</td>
+
+<td>8-11</td>
+
+</tr>
+
+<tr>
+
+<td>Amine</td>
+
+<td>Cationic</td>
+
+<td>Electrostatic</td>
+
+<td>6-10</td>
+
+</tr>
+
+<tr>
+
+<td>Xanthate</td>
+
+<td>Anionic</td>
+
+<td>Chemisorption</td>
+
+<td>7-11</td>
+
+</tr>
+
+<tr>
+
+<td>Sulfonate</td>
+
+<td>Anionic</td>
+
+<td>Complexation</td>
+
+<td>6-10</td>
+
+</tr>
+
+</table>
+
+</section>
+
+<section>
+
+<h2>
+
+Collector Information
+
+</h2>
+
+<div
+class="result-box"
+id="collectorDetails">
+
+Select a collector to view
+additional information.
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<p>
+
+© 2026 Flotation Simulation Hub
+
+</p>
+
+</footer>
+
+<script>
+
+const collectorData = {
+
+hydroxamate:
+
+`Chelating collector.
+
+Compatible minerals:
+
+• Boehmite
+
+• Gibbsite
+
+• Diaspore
+
+• Hematite`,
+
+fatty:
+
+`Fatty-acid collector.
+
+Compatible minerals:
+
+• Boehmite
+
+• Gibbsite
+
+• Hematite`,
+
+amine:
+
+`Cationic collector.
+
+Compatible minerals:
+
+• Quartz
+
+• Kaolinite`,
+
+xanthate:
+
+`Sulfide collector.
+
+Compatible minerals:
+
+• Galena
+
+• Chalcopyrite`,
+
+sulfonate:
+
+`Industrial anionic collector.`
+
+};
+
+function showCollector(name){
+
+document.getElementById(
+"collectorDetails"
+).innerText=
+
+collectorData[name];
+
+}
+
+</script>
+
+</body>
+
+</html>
