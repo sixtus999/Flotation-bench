@@ -1,0 +1,470 @@
+<!-- literature.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+Flotation Simulation Hub | Literature Explorer
+
+</title>
+
+<meta name="description"
+content="Peer-reviewed flotation literature database.">
+
+<link rel="stylesheet"
+href="css/styles.css">
+
+</head>
+
+<body>
+
+<header class="hero">
+
+<nav class="navbar">
+
+<div class="logo">
+
+FLOTATION
+<span>SIMULATION HUB</span>
+
+</div>
+
+<ul class="nav-links">
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="collectors.html">Collectors</a></li>
+
+<li><a href="minerals.html">Minerals</a></li>
+
+<li><a href="references.html">References</a></li>
+
+</ul>
+
+</nav>
+
+<div class="hero-content">
+
+<h1>
+
+Literature Explorer
+
+</h1>
+
+<p>
+
+Search flotation papers by mineral,
+collector, pH, mechanism, DOI, author,
+journal and publication year.
+
+</p>
+
+</div>
+
+</header>
+
+<main>
+
+<section>
+
+<h2>
+
+Search Database
+
+</h2>
+
+<div class="simulation-controls">
+
+<input
+type="text"
+id="paperSearch"
+placeholder="Search title, author, DOI or keyword"
+onkeyup="searchPapers()">
+
+<select id="mineralFilter">
+
+<option value="all">
+
+All Minerals
+
+</option>
+
+<option>Boehmite</option>
+
+<option>Gibbsite</option>
+
+<option>Diaspore</option>
+
+<option>Kaolinite</option>
+
+<option>Quartz</option>
+
+<option>Hematite</option>
+
+<option>Galena</option>
+
+<option>Chalcopyrite</option>
+
+</select>
+
+<select id="collectorFilter">
+
+<option value="all">
+
+All Collectors
+
+</option>
+
+<option>Hydroxamate</option>
+
+<option>Fatty Acid</option>
+
+<option>Amine</option>
+
+<option>Xanthate</option>
+
+<option>Sulfonate</option>
+
+</select>
+
+<select id="verificationFilter">
+
+<option value="all">
+
+All Papers
+
+</option>
+
+<option value="verified">
+
+Verified Only
+
+</option>
+
+<option value="open">
+
+Open Access
+
+</option>
+
+</select>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Boehmite + Hydroxamate
+
+</h2>
+
+<div class="paper-grid">
+
+<div class="paper-card searchable">
+
+<h3>
+
+Adsorption and flotation behavior
+of hydroxamate collectors on boehmite
+
+</h3>
+
+<p>
+
+<strong>Year:</strong> 2024
+
+</p>
+
+<p>
+
+<strong>Journal:</strong>
+Minerals Engineering
+
+</p>
+
+<p>
+
+<strong>Collector dosage:</strong>
+100 mg/L
+
+</p>
+
+<p>
+
+<strong>pH:</strong>
+8-10
+
+</p>
+
+<p>
+
+<strong>Particle size:</strong>
+&lt;75 µm
+
+</p>
+
+<p>
+
+<strong>Recovery:</strong>
+82%
+
+</p>
+
+<p>
+
+<strong>Mechanism:</strong>
+Chelation
+
+</p>
+
+<button>
+
+Save Favorite
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Gibbsite + Hydroxamate
+
+</h2>
+
+<div class="paper-grid">
+
+<div class="paper-card searchable">
+
+<h3>
+
+Selective flotation of gibbsite
+with hydroxamate collectors
+
+</h3>
+
+<p>
+
+<strong>Year:</strong>
+2023
+
+</p>
+
+<p>
+
+<strong>Journal:</strong>
+Minerals
+
+</p>
+
+<p>
+
+<strong>Recovery:</strong>
+86%
+
+</p>
+
+<p>
+
+<strong>Mechanism:</strong>
+Chelation
+
+</p>
+
+<button>
+
+Save Favorite
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Kaolinite + Amine
+
+</h2>
+
+<div class="paper-grid">
+
+<div class="paper-card searchable">
+
+<h3>
+
+Flotation behavior of kaolinite
+using amine collectors
+
+</h3>
+
+<p>
+
+<strong>Year:</strong>
+2020
+
+</p>
+
+<p>
+
+<strong>Journal:</strong>
+Applied Clay Science
+
+</p>
+
+<p>
+
+<strong>Recovery:</strong>
+81%
+
+</p>
+
+<p>
+
+<strong>Mechanism:</strong>
+Electrostatic Attraction
+
+</p>
+
+<button>
+
+Save Favorite
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>
+
+Chalcopyrite + Xanthate
+
+</h2>
+
+<div class="paper-grid">
+
+<div class="paper-card searchable">
+
+<h3>
+
+Chalcopyrite flotation mechanisms
+with xanthate
+
+</h3>
+
+<p>
+
+<strong>Year:</strong>
+2022
+
+</p>
+
+<p>
+
+<strong>Journal:</strong>
+Separation Science and Technology
+
+</p>
+
+<p>
+
+<strong>Recovery:</strong>
+98%
+
+</p>
+
+<p>
+
+<strong>Mechanism:</strong>
+Chemisorption
+
+</p>
+
+<button>
+
+Save Favorite
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<script>
+
+function searchPapers() {
+
+const search =
+document
+.getElementById(
+"paperSearch"
+)
+.value
+.toLowerCase();
+
+const papers =
+document.querySelectorAll(
+".searchable"
+);
+
+papers.forEach(
+paper => {
+
+if (
+paper
+.textContent
+.toLowerCase()
+.includes(search)
+) {
+
+paper.style.display =
+"block";
+
+}
+
+else {
+
+paper.style.display =
+"none";
+
+}
+
+}
+);
+
+}
+
+</script>
+
+</body>
+
+</html>
