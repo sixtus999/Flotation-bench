@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mineral Database – Flotation Sim</title>
-  <!-- Font for clean look -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
-    /* ---------- GLOBAL RESET & VARIABLES ---------- */
     * {
       margin: 0;
       padding: 0;
@@ -15,21 +13,17 @@
     }
 
     :root {
-      --bg-primary: #0A0E17;      /* deep dark base (from your flotation bench) */
-      --bg-secondary: #111B2C;
-      --bg-card: #142237;
-      --bg-card-hover: #1A2D45;
+      --bg-primary: #0F172A;
+      --bg-secondary: #1E293B;
+      --bg-card: #273548;
+      --bg-card-hover: #334155;
       --text-primary: #EDF2F7;
       --text-secondary: #94A3B8;
       --text-muted: #64748B;
-      --border-subtle: #1E2F44;
-
-      /* category accent colors */
-      --color-aluminum: #D35400;    /* burnt orange */
-      --color-silicate: #D4A373;    /* sandy gold */
-      --color-ore: #8E4A49;         /* deep metallic red */
-
-      /* nav active color (minerals page) */
+      --border-subtle: #334155;
+      --color-aluminum: #D35400;
+      --color-silicate: #D4A373;
+      --color-ore: #8E4A49;
       --color-active: #D35400;
     }
 
@@ -41,7 +35,6 @@
       padding: 0 24px 48px;
     }
 
-    /* ---------- NAVIGATION ---------- */
     .navbar {
       max-width: 1280px;
       margin: 0 auto;
@@ -88,7 +81,6 @@
       border-bottom-color: var(--color-active);
     }
 
-    /* ---------- MAIN LAYOUT ---------- */
     .container {
       max-width: 1280px;
       margin: 32px auto 0;
@@ -116,7 +108,6 @@
       font-size: 1.05rem;
     }
 
-    /* ---------- CATEGORY CARDS GRID ---------- */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -128,12 +119,12 @@
       border-radius: 16px;
       padding: 20px 18px 18px;
       border-left: 6px solid var(--cat-color, #fff);
-      box-shadow: 0 10px 25px -8px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.6);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .category-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 18px 35px -10px rgba(0,0,0,0.7);
+      box-shadow: 0 18px 35px -10px rgba(0, 0, 0, 0.8);
     }
 
     .category-header {
@@ -151,7 +142,6 @@
       font-size: 1.8rem;
     }
 
-    /* ---------- MINERAL ITEMS ---------- */
     .mineral-list {
       display: flex;
       flex-direction: column;
@@ -164,7 +154,7 @@
       justify-content: space-between;
       padding: 10px 14px;
       border-radius: 10px;
-      background: rgba(255,255,255,0.03);
+      background: rgba(255, 255, 255, 0.04);
       transition: background 0.2s ease;
       cursor: default;
     }
@@ -211,13 +201,12 @@
       color: #fff;
     }
 
-    /* ---------- MODAL (overlay) ---------- */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(2, 6, 16, 0.8);
+      background: rgba(2, 6, 16, 0.85);
       backdrop-filter: blur(6px);
-      display: none; /* hidden by default */
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
@@ -229,8 +218,14 @@
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.96); }
-      100% { opacity: 1; transform: scale(1); }
+      0% {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .modal-box {
@@ -241,7 +236,7 @@
       border-radius: 24px;
       padding: 32px 34px;
       border: 1px solid var(--border-subtle);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
       overflow-y: auto;
       position: relative;
     }
@@ -261,7 +256,6 @@
       transform: rotate(90deg);
     }
 
-    /* modal header */
     .modal-mineral-name {
       font-size: 2rem;
       font-weight: 700;
@@ -279,11 +273,10 @@
       margin-bottom: 20px;
     }
 
-    /* Tabs */
     .tabs {
       display: flex;
       gap: 4px;
-      background: #0E1728;
+      background: #0F172A;
       padding: 4px;
       border-radius: 12px;
       margin-bottom: 24px;
@@ -318,7 +311,6 @@
       display: block;
     }
 
-    /* data grid inside modal */
     .data-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -361,7 +353,6 @@
       color: #fff;
     }
 
-    /* full-width on small screens */
     @media (max-width: 600px) {
       .data-grid {
         grid-template-columns: 1fr;
@@ -383,7 +374,6 @@
       }
     }
 
-    /* scrollbar styling */
     .modal-box::-webkit-scrollbar {
       width: 5px;
     }
@@ -398,32 +388,30 @@
 </head>
 <body>
 
-  <!-- ========== NAVIGATION ========== -->
+  <!-- ===== NAVIGATION – LINKS FIXED FOR YOUR REPO ===== -->
   <nav class="navbar">
     <div class="logo">⛏️ Flotation<span>Sim</span></div>
     <ul class="nav-links">
-      <li><a href="#">Homepage</a></li>
-      <li><a href="#" class="active">Minerals Menu</a></li>
-      <li><a href="#">Collector Menu</a></li>
-      <li><a href="#">Literature</a></li>
+      <li><a href="index.html">Homepage</a></li>
+      <li><a href="minerals.html" class="active">Mineral</a></li>
+      <li><a href="collectors.html">Collector</a></li>
+      <li><a href="literature.html">Literature</a></li>
     </ul>
   </nav>
 
-  <!-- ========== MAIN CONTENT ========== -->
+  <!-- ===== MAIN CONTENT ===== -->
   <div class="container">
     <div class="page-header">
       <h1>
-        🗂️ Mineral Database
+        🪨 Mineral Database
         <small>flotation & surface chemistry</small>
       </h1>
       <p>Explore crystal systems, PZC, collector selection, and industrial relevance.</p>
     </div>
-
-    <!-- The 3 category cards will be injected here by JavaScript -->
     <div id="categoryGrid" class="category-grid"></div>
   </div>
 
-  <!-- ========== MODAL ========== -->
+  <!-- ===== MODAL ===== -->
   <div id="modalOverlay" class="modal-overlay">
     <div class="modal-box">
       <button class="modal-close" id="modalCloseBtn">✕</button>
@@ -434,26 +422,19 @@
       </div>
       <div class="modal-formula" id="modalFormula">Formula</div>
 
-      <!-- Tabs -->
       <div class="tabs">
         <button class="tab-btn active" data-tab="physical">🔬 Physical Properties</button>
         <button class="tab-btn" data-tab="process">⚙️ Process Parameters</button>
       </div>
 
-      <!-- Tab 1: Physical -->
       <div id="tabPhysical" class="tab-content active">
-        <div class="data-grid" id="physicalGrid">
-          <!-- filled by JS -->
-        </div>
+        <div class="data-grid" id="physicalGrid"></div>
       </div>
 
-      <!-- Tab 2: Process -->
       <div id="tabProcess" class="tab-content">
-        <div class="data-grid" id="processGrid">
-          <!-- filled by JS -->
-        </div>
+        <div class="data-grid" id="processGrid"></div>
         <div class="industrial-text" id="industrialRelevance">
-          <strong>🏭 Industrial relevance:</strong> 
+          <strong>🏭 Industrial relevance:</strong>
           <span id="industrialText">Loading...</span>
         </div>
       </div>
@@ -462,10 +443,10 @@
 
   <script>
     // ============================================================
-    //  DATA – complete mineral list with all new fields
+    //  MINERAL DATA
     // ============================================================
     const minerals = [
-      // ---------- ALUMINUM-BEARING (orange) ----------
+      // ---------- ALUMINUM-BEARING ----------
       {
         id: 'boehmite',
         name: 'Boehmite',
@@ -517,7 +498,7 @@
         categoryColor: '#D35400',
         catIcon: '🏗️'
       },
-      // ---------- SILICATE (sandy yellow) ----------
+      // ---------- SILICATE ----------
       {
         id: 'kaolinite',
         name: 'Kaolinite',
@@ -552,7 +533,7 @@
         categoryColor: '#D4A373',
         catIcon: '🧪'
       },
-      // ---------- ORE MINERALS (deep red/purple) ----------
+      // ---------- ORE ----------
       {
         id: 'hematite',
         name: 'Hematite',
@@ -573,7 +554,7 @@
       {
         id: 'galena',
         name: 'Galena',
-        icon: '🧊',  // cubic ice cube represents perfect cubes
+        icon: '🧊',
         formula: 'PbS',
         pzc: '≈6',
         hsab: 'Soft acid',
@@ -607,20 +588,18 @@
     ];
 
     // ============================================================
-    //  RENDER CATEGORIES & MINERALS
+    //  RENDER CATEGORIES
     // ============================================================
     function renderCategories() {
       const grid = document.getElementById('categoryGrid');
       grid.innerHTML = '';
 
-      // Group minerals by category
       const groups = {};
       minerals.forEach(m => {
         if (!groups[m.category]) groups[m.category] = [];
         groups[m.category].push(m);
       });
 
-      // Use the categoryColor & catIcon from the first mineral in each group
       for (const [catName, items] of Object.entries(groups)) {
         const color = items[0].categoryColor;
         const icon = items[0].catIcon;
@@ -629,13 +608,11 @@
         card.className = 'category-card';
         card.style.setProperty('--cat-color', color);
 
-        // Header
         const header = document.createElement('div');
         header.className = 'category-header';
         header.innerHTML = `<span class="cat-icon">${icon}</span> ${catName}`;
         card.appendChild(header);
 
-        // Mineral list
         const list = document.createElement('div');
         list.className = 'mineral-list';
 
@@ -669,22 +646,16 @@
     }
 
     // ============================================================
-    //  MODAL LOGIC
+    //  MODAL
     // ============================================================
-    let currentMineralId = null;
-
     function openModal(id) {
       const mineral = minerals.find(m => m.id === id);
       if (!mineral) return;
 
-      currentMineralId = id;
-
-      // Set header
       document.getElementById('modalIcon').textContent = mineral.icon;
       document.getElementById('modalName').textContent = mineral.name;
       document.getElementById('modalFormula').textContent = `Formula: ${mineral.formula}`;
 
-      // ---- Physical tab ----
       const physGrid = document.getElementById('physicalGrid');
       physGrid.innerHTML = `
         <div class="data-item"><span class="label">Crystal System</span><span class="value crystal-badge">${mineral.crystalSystem} ${getSystemEmoji(mineral.crystalSystem)}</span></div>
@@ -695,7 +666,6 @@
         <div class="data-item"><span class="label">Formula</span><span class="value">${mineral.formula}</span></div>
       `;
 
-      // ---- Process tab ----
       const procGrid = document.getElementById('processGrid');
       procGrid.innerHTML = `
         <div class="data-item"><span class="label">Typical Collectors</span><span class="value">${mineral.collectors}</span></div>
@@ -703,10 +673,7 @@
       `;
       document.getElementById('industrialText').textContent = mineral.industrial;
 
-      // Reset tabs to Physical
       switchTab('physical');
-
-      // Show modal
       document.getElementById('modalOverlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -728,22 +695,16 @@
       return map[system] || '🔘';
     }
 
-    // ---- Tab switching ----
     function switchTab(tabId) {
-      // update buttons
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tabId);
       });
-      // update panels
       document.getElementById('tabPhysical').classList.toggle('active', tabId === 'physical');
       document.getElementById('tabProcess').classList.toggle('active', tabId === 'process');
     }
 
-    // ---- Event listeners ----
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        switchTab(btn.dataset.tab);
-      });
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
     document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
@@ -754,11 +715,7 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ============================================================
-    //  BOOT
-    // ============================================================
     renderCategories();
   </script>
-
 </body>
 </html>
