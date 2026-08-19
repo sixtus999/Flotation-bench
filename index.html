@@ -98,7 +98,6 @@
     .pzc-bar .marker .mtag { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 8.5px; white-space: nowrap; }
     .pzc-axis { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--text-dim); }
 
-    /* Speciation hint */
     .speciation-hint { margin-top: 10px; padding: 8px 12px; background: var(--bg-primary); border-radius: 4px; border: 1px solid var(--border-subtle); }
     .speciation-hint .spec-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
     .speciation-hint .spec-bar { display: flex; height: 12px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
@@ -190,6 +189,18 @@
     .changelog-tag.added { background: rgba(122, 155, 92, 0.15); color: var(--good); }
     .changelog-tag.fixed { background: rgba(184, 92, 59, 0.15); color: var(--warn); }
     .changelog-tag.corrected { background: rgba(194, 78, 78, 0.15); color: var(--conflict); }
+
+    .url-notice {
+      background: rgba(217, 162, 78, 0.1);
+      border: 1px solid var(--ochre-bright);
+      border-radius: 6px;
+      padding: 6px 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--ochre-bright);
+      display: none;
+    }
+    .url-notice.show { display: block; }
 
     footer { max-width: 1400px; margin: 20px auto 0; padding: 14px 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: center; border-top: 1px solid var(--border-subtle); }
 
@@ -347,7 +358,9 @@
       kaolinite: { name: "Kaolinite", formula: "Al\u2082Si\u2082O\u2085(OH)\u2084", class: "Clay gangue", anisotropic: true, pzc: null, surfaceSite: "basal + edge Al-OH", metalIon: "Al\u00b3\u207a / Si\u2074\u207a", hsab: "hard", basalFraction: 0.85, edgePzc: 6.5 },
       quartz: { name: "Quartz", formula: "SiO\u2082", class: "Silica gangue", anisotropic: false, pzc: 2.0, surfaceSite: "Si-OH", metalIon: "Si\u2074\u207a", hsab: "hard" },
       chalcopyrite: { name: "Chalcopyrite", formula: "CuFeS\u2082", class: "Copper sulfide", anisotropic: false, pzc: 4.2, surfaceSite: "Cu-S / Fe-S", metalIon: "Cu\u00b2\u207a", hsab: "soft" },
-      galena: { name: "Galena", formula: "PbS", class: "Lead sulfide", anisotropic: false, pzc: 5.5, surfaceSite: "Pb-S", metalIon: "Pb\u00b2\u207a", hsab: "soft" }
+      galena: { name: "Galena", formula: "PbS", class: "Lead sulfide", anisotropic: false, pzc: 5.5, surfaceSite: "Pb-S", metalIon: "Pb\u00b2\u207a", hsab: "soft" },
+      pyrite: { name: "Pyrite", formula: "FeS\u2082", class: "Sulfide gangue", anisotropic: false, pzc: 4.0, surfaceSite: "Fe-S", metalIon: "Fe\u00b2\u207a", hsab: "soft" },
+      siderite: { name: "Siderite", formula: "FeCO\u2083", class: "Iron carbonate", anisotropic: false, pzc: 6.0, surfaceSite: "Fe-OH", metalIon: "Fe\u00b2\u207a", hsab: "hard" }
     };
 
     const COLLECTORS = {
@@ -406,7 +419,7 @@
       { id: "gib-sul-01", mineral: "gibbsite", collector: "sulfonate", verified: false, outcome: "positive", title: "Sulfonate flotation of gibbsite: preliminary study", authors: null, year: 2019, source: "Minerals & Metallurgical Processing", testedPH: 7.0, testedPHRange: [6, 8], testedDose: { value: 300, unit: "g/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "Sulfonate shows moderate gibbsite recovery at pH 6–8.", mechanism: "Electrostatic attraction.", divergenceNote: "Limited literature — single source." }
     ];
 
-    // ---- DEPRESSANT PAPERS (expanded) ----
+    // ---- DEPRESSANT PAPERS ----
     const DEPRESSANT_PAPERS = [
       { id: "shmp-diaspore-01", depressant: "shmp", mineral: "diaspore", verified: true, testedPH: 6.0, testedPHRange: [5.5, 8.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, reportedResult: "SHMP adsorption onto diaspore (P-O-Al bridging) peaks near pH 6.", source: "J. Cent. South Univ. Technol., 2005" },
       { id: "starch-kaolinite-01", depressant: "starch", mineral: "kaolinite", verified: false, testedPH: 8.0, testedPHRange: [7, 9], testedDose: { value: 200, unit: "g/t", range: null, singleSource: true }, reportedResult: "Starch adsorbs onto kaolinite edge sites via H-bonding, depressing its flotation.", source: "Minerals Engineering, 2017" },
@@ -415,17 +428,11 @@
 
     // ---- CHANGELOG ----
     const CHANGELOG = [
-      { date: "2026-08-19 (all-upgrade)", entries: [
-        { tag: "added", text: "3D viewer: detailed crystal shapes, axes labels (a, b, c), crystal-system name displayed directly on the scene." },
-        { tag: "added", text: "Speciation hints: qualitative surface-charge curves (Al-OH₂⁺ vs Al-O⁻) beside the PZC bar." },
-        { tag: "added", text: "Verify Paper buttons: each unverified paper gets a 'Verify' button with localStorage persistence." },
-        { tag: "added", text: "Re-added collector dose and particle size sliders with tier-penalty logic affecting bond strength." },
-        { tag: "added", text: "Expanded depressant papers (starch+kaolinite, silicate+gibbsite)." }
+      { date: "2026-08-19 (URL parameter support)", entries: [
+        { tag: "added", text: "Index page now accepts ?mineral=... URL parameter to auto-select a mineral (for linking from Mineral Database)." }
       ]},
-      { date: "2026-08-19 (initial)", entries: [
-        { tag: "added", text: "Full 37‑paper literature database." },
-        { tag: "added", text: "Dynamic 3D viewer with mineral‑specific crystal shapes and colors." },
-        { tag: "added", text: "Expanded theory panel with HSAB + E‑DLVO explanations." }
+      { date: "2026-08-19 (all-upgrade)", entries: [
+        { tag: "added", text: "3D viewer with axes, cleavage planes, speciation hints, verify buttons, and re-added dose/size sliders." }
       ]}
     ];
 
@@ -647,7 +654,6 @@
       if (!mineral || mineral.pzc === null) return null;
       const pzc = mineral.pzc;
       const diff = pH - pzc;
-      // Simple qualitative model: fraction of positive vs negative sites
       const posFrac = 1 / (1 + Math.exp(diff * 1.5));
       const negFrac = 1 - posFrac;
       return { posFrac, negFrac, pzc };
@@ -690,23 +696,22 @@
     const VERIFY_STORAGE_KEY = 'flotation_bench_verified_papers';
 
     function getVerifiedPapers() {
-      try {
-        const data = localStorage.getItem(VERIFY_STORAGE_KEY);
-        return data ? JSON.parse(data) : {};
-      } catch { return {}; }
+      try { return JSON.parse(localStorage.getItem(VERIFY_STORAGE_KEY)) || {}; } catch { return {}; }
     }
-
     function setVerifiedPaper(id) {
-      const verified = getVerifiedPapers();
-      verified[id] = true;
-      localStorage.setItem(VERIFY_STORAGE_KEY, JSON.stringify(verified));
+      const v = getVerifiedPapers(); v[id] = true; localStorage.setItem(VERIFY_STORAGE_KEY, JSON.stringify(v));
     }
-
     function isPaperVerified(id) {
-      const verified = getVerifiedPapers();
-      return !!verified[id];
+      const v = getVerifiedPapers(); return !!v[id];
     }
 
+    // ---- URL parameter handling ----
+    function getUrlParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // ---- Render function ----
     function render() {
       const mineralKey = els.mineral.value;
       const collectorKey = els.collector.value;
@@ -783,6 +788,7 @@
       updateScene({ mineral, collector, mineralKey, collectorKey, theory, depressantKey, depResult, pH });
     }
 
+    // ---- Theory Body (same as before, with speciation) ----
     function renderTheoryBody(theory, mineral, collector, depressantKey, depResult, pH, mineralKey) {
       const dom = theory.dominant;
       const isAnisotropic = theory.surfaces.length > 1;
@@ -939,7 +945,6 @@
           setVerifiedPaper(id);
           btn.textContent = '✓ Verified';
           btn.classList.add('verified');
-          // Re-render evidence body to update all buttons
           const mineralKey = els.mineral.value;
           const collectorKey = els.collector.value;
           const pH = parseFloat(els.ph.value);
@@ -1000,20 +1005,22 @@
     }
 
     // ============================================================
-    // 3D SCENE — UPGRADED with axes, labels, detailed shapes
+    // 3D SCENE (same as upgraded minerals.html)
     // ============================================================
-    let renderer3D, scene3D, camera3D, controls3D, labelRenderer, animationId3D;
+    let renderer3D, scene3D, camera3D, controls3D, labelRenderer3D, animationId3D;
     let currentSceneState = null;
 
     const MINERAL_COLORS = {
       gibbsite: 0xA8C7E0, boehmite: 0xD4B896, diaspore: 0xE8A87C,
       hematite: 0xC0392B, kaolinite: 0xF5E6CC, quartz: 0xE0E0E0,
-      chalcopyrite: 0xD4AF37, galena: 0x4A4A4A
+      chalcopyrite: 0xD4AF37, galena: 0x4A4A4A,
+      pyrite: 0xC2B280, siderite: 0x8B7D6B
     };
     const MINERAL_NAMES = {
       gibbsite: "Gibbsite", boehmite: "Boehmite", diaspore: "Diaspore",
       hematite: "Hematite", kaolinite: "Kaolinite", quartz: "Quartz",
-      chalcopyrite: "Chalcopyrite", galena: "Galena"
+      chalcopyrite: "Chalcopyrite", galena: "Galena",
+      pyrite: "Pyrite", siderite: "Siderite"
     };
     const TAIL_LENGTHS = {
       fatty_acid: 0.9, amine: 0.7, hydroxamate: 0.55, xanthate: 0.4, sulfonate: 0.4
@@ -1027,7 +1034,8 @@
       const map = {
         gibbsite: 'Monoclinic', boehmite: 'Orthorhombic', diaspore: 'Orthorhombic',
         hematite: 'Trigonal', kaolinite: 'Triclinic', quartz: 'Trigonal',
-        chalcopyrite: 'Tetragonal', galena: 'Cubic'
+        chalcopyrite: 'Tetragonal', galena: 'Cubic',
+        pyrite: 'Cubic', siderite: 'Trigonal'
       };
       return map[mineralKey] || 'Orthorhombic';
     }
@@ -1128,14 +1136,13 @@
       renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer3D.domElement);
 
-      // CSS2D renderer for labels
-      labelRenderer = new CSS2DRenderer();
-      labelRenderer.setSize(width, height);
-      labelRenderer.domElement.style.position = 'absolute';
-      labelRenderer.domElement.style.top = '0';
-      labelRenderer.domElement.style.left = '0';
-      labelRenderer.domElement.style.pointerEvents = 'none';
-      container.appendChild(labelRenderer.domElement);
+      labelRenderer3D = new CSS2DRenderer();
+      labelRenderer3D.setSize(width, height);
+      labelRenderer3D.domElement.style.position = 'absolute';
+      labelRenderer3D.domElement.style.top = '0';
+      labelRenderer3D.domElement.style.left = '0';
+      labelRenderer3D.domElement.style.pointerEvents = 'none';
+      container.appendChild(labelRenderer3D.domElement);
 
       controls3D = new OrbitControls(camera3D, renderer3D.domElement);
       controls3D.enableDamping = true;
@@ -1160,7 +1167,7 @@
         const w = r.width || container.clientWidth || 800;
         const h = r.height || container.clientHeight || 420;
         renderer3D.setSize(w, h);
-        labelRenderer.setSize(w, h);
+        labelRenderer3D.setSize(w, h);
         camera3D.aspect = w / h;
         camera3D.updateProjectionMatrix();
       });
@@ -1173,7 +1180,7 @@
       if (controls3D) controls3D.update();
       if (renderer3D && scene3D && camera3D) {
         renderer3D.render(scene3D, camera3D);
-        if (labelRenderer) labelRenderer.render(scene3D, camera3D);
+        if (labelRenderer3D) labelRenderer3D.render(scene3D, camera3D);
       }
     }
 
@@ -1215,12 +1222,12 @@
       const mineralColor = MINERAL_COLORS[mineralKey] || 0xFFB347;
       const crystalSystem = getCrystalSystem(mineralKey);
 
-      // ---- Crystal wireframe ----
+      // Crystal wireframe
       const crystalGroup = new THREE.Group();
       addCrystalWireframe(crystalGroup, crystalSystem, mineralColor, 0.25);
       scene3D.add(crystalGroup);
 
-      // ---- Axes labels (a, b, c) ----
+      // Axes labels
       const axisColor = 0xEDE7DD;
       const axisLen = 2.8;
       const axisPositions = [
@@ -1236,7 +1243,7 @@
         scene3D.add(lbl);
       });
 
-      // ---- Surface lattice ----
+      // Surface lattice
       const gridN = 6, spacing = 0.45;
       const siteColor = mineralColor;
       const activeColor = 0xFF6B6B;
@@ -1267,7 +1274,7 @@
         }
       }
 
-      // ---- Collector ----
+      // Collector
       const tailLen = TAIL_LENGTHS[state.collectorKey] || 0.55;
       const headY = 0.65 + Math.sin(performance.now() / 800) * 0.04;
       const headColor = collector.charge === 'anionic' ? 0x4ECDC4 : 0xFFE66D;
@@ -1287,7 +1294,7 @@
       headMesh.position.copy(headPos);
       scene3D.add(headMesh);
 
-      // ---- Collector labels (CSS2D) ----
+      // Collector labels
       const headLabel = createLabel(`${collector.headGroup} (${collector.charge})`, '#EDE7DD', '11px', '500');
       headLabel.position.set(0.6, headY, 0);
       scene3D.add(headLabel);
@@ -1300,7 +1307,7 @@
       nameLabel.position.set(0.05, headY + tailHeight + 0.45, -0.05);
       scene3D.add(nameLabel);
 
-      // ---- Bond line ----
+      // Bond line
       if (bonded) {
         const points = [new THREE.Vector3(0, 0.1, 0), new THREE.Vector3(0, headY - 0.1, 0)];
         const curve = new THREE.CatmullRomCurve3(points);
@@ -1321,7 +1328,6 @@
             scene3D.add(dash);
           }
         }
-        // Bond type label
         const midPt = curve.getPoint(0.5);
         const bondLabel = createLabel(
           suppressed ? 'bond suppressed' : dom.bondMode,
@@ -1344,15 +1350,15 @@
         scene3D.add(noBondLabel);
       }
 
-      // ---- Crystal system label on overlay ----
+      // Crystal system label on overlay
       const systemLabel = CRYSTAL_SYSTEM_LABELS[crystalSystem] || crystalSystem;
-      els.crystalSystemLabel.textContent = `${MINERAL_NAMES[mineralKey]} — ${systemLabel} System`;
+      els.crystalSystemLabel.textContent = `${MINERAL_NAMES[mineralKey] || mineralKey} — ${systemLabel} System`;
 
-      // ---- Color legend ----
+      // Color legend
       const legend = document.getElementById('colorLegend');
       const hexColor = '#' + new THREE.Color(mineralColor).getHexString();
       legend.innerHTML = `
-        <span class="legend-item"><span class="color-swatch" style="background:${hexColor};"></span>${MINERAL_NAMES[mineralKey]} (${systemLabel})</span>
+        <span class="legend-item"><span class="color-swatch" style="background:${hexColor};"></span>${MINERAL_NAMES[mineralKey] || mineralKey} (${systemLabel})</span>
         <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
         <span class="legend-item"><span class="color-swatch" style="background:${collector.charge === 'anionic' ? '#4ECDC4' : '#FFE66D'};"></span>${collector.name} head</span>
         <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${tailLen.toFixed(2)})</span>
@@ -1386,6 +1392,17 @@
     // ============================================================
     // BOOT
     // ============================================================
+    // Parse URL parameter and set mineral if present
+    const mineralParam = getUrlParam('mineral');
+    if (mineralParam && MINERALS[mineralParam]) {
+      els.mineral.value = mineralParam;
+      // Show a small notice (optional)
+      const notice = document.createElement('div');
+      notice.className = 'url-notice show';
+      notice.textContent = `🔬 Mineral "${MINERALS[mineralParam].name}" selected from the Mineral Database.`;
+      document.querySelector('.controls').prepend(notice);
+    }
+
     ['mineral', 'collector', 'depressant', 'ph', 'collectorDose', 'particleSize'].forEach(id => {
       els[id].addEventListener('input', render);
     });
@@ -1396,7 +1413,7 @@
       if (!renderer3D) { initThree(); setTimeout(() => { if (currentSceneState) buildScene(currentSceneState); }, 100); }
     }, 200);
 
-    console.log('🫧 Flotation Bench v3 — all upgrades loaded.');
+    console.log('🫧 Flotation Bench v3 — URL parameter support added.');
   </script>
 </body>
 </html>
