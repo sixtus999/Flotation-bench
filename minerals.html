@@ -1,952 +1,764 @@
-<!-- minerals.html -->
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mineral Database – Flotation Sim</title>
+  <!-- Font for clean look -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- GLOBAL RESET & VARIABLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <meta charset="UTF-8">
+    :root {
+      --bg-primary: #0A0E17;      /* deep dark base (from your flotation bench) */
+      --bg-secondary: #111B2C;
+      --bg-card: #142237;
+      --bg-card-hover: #1A2D45;
+      --text-primary: #EDF2F7;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border-subtle: #1E2F44;
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+      /* category accent colors */
+      --color-aluminum: #D35400;    /* burnt orange */
+      --color-silicate: #D4A373;    /* sandy gold */
+      --color-ore: #8E4A49;         /* deep metallic red */
 
-    <title>
+      /* nav active color (minerals page) */
+      --color-active: #D35400;
+    }
 
-        Flotation Simulation Hub | Mineral Database
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 0 24px 48px;
+    }
 
-    </title>
+    /* ---------- NAVIGATION ---------- */
+    .navbar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 0 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    <meta name="description"
-          content="Mineral database for flotation, surface chemistry and collector selection.">
+    .logo {
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span {
+      color: var(--color-active);
+    }
 
-    <link rel="stylesheet"
-          href="css/styles.css">
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding-bottom: 6px;
+      border-bottom: 2px solid transparent;
+      transition: 0.2s ease;
+    }
+    .nav-links a:hover {
+      color: #fff;
+    }
+    .nav-links a.active {
+      color: #fff;
+      border-bottom-color: var(--color-active);
+    }
 
-    <style>
+    /* ---------- MAIN LAYOUT ---------- */
+    .container {
+      max-width: 1280px;
+      margin: 32px auto 0;
+    }
 
-        .modal-overlay {
+    .page-header {
+      margin-bottom: 36px;
+    }
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header h1 small {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      margin-top: 6px;
+      font-size: 1.05rem;
+    }
 
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+    /* ---------- CATEGORY CARDS GRID ---------- */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 28px;
+    }
 
-        }
+    .category-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px 18px 18px;
+      border-left: 6px solid var(--cat-color, #fff);
+      box-shadow: 0 10px 25px -8px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 35px -10px rgba(0,0,0,0.7);
+    }
 
-        .modal-overlay.active {
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #fff;
+    }
+    .category-header .cat-icon {
+      font-size: 1.8rem;
+    }
 
-            display: flex;
+    /* ---------- MINERAL ITEMS ---------- */
+    .mineral-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-        }
+    .mineral-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      transition: background 0.2s ease;
+      cursor: default;
+    }
+    .mineral-item:hover {
+      background: var(--bg-card-hover);
+    }
 
-        .modal-box {
+    .mineral-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .mineral-icon {
+      font-size: 1.8rem;
+      width: 36px;
+      text-align: center;
+      transition: transform 0.25s ease;
+    }
+    .mineral-item:hover .mineral-icon {
+      transform: scale(1.15) rotate(-4deg);
+    }
+    .mineral-name {
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: #f1f5f9;
+    }
 
-            background: #fff;
-            border-radius: 8px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 28px;
-            position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    .btn-more {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+    }
+    .btn-more:hover {
+      background: var(--color-active);
+      border-color: var(--color-active);
+      color: #fff;
+    }
 
-        }
+    /* ---------- MODAL (overlay) ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 16, 0.8);
+      backdrop-filter: blur(6px);
+      display: none; /* hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: fadeIn 0.25s ease;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
 
-        .modal-close {
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1); }
+    }
 
-            position: absolute;
-            top: 14px;
-            right: 16px;
-            background: none;
-            border: none;
-            font-size: 22px;
-            line-height: 1;
-            cursor: pointer;
-            color: #444;
+    .modal-box {
+      background: var(--bg-secondary);
+      max-width: 780px;
+      width: 100%;
+      max-height: 90vh;
+      border-radius: 24px;
+      padding: 32px 34px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .modal-close:hover {
+      color: #fff;
+      transform: rotate(90deg);
+    }
 
-        }
+    /* modal header */
+    .modal-mineral-name {
+      font-size: 2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 4px;
+    }
+    .modal-mineral-name .big-icon {
+      font-size: 2.6rem;
+    }
+    .modal-formula {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
 
-        .modal-box h3 {
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: #0E1728;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab-btn.active {
+      background: var(--color-active);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(211, 84, 0, 0.3);
+    }
+    .tab-btn:hover:not(.active) {
+      color: #fff;
+    }
 
-            margin-top: 0;
-            margin-bottom: 4px;
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
 
-        }
+    /* data grid inside modal */
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+    }
+    .data-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .data-item .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .data-item .value {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-top: 2px;
+    }
+    .data-item .value.crystal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        .modal-formula {
+    .industrial-text {
+      background: rgba(211, 84, 0, 0.08);
+      border-left: 3px solid var(--color-active);
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin-top: 12px;
+      color: #d4dce8;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    .industrial-text strong {
+      color: #fff;
+    }
 
-            color: #666;
-            margin-bottom: 18px;
-            font-style: italic;
+    /* full-width on small screens */
+    @media (max-width: 600px) {
+      .data-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .nav-links {
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .modal-box {
+        padding: 24px 16px;
+      }
+      .page-header h1 {
+        font-size: 1.6rem;
+        flex-wrap: wrap;
+      }
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        }
-
-        .modal-box p {
-
-            margin: 10px 0;
-
-        }
-
-        .modal-wiki-link {
-
-            display: inline-block;
-            margin-top: 18px;
-            font-weight: 600;
-            text-decoration: none;
-            color: #0645AD;
-
-        }
-
-        .modal-wiki-link:hover {
-
-            text-decoration: underline;
-
-        }
-
-    </style>
-
+    /* scrollbar styling */
+    .modal-box::-webkit-scrollbar {
+      width: 5px;
+    }
+    .modal-box::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .modal-box::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 8px;
+    }
+  </style>
 </head>
-
 <body>
 
-    <header class="hero">
-
-        <nav class="navbar">
-
-            <div class="logo">
-
-                FLOTATION
-                <span>SIMULATION HUB</span>
-
-            </div>
-
-            <ul class="nav-links">
-
-                <li><a href="index.html">Home</a></li>
-
-                <li><a href="literature.html">Literature</a></li>
-
-                <li><a href="collectors.html">Collectors</a></li>
-
-                <li><a href="chemistry.html">Surface Chemistry</a></li>
-
-                <li><a href="references.html">References</a></li>
-
-            </ul>
-
-        </nav>
-
-        <div class="hero-content">
-
-            <h1>
-
-                Mineral Database
-
-            </h1>
-
-            <p>
-
-                Explore flotation behavior,
-                surface chemistry,
-                point of zero charge,
-                collector selection
-                and adsorption mechanisms.
-
-            </p>
-
-        </div>
-
-    </header>
-
-    <main>
-
-        <section>
-
-            <h2>
-
-                Aluminum-Bearing Minerals
-
-            </h2>
-
-            <div class="dashboard-grid">
-
-                <div class="card">
-
-                    <h3>
-
-                        Boehmite
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        AlO(OH)
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈9
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Hard acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Hydroxamate,
-                        Fatty acid,
-                        Amine
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Chelation
-
-                    </p>
-
-                    <button onclick="showMineral('boehmite')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>
-
-                        Gibbsite
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        Al(OH)₃
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈10
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Hard acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Hydroxamate,
-                        Fatty acid
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Chemisorption
-
-                    </p>
-
-                    <button onclick="showMineral('gibbsite')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>
-
-                        Diaspore
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        AlO(OH)
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈8
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Hard acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Hydroxamate,
-                        Amine
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Surface complexation
-
-                    </p>
-
-                    <button onclick="showMineral('diaspore')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <section>
-
-            <h2>
-
-                Silicate Minerals
-
-            </h2>
-
-            <div class="dashboard-grid">
-
-                <div class="card">
-
-                    <h3>
-
-                        Kaolinite
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        Al₂Si₂O₅(OH)₄
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈4
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Hard acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Amine,
-                        Hydroxamate
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Electrostatic attraction
-
-                    </p>
-
-                    <button onclick="showMineral('kaolinite')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>
-
-                        Quartz
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        SiO₂
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈2
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Hard acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Amine
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Electrostatic attraction
-
-                    </p>
-
-                    <button onclick="showMineral('quartz')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <section>
-
-            <h2>
-
-                Ore Minerals
-
-            </h2>
-
-            <div class="dashboard-grid">
-
-                <div class="card">
-
-                    <h3>
-
-                        Hematite
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        Fe₂O₃
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈8
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Hard acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Hydroxamate,
-                        Fatty acid
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Chelation
-
-                    </p>
-
-                    <button onclick="showMineral('hematite')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>
-
-                        Galena
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        PbS
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈6
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Soft acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Xanthate
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Chemisorption
-
-                    </p>
-
-                    <button onclick="showMineral('galena')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>
-
-                        Chalcopyrite
-
-                    </h3>
-
-                    <p>
-
-                        Formula:
-
-                        CuFeS₂
-
-                    </p>
-
-                    <p>
-
-                        PZC:
-
-                        ≈5
-
-                    </p>
-
-                    <p>
-
-                        HSAB:
-
-                        Soft acid
-
-                    </p>
-
-                    <p>
-
-                        Typical collectors:
-
-                        Xanthate
-
-                    </p>
-
-                    <p>
-
-                        Mechanism:
-
-                        Chemisorption
-
-                    </p>
-
-                    <button onclick="showMineral('chalcopyrite')">
-
-                        More Information
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-    <footer>
-
-        <p>
-
-            © 2026 Flotation Simulation Hub
-
-        </p>
-
-    </footer>
-
-    <!-- Modal popup for mineral details -->
-
-    <div class="modal-overlay"
-         id="mineralModal"
-         onclick="closeMineralModalOnOverlay(event)">
-
-        <div class="modal-box">
-
-            <button class="modal-close"
-                    onclick="closeMineralModal()"
-                    aria-label="Close">
-
-                &times;
-
-            </button>
-
-            <h3 id="modalMineralName"></h3>
-
-            <p class="modal-formula" id="modalMineralFormula"></p>
-
-            <p id="modalMineralBody"></p>
-
-            <a id="modalWikiLink"
-               class="modal-wiki-link"
-               href="#"
-               target="_blank"
-               rel="noopener noreferrer">
-
-                View on Wikipedia →
-
-            </a>
-
-        </div>
-
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar">
+    <div class="logo">⛏️ Flotation<span>Sim</span></div>
+    <ul class="nav-links">
+      <li><a href="#">Homepage</a></li>
+      <li><a href="#" class="active">Minerals Menu</a></li>
+      <li><a href="#">Collector Menu</a></li>
+      <li><a href="#">Literature</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="container">
+    <div class="page-header">
+      <h1>
+        🗂️ Mineral Database
+        <small>flotation & surface chemistry</small>
+      </h1>
+      <p>Explore crystal systems, PZC, collector selection, and industrial relevance.</p>
     </div>
 
-    <script>const minerals = {
-
-boehmite: {
-
-    displayName: "Boehmite",
-
-    formula: "AlO(OH)",
-
-    wiki: "https://en.wikipedia.org/wiki/Boehmite",
-
-    body:
-
-`Industrial importance:
-
-Major aluminum-bearing mineral.
-
-Surface sites:
-
-Al-OH groups.
-
-Compatible collectors:
-
-Hydroxamates and fatty acids.`
-
-},
-
-gibbsite: {
-
-    displayName: "Gibbsite",
-
-    formula: "Al(OH)₃",
-
-    wiki: "https://en.wikipedia.org/wiki/Gibbsite",
-
-    body:
-
-`Industrial importance:
-
-Principal ore of aluminum.
-
-Surface sites:
-
-Hydroxyl groups.
-
-Compatible collectors:
-
-Hydroxamates.`
-
-},
-
-diaspore: {
-
-    displayName: "Diaspore",
-
-    formula: "AlO(OH)",
-
-    wiki: "https://en.wikipedia.org/wiki/Diaspore_(mineral)",
-
-    body:
-
-`Industrial importance:
-
-Important bauxite mineral.
-
-Surface sites:
-
-Al-OH groups.
-
-Compatible collectors:
-
-Hydroxamates and amines.`
-
-},
-
-kaolinite: {
-
-    displayName: "Kaolinite",
-
-    formula: "Al₂Si₂O₅(OH)₄",
-
-    wiki: "https://en.wikipedia.org/wiki/Kaolinite",
-
-    body:
-
-`Industrial importance:
-
-Clay mineral.
-
-Surface sites:
-
-Siloxane and aluminol surfaces.
-
-Compatible collectors:
-
-Amines.`
-
-},
-
-quartz: {
-
-    displayName: "Quartz",
-
-    formula: "SiO₂",
-
-    wiki: "https://en.wikipedia.org/wiki/Quartz",
-
-    body:
-
-`Industrial importance:
-
-Most abundant gangue mineral.
-
-Surface sites:
-
-Silanol groups.
-
-Compatible collectors:
-
-Amines.`
-
-},
-
-hematite: {
-
-    displayName: "Hematite",
-
-    formula: "Fe₂O₃",
-
-    wiki: "https://en.wikipedia.org/wiki/Hematite",
-
-    body:
-
-`Industrial importance:
-
-Major iron ore.
-
-Surface sites:
-
-Fe-OH groups.
-
-Compatible collectors:
-
-Hydroxamates and fatty acids.`
-
-},
-
-galena: {
-
-    displayName: "Galena",
-
-    formula: "PbS",
-
-    wiki: "https://en.wikipedia.org/wiki/Galena",
-
-    body:
-
-`Industrial importance:
-
-Lead ore.
-
-Surface sites:
-
-Lead sulfide.
-
-Compatible collectors:
-
-Xanthates.`
-
-},
-
-chalcopyrite: {
-
-    displayName: "Chalcopyrite",
-
-    formula: "CuFeS₂",
-
-    wiki: "https://en.wikipedia.org/wiki/Chalcopyrite",
-
-    body:
-
-`Industrial importance:
-
-Copper ore.
-
-Surface sites:
-
-Copper-iron sulfide.
-
-Compatible collectors:
-
-Xanthates.`
-
-}
-
-};
-
-function showMineral(name){
-
-    const data = minerals[name];
-
-    if(!data){
-        return;
+    <!-- The 3 category cards will be injected here by JavaScript -->
+    <div id="categoryGrid" class="category-grid"></div>
+  </div>
+
+  <!-- ========== MODAL ========== -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close" id="modalCloseBtn">✕</button>
+
+      <div class="modal-mineral-name">
+        <span class="big-icon" id="modalIcon">🧊</span>
+        <span id="modalName">Mineral</span>
+      </div>
+      <div class="modal-formula" id="modalFormula">Formula</div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="physical">🔬 Physical Properties</button>
+        <button class="tab-btn" data-tab="process">⚙️ Process Parameters</button>
+      </div>
+
+      <!-- Tab 1: Physical -->
+      <div id="tabPhysical" class="tab-content active">
+        <div class="data-grid" id="physicalGrid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Process -->
+      <div id="tabProcess" class="tab-content">
+        <div class="data-grid" id="processGrid">
+          <!-- filled by JS -->
+        </div>
+        <div class="industrial-text" id="industrialRelevance">
+          <strong>🏭 Industrial relevance:</strong> 
+          <span id="industrialText">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    //  DATA – complete mineral list with all new fields
+    // ============================================================
+    const minerals = [
+      // ---------- ALUMINUM-BEARING (orange) ----------
+      {
+        id: 'boehmite',
+        name: 'Boehmite',
+        icon: '🧊',
+        formula: 'Al(OH)₃',
+        pzc: '≈9',
+        hsab: 'Hard acid',
+        collectors: 'Hydroxamate, Fatty acid, Amine',
+        mechanism: 'Chelation',
+        crystalSystem: 'Orthorhombic',
+        cleavage: 'Perfect {010}',
+        habit: 'Lamellae (flat plates)',
+        industrial: 'Major ore in karst bauxites. Processed via reverse flotation to remove silicates. Temperature-sensitive; requires high caustic soda digestion.',
+        category: 'Aluminum-Bearing Minerals',
+        categoryColor: '#D35400',
+        catIcon: '🏗️'
+      },
+      {
+        id: 'gibbsite',
+        name: 'Gibbsite',
+        icon: '💎',
+        formula: 'Al(OH)₃',
+        pzc: '≈10',
+        hsab: 'Hard acid',
+        collectors: 'Hydromagnate, Fatty acid, Amine',
+        mechanism: 'Chemisorption',
+        crystalSystem: 'Monoclinic',
+        cleavage: 'Perfect {001}',
+        habit: 'Platy / foliated',
+        industrial: 'Predominant in weathered bauxites. Often floated at higher pH. Soft and easily ground, but slimes interfere with settling.',
+        category: 'Aluminum-Bearing Minerals',
+        categoryColor: '#D35400',
+        catIcon: '🏗️'
+      },
+      {
+        id: 'diaspore',
+        name: 'Diaspore',
+        icon: '🔶',
+        formula: 'AlO(OH)',
+        pzc: '≈8',
+        hsab: 'Hard acid',
+        collectors: 'Hydroxamate, Amine',
+        mechanism: 'Surface complexation',
+        crystalSystem: 'Orthorhombic',
+        cleavage: 'Perfect {010}, {110}',
+        habit: 'Acicular (needle-like)',
+        industrial: 'Common in diasporic bauxite (China). Floated at pH 9–11 to separate from silicates. Harder than gibbsite, requiring more energy to grind.',
+        category: 'Aluminum-Bearing Minerals',
+        categoryColor: '#D35400',
+        catIcon: '🏗️'
+      },
+      // ---------- SILICATE (sandy yellow) ----------
+      {
+        id: 'kaolinite',
+        name: 'Kaolinite',
+        icon: '🧴',
+        formula: 'Al₂Si₂O₅(OH)₄',
+        pzc: '≈4',
+        hsab: 'Hard acid',
+        collectors: 'Amine, Hydroxamate',
+        mechanism: 'Electrostatic attraction',
+        crystalSystem: 'Triclinic',
+        cleavage: 'Perfect {001}',
+        habit: 'Stacked sheets (platy)',
+        industrial: 'Primary gangue in bauxite. Removed via reverse flotation using amines. Strongly slimy; increases viscosity and consumes reagents.',
+        category: 'Silicate Minerals',
+        categoryColor: '#D4A373',
+        catIcon: '🧪'
+      },
+      {
+        id: 'quartz',
+        name: 'Quartz',
+        icon: '🔮',
+        formula: 'SiO₂',
+        pzc: '≈2',
+        hsab: 'Hard acid',
+        collectors: 'Amine',
+        mechanism: 'Electrostatic attraction',
+        crystalSystem: 'Trigonal',
+        cleavage: 'None (conchoidal fracture)',
+        habit: 'Hexagonal prisms with pyramidal ends',
+        industrial: 'Common impurity in iron ore and bauxite. Easily floated with amine at pH 6–11. Used as a standard reference mineral for electrostatic studies.',
+        category: 'Silicate Minerals',
+        categoryColor: '#D4A373',
+        catIcon: '🧪'
+      },
+      // ---------- ORE MINERALS (deep red/purple) ----------
+      {
+        id: 'hematite',
+        name: 'Hematite',
+        icon: '🔴',
+        formula: 'Fe₂O₃',
+        pzc: '≈8',
+        hsab: 'Hard acid',
+        collectors: 'Hydroxamate, Fatty acid',
+        mechanism: 'Chelation',
+        crystalSystem: 'Trigonal',
+        cleavage: 'None (uneven fracture)',
+        habit: 'Rhombohedral / massive',
+        industrial: 'Major iron ore. In bauxite, it is a heavy impurity. Separated using WHIMS or floated with hydroxamate in oxidized ore circuits.',
+        category: 'Ore Minerals',
+        categoryColor: '#8E4A49',
+        catIcon: '⚒️'
+      },
+      {
+        id: 'galena',
+        name: 'Galena',
+        icon: '🧊',  // cubic ice cube represents perfect cubes
+        formula: 'PbS',
+        pzc: '≈6',
+        hsab: 'Soft acid',
+        collectors: 'Xanthate',
+        mechanism: 'Chemisorption',
+        crystalSystem: 'Cubic',
+        cleavage: 'Perfect {100} (cubic)',
+        habit: 'Perfect cubes',
+        industrial: 'Primary lead sulfide. Floats rapidly with xanthates at alkaline pH. Often depressed with dichromate or sulfite in selective circuits.',
+        category: 'Ore Minerals',
+        categoryColor: '#8E4A49',
+        catIcon: '⚒️'
+      },
+      {
+        id: 'chalcopyrite',
+        name: 'Chalcopyrite',
+        icon: '🪙',
+        formula: 'CuFeS₂',
+        pzc: '≈5',
+        hsab: 'Soft acid',
+        collectors: 'Xanthate',
+        mechanism: 'Chemisorption',
+        crystalSystem: 'Tetragonal',
+        cleavage: 'Indistinct {011}',
+        habit: 'Scalenohedral / brassy masses',
+        industrial: 'Major copper source. Floats with xanthate. In selective flotation, depressed with lime to separate from pyrite while copper remains floated.',
+        category: 'Ore Minerals',
+        categoryColor: '#8E4A49',
+        catIcon: '⚒️'
+      }
+    ];
+
+    // ============================================================
+    //  RENDER CATEGORIES & MINERALS
+    // ============================================================
+    function renderCategories() {
+      const grid = document.getElementById('categoryGrid');
+      grid.innerHTML = '';
+
+      // Group minerals by category
+      const groups = {};
+      minerals.forEach(m => {
+        if (!groups[m.category]) groups[m.category] = [];
+        groups[m.category].push(m);
+      });
+
+      // Use the categoryColor & catIcon from the first mineral in each group
+      for (const [catName, items] of Object.entries(groups)) {
+        const color = items[0].categoryColor;
+        const icon = items[0].catIcon;
+
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.style.setProperty('--cat-color', color);
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `<span class="cat-icon">${icon}</span> ${catName}`;
+        card.appendChild(header);
+
+        // Mineral list
+        const list = document.createElement('div');
+        list.className = 'mineral-list';
+
+        items.forEach(mineral => {
+          const item = document.createElement('div');
+          item.className = 'mineral-item';
+
+          const left = document.createElement('div');
+          left.className = 'mineral-left';
+          left.innerHTML = `
+            <span class="mineral-icon">${mineral.icon}</span>
+            <span class="mineral-name">${mineral.name}</span>
+          `;
+
+          const btn = document.createElement('button');
+          btn.className = 'btn-more';
+          btn.textContent = 'More Info';
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModal(mineral.id);
+          });
+
+          item.appendChild(left);
+          item.appendChild(btn);
+          list.appendChild(item);
+        });
+
+        card.appendChild(list);
+        grid.appendChild(card);
+      }
     }
 
-    document.getElementById("modalMineralName").innerText = data.displayName;
-    document.getElementById("modalMineralFormula").innerText = "Formula: " + data.formula;
-    document.getElementById("modalMineralBody").innerText = data.body;
-    document.getElementById("modalWikiLink").href = data.wiki;
+    // ============================================================
+    //  MODAL LOGIC
+    // ============================================================
+    let currentMineralId = null;
 
-    document.getElementById("mineralModal").classList.add("active");
+    function openModal(id) {
+      const mineral = minerals.find(m => m.id === id);
+      if (!mineral) return;
 
-}
+      currentMineralId = id;
 
-function closeMineralModal(){
+      // Set header
+      document.getElementById('modalIcon').textContent = mineral.icon;
+      document.getElementById('modalName').textContent = mineral.name;
+      document.getElementById('modalFormula').textContent = `Formula: ${mineral.formula}`;
 
-    document.getElementById("mineralModal").classList.remove("active");
+      // ---- Physical tab ----
+      const physGrid = document.getElementById('physicalGrid');
+      physGrid.innerHTML = `
+        <div class="data-item"><span class="label">Crystal System</span><span class="value crystal-badge">${mineral.crystalSystem} ${getSystemEmoji(mineral.crystalSystem)}</span></div>
+        <div class="data-item"><span class="label">Cleavage</span><span class="value">${mineral.cleavage}</span></div>
+        <div class="data-item"><span class="label">Habit / Morphology</span><span class="value">${mineral.habit}</span></div>
+        <div class="data-item"><span class="label">Point of Zero Charge (PZC)</span><span class="value">${mineral.pzc}</span></div>
+        <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${mineral.hsab}</span></div>
+        <div class="data-item"><span class="label">Formula</span><span class="value">${mineral.formula}</span></div>
+      `;
 
-}
+      // ---- Process tab ----
+      const procGrid = document.getElementById('processGrid');
+      procGrid.innerHTML = `
+        <div class="data-item"><span class="label">Typical Collectors</span><span class="value">${mineral.collectors}</span></div>
+        <div class="data-item"><span class="label">Adsorption Mechanism</span><span class="value">${mineral.mechanism}</span></div>
+      `;
+      document.getElementById('industrialText').textContent = mineral.industrial;
 
-function closeMineralModalOnOverlay(event){
+      // Reset tabs to Physical
+      switchTab('physical');
 
-    if(event.target === event.currentTarget){
-        closeMineralModal();
+      // Show modal
+      document.getElementById('modalOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
 
-}
-
-document.addEventListener("keydown", function(event){
-
-    if(event.key === "Escape"){
-        closeMineralModal();
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
     }
 
-});</script>
+    function getSystemEmoji(system) {
+      const map = {
+        'Cubic': '🧊',
+        'Trigonal': '🔷',
+        'Monoclinic': '🛤️',
+        'Triclinic': '📐',
+        'Orthorhombic': '📦',
+        'Tetragonal': '🎲'
+      };
+      return map[system] || '🔘';
+    }
+
+    // ---- Tab switching ----
+    function switchTab(tabId) {
+      // update buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+      // update panels
+      document.getElementById('tabPhysical').classList.toggle('active', tabId === 'physical');
+      document.getElementById('tabProcess').classList.toggle('active', tabId === 'process');
+    }
+
+    // ---- Event listeners ----
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.tab);
+      });
+    });
+
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================================
+    //  BOOT
+    // ============================================================
+    renderCategories();
+  </script>
 
 </body>
-
 </html>
