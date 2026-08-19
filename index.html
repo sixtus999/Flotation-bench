@@ -7,13 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ====== GLOBAL THEME (matches minerals.html exactly) ====== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    /* ====== GLOBAL THEME (matches minerals.html) ====== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg-primary: #0F172A;
       --bg-secondary: #1E293B;
@@ -34,7 +29,6 @@
       --good: #7A9B5C;
       --conflict: #C24E4E;
     }
-
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-primary);
@@ -44,840 +38,192 @@
       padding: 0 24px 48px;
       -webkit-font-smoothing: antialiased;
     }
-    .mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    ::selection {
-      background: rgba(184, 134, 59, 0.3);
-      color: var(--text-primary);
-    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    ::selection { background: rgba(184, 134, 59, 0.3); color: var(--text-primary); }
 
-    /* ====== NAVIGATION (identical to minerals.html) ====== */
+    /* ====== NAVIGATION ====== */
     .navbar {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 24px 0 16px;
+      max-width: 1400px; margin: 0 auto; padding: 24px 0 16px;
       border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
     }
-    .logo {
-      font-weight: 700;
-      font-size: 1.3rem;
-      letter-spacing: -0.5px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo span {
-      color: var(--color-active);
-    }
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
+    .logo { font-weight: 700; font-size: 1.3rem; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--color-active); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      padding-bottom: 6px;
-      border-bottom: 2px solid transparent;
-      transition: 0.2s ease;
+      color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem;
+      padding-bottom: 6px; border-bottom: 2px solid transparent; transition: 0.2s ease;
     }
-    .nav-links a:hover {
-      color: #fff;
-    }
-    .nav-links a.active {
-      color: #fff;
-      border-bottom-color: var(--color-active);
-    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: #fff; border-bottom-color: var(--color-active); }
 
     /* ====== HEADER ====== */
     header {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 16px 0 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 16px;
+      max-width: 1400px; margin: 0 auto; padding: 16px 0 12px;
+      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;
     }
-    header h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    header h1 span {
-      color: var(--color-active);
-    }
-    header .sub {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 2px;
-    }
-    .legend-header {
-      display: flex;
-      gap: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-    .legend-header span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-      flex-shrink: 0;
-    }
-    .dot.theory {
-      background: var(--ochre-bright);
-    }
-    .dot.evidence {
-      background: var(--evidence-bright);
-    }
+    header h1 { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+    header h1 span { color: var(--color-active); }
+    header .sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+    .legend-header { display: flex; gap: 24px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-secondary); }
+    .legend-header span { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .dot.theory { background: var(--ochre-bright); }
+    .dot.evidence { background: var(--evidence-bright); }
 
     /* ====== CONTROLS ====== */
     .controls {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border-subtle);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px 28px;
+      max-width: 1400px; margin: 0 auto; padding: 20px 0; border-bottom: 1px solid var(--border-subtle);
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px 28px;
     }
-    .control-group label {
-      display: block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-bottom: 6px;
-    }
-    .control-group select,
-    .control-group input[type="range"] {
-      width: 100%;
-    }
-    .control-group select {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 9px 12px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .control-group select:focus {
-      border-color: var(--ochre-bright);
-    }
-    .slider-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .slider-row input[type="range"] {
-      accent-color: var(--ochre-bright);
-      flex: 1;
-    }
-    .slider-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      color: var(--ochre-bright);
-      min-width: 44px;
-      text-align: right;
-      flex-shrink: 0;
-    }
+    .control-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+    .control-group select, .control-group input[type="range"] { width: 100%; }
+    .control-group select { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 9px 12px; font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .control-group select:focus { border-color: var(--ochre-bright); }
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+    .slider-row input[type="range"] { accent-color: var(--ochre-bright); flex: 1; }
+    .slider-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--ochre-bright); min-width: 44px; text-align: right; flex-shrink: 0; }
 
     /* ====== MAIN 2-PANEL ====== */
     .main-grid {
-      max-width: 1400px;
-      margin: 24px auto 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--border-subtle);
-      border-radius: var(--radius);
-      overflow: hidden;
+      max-width: 1400px; margin: 24px auto 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border-subtle); border-radius: var(--radius); overflow: hidden;
     }
-    @media (max-width: 900px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-        border-radius: 0;
-      }
-    }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; border-radius: 0; } }
 
-    .panel {
-      background: var(--bg-primary);
-      padding: 24px 28px 32px;
-    }
-    .panel-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .panel-head .dot {
-      width: 10px;
-      height: 10px;
-    }
-    .panel-head h2 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0;
-    }
-    .panel-head .tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 3px 10px;
-      border-radius: 4px;
-      margin-left: auto;
-    }
-    .panel.theory .panel-head .tag {
-      background: rgba(184, 134, 59, 0.15);
-      color: var(--ochre-bright);
-      border: 1px solid rgba(184, 134, 59, 0.3);
-    }
-    .panel.evidence .panel-head .tag {
-      background: rgba(62, 124, 124, 0.15);
-      color: var(--evidence-bright);
-      border: 1px solid rgba(62, 124, 124, 0.3);
-    }
+    .panel { background: var(--bg-primary); padding: 24px 28px 32px; }
+    .panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle); }
+    .panel-head .dot { width: 10px; height: 10px; }
+    .panel-head h2 { font-size: 16px; font-weight: 600; margin: 0; }
+    .panel-head .tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 4px; margin-left: auto; }
+    .panel.theory .panel-head .tag { background: rgba(184, 134, 59, 0.15); color: var(--ochre-bright); border: 1px solid rgba(184, 134, 59, 0.3); }
+    .panel.evidence .panel-head .tag { background: rgba(62, 124, 124, 0.15); color: var(--evidence-bright); border: 1px solid rgba(62, 124, 124, 0.3); }
 
-    .scope-note {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-dim);
-      background: var(--bg-secondary);
-      border-left: 2px solid var(--border-bright);
-      padding: 10px 14px;
-      margin-bottom: 18px;
-      border-radius: 4px;
-      line-height: 1.6;
-    }
+    .scope-note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); background: var(--bg-secondary); border-left: 2px solid var(--border-bright); padding: 10px 14px; margin-bottom: 18px; border-radius: 4px; line-height: 1.6; }
 
     /* ====== THEORY PANEL ====== */
-    .strength-readout {
-      display: flex;
-      align-items: baseline;
-      gap: 14px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .strength-value {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .strength-value.strong {
-      color: var(--good);
-    }
-    .strength-value.moderate-to-strong {
-      color: var(--ochre-bright);
-    }
-    .strength-value.weak-to-moderate {
-      color: var(--warn);
-    }
-    .strength-value.weak {
-      color: var(--conflict);
-    }
-    .strength-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
+    .strength-readout { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+    .strength-value { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+    .strength-value.strong { color: var(--good); }
+    .strength-value.moderate-to-strong { color: var(--ochre-bright); }
+    .strength-value.weak-to-moderate { color: var(--warn); }
+    .strength-value.weak { color: var(--conflict); }
+    .strength-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
 
-    .diagram-wrap {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 18px;
-    }
-    .pzc-bar {
-      position: relative;
-      height: 34px;
-      background: var(--bg-primary);
-      border-radius: 4px;
-      margin: 10px 0 6px;
-      overflow: visible;
-    }
-    .pzc-bar .zone {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      border-radius: 4px;
-    }
-    .pzc-bar .zone.pos {
-      background: linear-gradient(90deg, rgba(184, 92, 59, 0.35), rgba(184, 92, 59, 0.05));
-      left: 0;
-    }
-    .pzc-bar .zone.neg {
-      background: linear-gradient(90deg, rgba(95, 175, 175, 0.05), rgba(95, 175, 175, 0.35));
-      right: 0;
-    }
-    .pzc-bar .marker {
-      position: absolute;
-      top: -6px;
-      width: 2px;
-      height: 46px;
-      background: var(--text-primary);
-    }
-    .pzc-bar .marker.ph-marker {
-      background: var(--ochre-bright);
-      width: 3px;
-    }
-    .pzc-bar .marker .mtag {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      white-space: nowrap;
-    }
-    .pzc-axis {
-      display: flex;
-      justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      color: var(--text-dim);
-    }
+    .diagram-wrap { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 18px; }
+    .pzc-bar { position: relative; height: 34px; background: var(--bg-primary); border-radius: 4px; margin: 10px 0 6px; overflow: visible; }
+    .pzc-bar .zone { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
+    .pzc-bar .zone.pos { background: linear-gradient(90deg, rgba(184, 92, 59, 0.35), rgba(184, 92, 59, 0.05)); left: 0; }
+    .pzc-bar .zone.neg { background: linear-gradient(90deg, rgba(95, 175, 175, 0.05), rgba(95, 175, 175, 0.35)); right: 0; }
+    .pzc-bar .marker { position: absolute; top: -6px; width: 2px; height: 46px; background: var(--text-primary); }
+    .pzc-bar .marker.ph-marker { background: var(--ochre-bright); width: 3px; }
+    .pzc-bar .marker .mtag { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 9.5px; white-space: nowrap; }
+    .pzc-axis { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-dim); }
 
-    .mech-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px;
-      font-size: 13.5px;
-      color: var(--text-secondary);
-    }
-    .mech-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .mech-list li:last-child {
-      border-bottom: none;
-    }
-    .mech-list .mech-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: block;
-      margin-bottom: 3px;
-    }
+    .mech-list { list-style: none; padding: 0; margin: 0 0 16px; font-size: 13.5px; color: var(--text-secondary); }
+    .mech-list li { padding: 8px 0; border-bottom: 1px solid var(--border-subtle); }
+    .mech-list li:last-child { border-bottom: none; }
+    .mech-list .mech-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 3px; }
 
-    /* ---- NEW: Expanded theory explanations ---- */
-    .theory-explanation {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-top: 14px;
-    }
-    .theory-explanation .exp-title {
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .theory-explanation .exp-body {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-    .theory-explanation .exp-body strong {
-      color: var(--text-primary);
-    }
-    .theory-explanation .exp-body .highlight {
-      color: var(--ochre-bright);
-      font-weight: 500;
-    }
+    .theory-explanation { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px 16px; margin-top: 14px; }
+    .theory-explanation .exp-title { font-weight: 600; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .theory-explanation .exp-body { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+    .theory-explanation .exp-body strong { color: var(--text-primary); }
+    .theory-explanation .exp-body .highlight { color: var(--ochre-bright); font-weight: 500; }
 
-    .dose-flag {
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-top: 14px;
-      font-size: 13px;
-      line-height: 1.5;
-      background: rgba(184, 92, 59, 0.08);
-      border: 1px solid var(--warn);
-      color: var(--text-secondary);
-    }
+    .dose-flag { border-radius: 8px; padding: 12px 14px; margin-top: 14px; font-size: 13px; line-height: 1.5; background: rgba(184, 92, 59, 0.08); border: 1px solid var(--warn); color: var(--text-secondary); }
 
     /* ====== EVIDENCE PANEL ====== */
-    .evidence-weight {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 5px 12px;
-      border-radius: 4px;
-      margin-bottom: 16px;
-    }
-    .evidence-weight.none {
-      background: var(--bg-secondary);
-      color: var(--text-dim);
-      border: 1px solid var(--border-subtle);
-    }
-    .evidence-weight.single-source {
-      background: rgba(184, 134, 59, 0.1);
-      color: var(--ochre-bright);
-      border: 1px solid rgba(184, 134, 59, 0.3);
-    }
-    .evidence-weight.multiple-consistent {
-      background: rgba(122, 155, 92, 0.12);
-      color: var(--good);
-      border: 1px solid var(--good);
-    }
-    .evidence-weight.multiple-conflicting {
-      background: rgba(194, 78, 78, 0.12);
-      color: var(--conflict);
-      border: 1px solid var(--conflict);
-    }
+    .evidence-weight { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 5px 12px; border-radius: 4px; margin-bottom: 16px; }
+    .evidence-weight.none { background: var(--bg-secondary); color: var(--text-dim); border: 1px solid var(--border-subtle); }
+    .evidence-weight.single-source { background: rgba(184, 134, 59, 0.1); color: var(--ochre-bright); border: 1px solid rgba(184, 134, 59, 0.3); }
+    .evidence-weight.multiple-consistent { background: rgba(122, 155, 92, 0.12); color: var(--good); border: 1px solid var(--good); }
+    .evidence-weight.multiple-conflicting { background: rgba(194, 78, 78, 0.12); color: var(--conflict); border: 1px solid var(--conflict); }
 
-    .empty-state {
-      padding: 32px 20px;
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 13.5px;
-      border: 1px dashed var(--border-bright);
-      border-radius: var(--radius);
-    }
+    .empty-state { padding: 32px 20px; text-align: center; color: var(--text-dim); font-size: 13.5px; border: 1px dashed var(--border-bright); border-radius: var(--radius); }
 
-    .paper-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      margin-bottom: 14px;
-      transition: border-color 0.2s;
-    }
-    .paper-card.outcome-negative {
-      border-left: 4px solid var(--warn);
-    }
-    .paper-card.outcome-selective-avoidance {
-      border-left: 4px solid var(--evidence-bright);
-    }
-    .paper-card.outcome-positive {
-      border-left: 4px solid var(--good);
-    }
-    .paper-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      line-height: 1.4;
-      color: #f1f5f9;
-    }
-    .paper-meta {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-dim);
-      margin-bottom: 8px;
-    }
-    .paper-outcome-tag {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 2px 10px;
-      border-radius: 4px;
-      margin-bottom: 8px;
-    }
-    .paper-outcome-tag.positive {
-      background: rgba(122, 155, 92, 0.15);
-      color: var(--good);
-    }
-    .paper-outcome-tag.negative {
-      background: rgba(184, 92, 59, 0.15);
-      color: var(--warn);
-    }
-    .paper-outcome-tag.selective-avoidance {
-      background: rgba(95, 175, 175, 0.15);
-      color: var(--evidence-bright);
-    }
-    .paper-conditions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .cond-chip {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 4px;
-      padding: 4px 10px;
-      color: var(--text-secondary);
-    }
-    .paper-result {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin-bottom: 8px;
-    }
-    .paper-mechanism {
-      font-size: 12.5px;
-      color: var(--text-dim);
-      line-height: 1.5;
-      font-style: italic;
-    }
-    .paper-divergence {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border-subtle);
-      font-size: 12px;
-      color: var(--ochre-bright);
-      line-height: 1.5;
-    }
-    .paper-params {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-subtle);
-      font-size: 12px;
-      color: var(--text-secondary);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 16px;
-    }
-    .paper-params .param-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      background: var(--bg-primary);
-      padding: 3px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border-subtle);
-    }
-    .paper-params .param-item .param-label {
-      color: var(--text-dim);
-      font-weight: 400;
-    }
-    .paper-params .param-item .param-value {
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-    .unverified-flag {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: var(--text-dim);
-      margin-left: 8px;
-      text-transform: uppercase;
-    }
-    .ph-relevance {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      line-height: 1.5;
-      border-radius: 4px;
-      padding: 6px 12px;
-      margin-bottom: 10px;
-    }
-    .ph-relevance.in-range {
-      background: rgba(122, 155, 92, 0.08);
-      color: var(--good);
-      border: 1px solid var(--good);
-    }
-    .ph-relevance.outside {
-      background: rgba(184, 92, 59, 0.08);
-      color: var(--warn);
-      border: 1px solid var(--warn);
-    }
-    .ph-relevance.far-outside {
-      background: rgba(194, 78, 78, 0.1);
-      color: var(--conflict);
-      border: 1px solid var(--conflict);
-    }
-    .paper-card.ph-mismatch {
-      opacity: 0.75;
-    }
-    .paper-card.ph-mismatch .paper-outcome-tag {
-      filter: grayscale(0.3);
-    }
+    .paper-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px; transition: border-color 0.2s; }
+    .paper-card.outcome-negative { border-left: 4px solid var(--warn); }
+    .paper-card.outcome-selective-avoidance { border-left: 4px solid var(--evidence-bright); }
+    .paper-card.outcome-positive { border-left: 4px solid var(--good); }
+    .paper-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; color: #f1f5f9; }
+    .paper-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); margin-bottom: 8px; }
+    .paper-outcome-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 10px; border-radius: 4px; margin-bottom: 8px; }
+    .paper-outcome-tag.positive { background: rgba(122, 155, 92, 0.15); color: var(--good); }
+    .paper-outcome-tag.negative { background: rgba(184, 92, 59, 0.15); color: var(--warn); }
+    .paper-outcome-tag.selective-avoidance { background: rgba(95, 175, 175, 0.15); color: var(--evidence-bright); }
+    .paper-conditions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .cond-chip { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 4px 10px; color: var(--text-secondary); }
+    .paper-result { font-size: 13px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 8px; }
+    .paper-mechanism { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; font-style: italic; }
+    .paper-divergence { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-subtle); font-size: 12px; color: var(--ochre-bright); line-height: 1.5; }
+    .paper-params { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 6px 16px; }
+    .paper-params .param-item { display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--bg-primary); padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border-subtle); }
+    .paper-params .param-item .param-label { color: var(--text-dim); font-weight: 400; }
+    .paper-params .param-item .param-value { color: var(--text-primary); font-weight: 500; }
+    .unverified-flag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); margin-left: 8px; text-transform: uppercase; }
+    .ph-relevance { font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.5; border-radius: 4px; padding: 6px 12px; margin-bottom: 10px; }
+    .ph-relevance.in-range { background: rgba(122, 155, 92, 0.08); color: var(--good); border: 1px solid var(--good); }
+    .ph-relevance.outside { background: rgba(184, 92, 59, 0.08); color: var(--warn); border: 1px solid var(--warn); }
+    .ph-relevance.far-outside { background: rgba(194, 78, 78, 0.1); color: var(--conflict); border: 1px solid var(--conflict); }
+    .paper-card.ph-mismatch { opacity: 0.75; }
+    .paper-card.ph-mismatch .paper-outcome-tag { filter: grayscale(0.3); }
 
-    .conflict-banner {
-      background: rgba(194, 78, 78, 0.12);
-      border: 1px solid var(--conflict);
-      border-radius: 8px;
-      padding: 14px 16px;
-      color: var(--text-primary);
-      margin-bottom: 18px;
-    }
-    .conflict-banner .cb-title {
-      font-weight: 600;
-      font-size: 13.5px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .conflict-banner textarea {
-      width: 100%;
-      margin-top: 10px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      padding: 10px;
-      resize: vertical;
-      min-height: 60px;
-    }
-    .conflict-banner .cb-hint {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--text-dim);
-      margin-top: 6px;
-    }
-    .comment-list {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .comment-item {
-      background: var(--bg-primary);
-      border-radius: 4px;
-      padding: 8px 12px;
-      font-size: 12.5px;
-      color: var(--text-secondary);
-    }
+    .conflict-banner { background: rgba(194, 78, 78, 0.12); border: 1px solid var(--conflict); border-radius: 8px; padding: 14px 16px; color: var(--text-primary); margin-bottom: 18px; }
+    .conflict-banner .cb-title { font-weight: 600; font-size: 13.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .conflict-banner textarea { width: 100%; margin-top: 10px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px; resize: vertical; min-height: 60px; }
+    .conflict-banner .cb-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+    .comment-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .comment-item { background: var(--bg-primary); border-radius: 4px; padding: 8px 12px; font-size: 12.5px; color: var(--text-secondary); }
 
-    /* ====== 3D SCENE SECTION ====== */
-    .scene-section {
-      max-width: 1400px;
-      margin: 24px auto 0;
-      padding: 24px 28px 28px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
-    }
-    .scene-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .scene-head h2 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .scene-hint {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-dim);
-    }
-    .scene-wrap {
-      position: relative;
-      background: #1A2A3A;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
-      overflow: hidden;
-      touch-action: none;
-      height: 440px;
-    }
-    .scene-wrap canvas {
-      display: block;
-      width: 100% !important;
-      height: 100% !important;
-    }
+    /* ====== 3D SCENE ====== */
+    .scene-section { max-width: 1400px; margin: 24px auto 0; padding: 24px 28px 28px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
+    .scene-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .scene-head h2 { font-size: 16px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .scene-hint { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); }
+    .scene-wrap { position: relative; background: #1A2A3A; border: 1px solid var(--border-subtle); border-radius: var(--radius); overflow: hidden; touch-action: none; height: 440px; }
+    .scene-wrap canvas { display: block; width: 100% !important; height: 100% !important; }
 
-    /* ---- Color Legend (below 3D scene) ---- */
-    .color-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px 28px;
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-    }
-    .color-legend .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-    .color-legend .color-swatch {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      flex-shrink: 0;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
+    .color-legend { display: flex; flex-wrap: wrap; gap: 16px 28px; margin-top: 16px; padding: 12px 16px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 8px; }
+    .color-legend .legend-item { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-secondary); }
+    .color-legend .color-swatch { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.15); }
 
     /* ====== CHANGELOG ====== */
-    .changelog-section {
-      max-width: 1400px;
-      margin: 24px auto 0;
-      padding: 24px 28px 32px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
-    }
-    .changelog-section .scene-head {
-      margin-bottom: 16px;
-    }
-    .changelog-entry {
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-    .changelog-date {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-dim);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .changelog-entry ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-    .changelog-entry li {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 3px;
-    }
-    .changelog-tag {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      text-transform: uppercase;
-      padding: 1px 8px;
-      border-radius: 4px;
-      margin-right: 6px;
-      vertical-align: middle;
-    }
-    .changelog-tag.added {
-      background: rgba(122, 155, 92, 0.15);
-      color: var(--good);
-    }
-    .changelog-tag.fixed {
-      background: rgba(184, 92, 59, 0.15);
-      color: var(--warn);
-    }
-    .changelog-tag.corrected {
-      background: rgba(194, 78, 78, 0.15);
-      color: var(--conflict);
-    }
+    .changelog-section { max-width: 1400px; margin: 24px auto 0; padding: 24px 28px 32px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
+    .changelog-section .scene-head { margin-bottom: 16px; }
+    .changelog-entry { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+    .changelog-date { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .changelog-entry ul { margin: 0; padding-left: 18px; }
+    .changelog-entry li { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 3px; }
+    .changelog-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; padding: 1px 8px; border-radius: 4px; margin-right: 6px; vertical-align: middle; }
+    .changelog-tag.added { background: rgba(122, 155, 92, 0.15); color: var(--good); }
+    .changelog-tag.fixed { background: rgba(184, 92, 59, 0.15); color: var(--warn); }
+    .changelog-tag.corrected { background: rgba(194, 78, 78, 0.15); color: var(--conflict); }
 
     /* ====== FOOTER ====== */
-    footer {
-      max-width: 1400px;
-      margin: 24px auto 0;
-      padding: 18px 0;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-dim);
-      text-align: center;
-      border-top: 1px solid var(--border-subtle);
-    }
+    footer { max-width: 1400px; margin: 24px auto 0; padding: 18px 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); text-align: center; border-top: 1px solid var(--border-subtle); }
 
     /* ====== RESPONSIVE ====== */
     @media (max-width: 600px) {
-      body {
-        padding: 0 12px 32px;
-        font-size: 14px;
-      }
-      .controls {
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-      .panel {
-        padding: 16px 16px 24px;
-      }
-      .scene-section,
-      .changelog-section {
-        padding: 16px 16px 24px;
-      }
-      .scene-wrap {
-        height: 300px;
-      }
-      .color-legend {
-        gap: 10px 16px;
-        font-size: 10px;
-      }
-      .color-legend .legend-item {
-        font-size: 10px;
-      }
-      .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-      }
-      .nav-links {
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .legend-header {
-        font-size: 10px;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      .strength-value {
-        font-size: 22px;
-      }
+      body { padding: 0 12px 32px; font-size: 14px; }
+      .controls { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .panel { padding: 16px 16px 24px; }
+      .scene-section, .changelog-section { padding: 16px 16px 24px; }
+      .scene-wrap { height: 300px; }
+      .color-legend { gap: 10px 16px; font-size: 10px; }
+      .color-legend .legend-item { font-size: 10px; }
+      .navbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .nav-links { gap: 16px; flex-wrap: wrap; }
+      .legend-header { font-size: 10px; gap: 12px; flex-wrap: wrap; }
+      .strength-value { font-size: 22px; }
     }
-    @media (max-width: 400px) {
-      .controls {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 400px) { .controls { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <!-- ====== NAVIGATION (matches minerals.html) ====== -->
+  <!-- ====== NAVIGATION ====== -->
   <nav class="navbar">
     <div class="logo">🫧 Flotation<span>Bench</span></div>
     <ul class="nav-links">
@@ -900,7 +246,7 @@
     </div>
   </header>
 
-  <!-- ====== CONTROLS (pH only) ====== -->
+  <!-- ====== CONTROLS ====== -->
   <div class="controls">
     <div class="control-group">
       <label for="mineral">Mineral</label>
@@ -952,10 +298,7 @@
       <h2>🔬 Molecular bonding view</h2>
       <span class="scene-hint">🖱️ drag to rotate · scroll to zoom · updates live</span>
     </div>
-    <div class="scene-wrap" id="three-container">
-      <!-- No floating labels; legend is below -->
-    </div>
-    <!-- Color legend -->
+    <div class="scene-wrap" id="three-container"></div>
     <div class="color-legend" id="colorLegend">
       <span class="legend-item"><span class="color-swatch" style="background:#FFB347;"></span>Surface site</span>
       <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
@@ -1026,90 +369,45 @@
     };
 
     // ============================================================
-    // PAPERS — 41 entries total (35 original + 6 new)
+    // PAPERS — 37 entries (full list)
     // ============================================================
     const PAPERS = [
-      // ---- GIBBSITE | HYDROXAMATE (3) ----
       { id: "gib-hyd-01", mineral: "gibbsite", collector: "hydroxamate", verified: true, outcome: "positive", title: "The Flotation of Marginal Gibbsitic Bauxite Ores from Paragominas – Brazil", authors: "Marino, C.A. et al.", year: null, source: "University of Utah thesis", testedPH: 10.5, testedPHRange: [9.5, 10.5], testedDose: { value: 1.0, unit: "kg/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "Direct gibbsite flotation with alkyl hydroxamate-fatty acid; Al₂O₃:SiO₂ ratio 8.44–10.58.", mechanism: "Chelation of hydroxamate onto Al-OH via 5-membered ring complex.", divergenceNote: null },
       { id: "gib-hyd-02", mineral: "gibbsite", collector: "hydroxamate", verified: true, outcome: "positive", title: "Removal of Iron-Bearing Minerals from Gibbsitic Bauxite by Direct Froth Flotation", authors: null, year: 2016, source: "Tecnol. Metal. Mater. Miner.", testedPH: 9.5, testedPHRange: [8.5, 10.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Optimum flotation at pH 9.5; performance dropped at pH 8.5 or 10.5.", mechanism: "Chelation; dropoff at pH 8.5 attributed to site availability.", divergenceNote: "Narrower optimum than Marino (9.5 vs 10.5) — likely ore-source differences." },
       { id: "gib-hyd-03", mineral: "gibbsite", collector: "hydroxamate", verified: true, outcome: "positive", title: "Concentration of Brazilian Refractory Bauxite by Direct Flotation", authors: null, year: null, source: "Journal article", testedPH: 9.5, testedPHRange: null, testedDose: { value: 395, unit: "g/t", range: [264, 395], singleSource: false }, testedParticleSize: null, reportedResult: "Recovery rose from 25.81% to 39.02% as hydroxamate dosage increased.", mechanism: "Chelation; dose-response source.", divergenceNote: null },
-
-      // ---- GIBBSITE | AMINE (3) ----
       { id: "gib-am-01", mineral: "gibbsite", collector: "amine", verified: false, outcome: "selective-avoidance", title: "Separation of silica from bauxite via froth flotation", authors: "Massola, C.P. et al.", year: 2009, source: "Minerals Engineering", testedPH: 10.0, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Reverse flotation with ether-amine; amine collects silica, gibbsite left behind. A/S ratio 11.1.", mechanism: "Amine's electrostatic target is quartz (PZC 2.0), not gibbsite (PZC 9.0).", divergenceNote: null },
       { id: "gib-am-02", mineral: "gibbsite", collector: "amine", verified: false, outcome: "selective-avoidance", title: "Removal of silicates from gibbsite-bauxite ore by cationic reverse flotation", authors: "Palit, C. & Suliestyah", year: 2021, source: "AIP Conference Proceedings", testedPH: 10.0, testedPHRange: [4, 10], testedDose: { value: 400, unit: "g/t DDA", range: [400, 500], singleSource: false }, testedParticleSize: { value: null, unit: "-325 mesh", range: null }, reportedResult: "DDA + starch: Al₂O₃ increased to 79.1%, SiO₂ decreased to 8.89%.", mechanism: "Same reverse-flotation mechanism.", divergenceNote: null },
       { id: "gib-am-03", mineral: "gibbsite", collector: "amine", verified: false, outcome: "selective-avoidance", title: "Research on Low-grade Bauxite Desilication by Reverse Flotation", authors: "Dan, F.", year: 2012, source: "Nonferrous Metals", testedPH: 4.0, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: { value: null, unit: "70% below 74 µm", range: null }, reportedResult: "Amine Wj-13 at pH 4 achieved 60.12% Al₂O₃ concentrate, A/S 8.89.", mechanism: "Reverse flotation; pH 4 conflicts with others (pH 10).", divergenceNote: "Genuine pH disagreement with gib-am-01/02 — ore or collector chemistry differences." },
-
-      // ---- GIBBSITE | FATTY_ACID (2) ----
       { id: "gib-fa-01", mineral: "gibbsite", collector: "fatty_acid", verified: false, outcome: "positive", title: "Oleic acid flotation of gibbsite (cited in Paragominas thesis)", authors: "Bittencourt", year: 1989, source: "Cited in Marino et al.", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Oleic acid documented as workable gibbsite collector.", mechanism: "Chelation + electrostatic, weaker than hydroxamate.", divergenceNote: null },
       { id: "gib-fa-02", mineral: "gibbsite", collector: "fatty_acid", verified: false, outcome: "negative", title: "Kaolinite removal from bauxite by flotation (CTAB study)", authors: "Rodrigues, W.N. et al.", year: 2016, source: "REM: Revista Escola de Minas", testedPH: null, testedPHRange: [8.5, 10.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Only ~37% gibbsite recovery with CTAB under favorable conditions.", mechanism: "Recovery ceiling not explained by electrostatics/HSAB alone.", divergenceNote: "Tests CTAB (different collector) — included as context." },
-
-      // ---- BOEHMITE | AMINE (1) ----
       { id: "boe-am-01", mineral: "boehmite", collector: "amine", verified: false, outcome: "positive", title: "Characterization and flotation of low-grade boehmitic bauxite ore", authors: "Birinci, M. et al.", year: 2021, source: "Minerals Engineering", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Reverse flotation achieved A/S 8.54 but recovery only 42.87% due to complex mineralogy.", mechanism: "Reverse-flotation electrostatic mechanism.", divergenceNote: "Low recovery highlights liberation/mineralogy dominance." },
-
-      // ---- BOEHMITE | FATTY_ACID (1) ----
       { id: "boe-fa-01", mineral: "boehmite", collector: "fatty_acid", verified: false, outcome: "positive", title: "Froth Flotation for Boehmite Recovery from Water-Treatment Process", authors: "Guzmán-Jarquín, E.J. et al.", year: 2025, source: "Metals", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: { value: 30, unit: "µm", range: null }, reportedResult: "SDS and potassium oleate enabled up to 95% recovery of synthetic boehmite under 30 µm.", mechanism: "Anionic collector chemisorption/electrostatic attraction.", divergenceNote: "Synthetic boehmite — may not represent real bauxite ore." },
-
-      // ---- DIASPORE | HYDROXAMATE (1) ----
       { id: "dia-hyd-01", mineral: "diaspore", collector: "hydroxamate", verified: false, outcome: "positive", title: "Tailored pH-triggered surfactant for stepwise separation", authors: "Sun, Q. et al.", year: 2023, source: "Separation and Purification Technology", testedPH: 8.0, testedPHRange: [6, 8], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "BTHA surfactant (hydroxamate + thioether) at pH 8 chelates diaspore.", mechanism: "pH gates hydroxamate functional group reactivity.", divergenceNote: "Specialty bifunctional surfactant — may not generalize." },
-
-      // ---- DIASPORE | AMINE (2, negative) ----
       { id: "dia-am-01", mineral: "diaspore", collector: "amine", verified: true, outcome: "negative", title: "SHMP-diaspore P-O-Al bonding study", authors: null, year: 2005, source: "J. Cent. South Univ. Technol.", testedPH: 6.0, testedPHRange: [5.5, 8.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Amine collects kaolinite (not diaspore); SHMP depresses diaspore.", mechanism: "Diaspore's positive surface (pH < 7.3) repels cationic amine.", divergenceNote: "CORRECTED: originally miscategorized as positive." },
       { id: "dia-am-02", mineral: "diaspore", collector: "amine", verified: false, outcome: "negative", title: "Effects of particle size on flotation parameters", authors: "Zhang, N. et al.", year: 2017, source: "Powder Technology", testedPH: 10, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: { value: 29, unit: "µm (favorable -38+20 µm)", range: [20, 38] }, reportedResult: "83.79% diaspore recovery with sodium oleate (fatty acid), not amine.", mechanism: "No direct amine collection of diaspore reported.", divergenceNote: "CORRECTED: strong result is for fatty_acid, not amine." },
-
-      // ---- DIASPORE | FATTY_ACID (new) ----
       { id: "dia-fa-01", mineral: "diaspore", collector: "fatty_acid", verified: false, outcome: "positive", title: "Effects of particle size on flotation parameters", authors: "Zhang, N. et al.", year: 2017, source: "Powder Technology", testedPH: 10, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: { value: 29, unit: "µm (favorable -38+20 µm)", range: [20, 38] }, reportedResult: "Sodium oleate direct flotation of diaspore achieved 83.79% recovery, A/S 7.96.", mechanism: "Chelation + electrostatic attraction to Al-OH.", divergenceNote: "From Zhang et al. 2017 — particle-size data originally attached to the wrong collector." },
-
-      // ---- HEMATITE | FATTY_ACID (1) ----
       { id: "hem-fa-01", mineral: "hematite", collector: "fatty_acid", verified: false, outcome: "positive", title: "Flotation of hematite using 18-carbon fatty acids", authors: "Quast, K.", year: 2020, source: "Minerals Engineering", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Chemisorption in alkaline; electrostatic in acidic.", mechanism: "Mechanism switches with pH.", mechanismSwitch: { type: "chemisorption-to-electrostatic", direction: "alkaline chemisorption, acidic electrostatic", crossoverPH: null }, divergenceNote: "Mechanism TYPE changes with pH — a gap in current theory." },
-
-      // ---- HEMATITE | HYDROXAMATE (new) ----
       { id: "hem-hyd-01", mineral: "hematite", collector: "hydroxamate", verified: false, outcome: "positive", title: "Hydroxamate flotation of hematite in iron ore processing", authors: null, year: 2018, source: "Minerals & Metallurgical Processing", testedPH: 8.5, testedPHRange: [7.5, 9.5], testedDose: { value: 800, unit: "g/t", range: [600, 1000], singleSource: false }, testedParticleSize: null, reportedResult: "Hydroxamate effectively floats hematite at pH 8–9 via chelation.", mechanism: "Chelation onto Fe-OH surface sites.", divergenceNote: null },
-
-      // ---- KAOLINITE | HYDROXAMATE (2) ----
       { id: "kao-hyd-01", mineral: "kaolinite", collector: "hydroxamate", verified: true, outcome: "selective-avoidance", title: "Purification of kaolin clay by froth flotation using hydroxamate collectors", authors: null, year: null, source: "US Patent 4,629,556", testedPH: null, testedPHRange: [5, 9], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Hydroxamate selectively floats impurities OUT of kaolin — kaolinite itself is NOT collected.", mechanism: "Kaolinite's low edge-site density prevents strong chelation.", divergenceNote: "Direct contradiction of naive HSAB prediction." },
       { id: "kao-hyd-02", mineral: "kaolinite", collector: "hydroxamate", verified: false, outcome: "negative", title: "Kaolinite aggregation/clustering mechanism", authors: "Xu, Z. & Liu, Q.", year: 2015, source: "Int. J. Miner. Process.", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Particle aggregation effects dominate kaolinite flotation behavior.", mechanism: "Aggregation state controls apparent floatability.", divergenceNote: "Physical mechanism for why theory over-predicts bonding." },
-
-      // ---- KAOLINITE | AMINE (2) ----
       { id: "kao-am-01", mineral: "kaolinite", collector: "amine", verified: false, outcome: "positive", title: "Kaolinite removal from bauxite by flotation", authors: "Rodrigues, W.N. et al.", year: 2016, source: "REM: Revista Escola de Minas", testedPH: null, testedPHRange: [4, 10], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "CTAB recovery of kaolinite up to 80% across pH 4–10.", mechanism: "Electrostatic attraction — kaolinite's permanent negative basal face.", divergenceNote: null },
       { id: "kao-am-02", mineral: "kaolinite", collector: "amine", verified: false, outcome: "positive", title: "Recovery of kaolinite from tailings by flotation-flocculation", authors: "Barani, K. et al.", year: 2017, source: "J. Mater. Res. Technol.", testedPH: 7.0, testedPHRange: null, testedDose: { value: 300, unit: "g/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "300 g/t dodecylamine + flocculant achieved 34.43% mass recovery.", mechanism: "Electrostatic attraction.", divergenceNote: "Multi-reagent system, not amine alone." },
-
-      // ---- QUARTZ | AMINE (3) ----
       { id: "qtz-am-01", mineral: "quartz", collector: "amine", verified: false, outcome: "positive", title: "Selective adsorption of dodecylamine on hydrated surface of hematite and quartz", authors: null, year: 2021, source: "ScienceDirect", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "DDA selectively adsorbs on quartz.", mechanism: "Pure electrostatic attraction — PZC-driven.", divergenceNote: null },
       { id: "qtz-am-02", mineral: "quartz", collector: "amine", verified: false, outcome: "positive", title: "Quartz-collophane amine separation study", authors: null, year: 2017, source: "ScienceDirect", testedPH: null, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "98.24% recovery of quartz using amine collector.", mechanism: "Same electrostatic mechanism.", divergenceNote: null },
       { id: "qtz-am-03", mineral: "quartz", collector: "amine", verified: false, outcome: "positive", title: "Dodecylamine flotation of quartz: effect of pH and collector concentration", authors: null, year: 2019, source: "Minerals Engineering", testedPH: 8.0, testedPHRange: [6, 10], testedDose: { value: 150, unit: "g/t", range: [100, 250], singleSource: false }, testedParticleSize: { value: 75, unit: "µm", range: null }, reportedResult: "Quartz recovery >95% at pH 6–10 with 150 g/t DDA.", mechanism: "Electrostatic attraction.", divergenceNote: null },
-
-      // ---- CHALCOPYRITE | XANTHATE (4) ----
       { id: "cpy-xan-01", mineral: "chalcopyrite", collector: "xanthate", verified: true, outcome: "positive", title: "Chalcopyrite Flotation, Molecular Design and Smart Industry: A Review", authors: null, year: 2025, source: "PMC", testedPH: 10.5, testedPHRange: [3, 11], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Chalcopyrite recovery above 84–93% with xanthate across pH 3–11.", mechanism: "Covalent Cu-S chemisorption.", divergenceNote: null },
       { id: "cpy-xan-02", mineral: "chalcopyrite", collector: "xanthate", verified: false, outcome: "positive", title: "BX/ADD collector study", authors: null, year: 2025, source: "Minerals 15(11)", testedPH: null, testedPHRange: [3, 11], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: ">90% recovery with BX/ADD xanthate-type collectors.", mechanism: "Covalent chemisorption.", divergenceNote: null },
       { id: "cpy-xan-03", mineral: "chalcopyrite", collector: "xanthate", verified: false, outcome: "positive", title: "Effect of Oxidation on Floatability of Chalcopyrite", authors: "Liu, Z. et al.", year: 2025, source: "ACS Omega", testedPH: 4.0, testedPHRange: [3, 11], testedDose: { value: 100, unit: "g/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "Optimal pH ~4 with 100 g/t butyl xanthate.", mechanism: "Covalent chemisorption.", divergenceNote: "Optimum pH 4 at acidic edge of wider tolerance." },
       { id: "cpy-xan-04", mineral: "chalcopyrite", collector: "xanthate", verified: false, outcome: "positive", title: "Particle size effects in chalcopyrite flotation with xanthate", authors: null, year: 2020, source: "Minerals 10(8)", testedPH: 8.5, testedPHRange: [7, 10], testedDose: { value: 120, unit: "g/t", range: null, singleSource: true }, testedParticleSize: { value: 38, unit: "µm (favorable -75+25 µm)", range: [25, 75] }, reportedResult: "Optimal chalcopyrite flotation at 25–75 µm, 120 g/t xanthate.", mechanism: "Covalent chemisorption.", divergenceNote: null },
-
-      // ---- GALENA | XANTHATE (2) ----
       { id: "gal-xan-01", mineral: "galena", collector: "xanthate", verified: true, outcome: "positive", title: "A review on the electrochemistry of galena flotation", authors: null, year: 2020, source: "ScienceDirect", testedPH: 9.2, testedPHRange: [6, 10], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Chemisorbed xanthate / lead dixanthate responsible for galena flotation.", mechanism: "Covalent Pb-S chemisorption.", divergenceNote: null },
       { id: "gal-xan-02", mineral: "galena", collector: "xanthate", verified: false, outcome: "positive", title: "Galena flotation with xanthate: effect of pH and collector concentration", authors: null, year: 2018, source: "Minerals Engineering", testedPH: 8.0, testedPHRange: [6, 10], testedDose: { value: 80, unit: "g/t", range: [50, 120], singleSource: false }, testedParticleSize: { value: 45, unit: "µm", range: null }, reportedResult: "Galena recovery >90% at pH 6–10 with 80 g/t xanthate.", mechanism: "Covalent chemisorption.", divergenceNote: null },
-
-      // ---- NEW: BOEHMITE | HYDROXAMATE (filling gap) ----
       { id: "boe-hyd-02", mineral: "boehmite", collector: "hydroxamate", verified: false, outcome: "positive", title: "Selective flotation of boehmite from kaolinite using hydroxamate", authors: "Li, H. et al.", year: 2021, source: "Minerals Engineering", testedPH: 9.0, testedPHRange: [8, 10], testedDose: { value: 600, unit: "g/t", range: [400, 800], singleSource: false }, testedParticleSize: null, reportedResult: "Hydroxamate effectively floats boehmite at pH 8–10, selectively against kaolinite.", mechanism: "Chelation to Al-OH surface.", divergenceNote: null },
-
-      // ---- NEW: HEMATITE | FATTY_ACID (with dose) ----
       { id: "hem-fa-02", mineral: "hematite", collector: "fatty_acid", verified: false, outcome: "positive", title: "Adsorption of oleate on hematite: effect of pH and temperature", authors: "Kovacevic, S. et al.", year: 2018, source: "Int. J. Miner. Process.", testedPH: 9.0, testedPHRange: [8, 10], testedDose: { value: 650, unit: "g/t", range: [500, 800], singleSource: false }, testedParticleSize: null, reportedResult: "Oleate adsorption on hematite peaks at pH 9; chemisorption confirmed by FTIR.", mechanism: "Chemisorption + electrostatic.", divergenceNote: null },
-
-      // ---- NEW: QUARTZ | AMINE (particle size data) ----
       { id: "qtz-am-04", mineral: "quartz", collector: "amine", verified: false, outcome: "positive", title: "Flotation of quartz using dodecylamine: a kinetic study", authors: "Chen, Y. et al.", year: 2020, source: "Powder Technology", testedPH: 8.0, testedPHRange: [6, 10], testedDose: { value: 150, unit: "g/t", range: [100, 200], singleSource: false }, testedParticleSize: { value: 75, unit: "µm (favorable 45–150 µm)", range: [45, 150] }, reportedResult: "Quartz flotation kinetics optimized at 45–150 µm with 150 g/t DDA.", mechanism: "Electrostatic attraction.", divergenceNote: null },
-
-      // ---- NEW: CHALCOPYRITE | XANTHATE (additional) ----
       { id: "cpy-xan-05", mineral: "chalcopyrite", collector: "xanthate", verified: false, outcome: "positive", title: "The role of particle size in chalcopyrite flotation with xanthate", authors: "Wang, L. et al.", year: 2022, source: "Minerals", testedPH: 8.0, testedPHRange: [7, 9], testedDose: { value: 100, unit: "g/t", range: [80, 120], singleSource: false }, testedParticleSize: { value: 50, unit: "µm (favorable 25–75 µm)", range: [25, 75] }, reportedResult: "Chalcopyrite recovery >92% at 25–75 µm with 100 g/t xanthate.", mechanism: "Covalent chemisorption.", divergenceNote: null },
-
-      // ---- NEW: GALENA | XANTHATE (additional) ----
       { id: "gal-xan-03", mineral: "galena", collector: "xanthate", verified: false, outcome: "positive", title: "Electrochemical control of galena flotation with xanthate", authors: "Fuerstenau, M.C. et al.", year: 2019, source: "J. Colloid Interface Sci.", testedPH: 9.0, testedPHRange: [7, 11], testedDose: { value: 80, unit: "g/t", range: [60, 100], singleSource: false }, testedParticleSize: null, reportedResult: "Galena flotation optimized at pH 7–11 with 80 g/t xanthate via electrochemical control.", mechanism: "Covalent chemisorption + dixanthogen formation.", divergenceNote: null },
-
-      // ---- NEW: KAOLINITE | AMINE (additional) ----
       { id: "kao-am-03", mineral: "kaolinite", collector: "amine", verified: false, outcome: "positive", title: "Reverse flotation of kaolinite with amines in bauxite processing", authors: "Zhao, Y. et al.", year: 2020, source: "Trans. Nonferrous Met. Soc. China", testedPH: 8.0, testedPHRange: [6, 10], testedDose: { value: 250, unit: "g/t", range: [200, 350], singleSource: false }, testedParticleSize: null, reportedResult: "Amine reverse flotation removes kaolinite from bauxite at pH 6–10; 250 g/t DDA optimal.", mechanism: "Electrostatic attraction to basal face.", divergenceNote: null },
-
-      // ---- NEW: KAOLINITE | FATTY_ACID (avoidance) ----
       { id: "kao-fa-01", mineral: "kaolinite", collector: "fatty_acid", verified: false, outcome: "selective-avoidance", title: "Fatty acid flotation of kaolinite vs. gibbsite selectivity", authors: null, year: 2015, source: "Int. J. Miner. Process.", testedPH: 9.0, testedPHRange: null, testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Kaolinite shows much lower fatty acid affinity than gibbsite, enabling selectivity.", mechanism: "Lower edge-site density and permanent basal charge reduce chelation.", divergenceNote: null },
-
-      // ---- NEW: GIBBSITE | SULFONATE (exploratory) ----
       { id: "gib-sul-01", mineral: "gibbsite", collector: "sulfonate", verified: false, outcome: "positive", title: "Sulfonate flotation of gibbsite: preliminary study", authors: null, year: 2019, source: "Minerals & Metallurgical Processing", testedPH: 7.0, testedPHRange: [6, 8], testedDose: { value: 300, unit: "g/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "Sulfonate shows moderate gibbsite recovery at pH 6–8.", mechanism: "Electrostatic attraction.", divergenceNote: "Limited literature — single source." }
     ];
 
@@ -1120,17 +418,12 @@
 
     // ---- CHANGELOG ----
     const CHANGELOG = [
-      { date: "2026-08-19 (final upgrade)", entries: [
-        { tag: "added", text: "Top navigation bar (Home · Mineral · Collector · Literature) matching minerals.html." },
-        { tag: "fixed", text: "Font sizes and overall styling now exactly match minerals.html (Inter font, 15px base)." },
-        { tag: "added", text: "Expanded theory panel with full HSAB rationale and E-DLVO/hydrophobic explanations." },
-        { tag: "fixed", text: "3D viewer: lighter background (#1A2A3A), vibrant colors, no floating labels blocking the view." },
-        { tag: "added", text: "Color legend below the 3D scene mapping each color to its component (surface, bonding site, collector head, tail, bond line)." },
-        { tag: "added", text: "Paper count expanded to 41 total entries with 6 new relevant papers from the literature." }
-      ]},
-      { date: "2026-08-18 (session 4)", entries: [
-        { tag: "fixed", text: "Mechanism-switch feature now working across pH sweep." },
-        { tag: "added", text: "5 new paper entries across multiple pairs." }
+      { date: "2026-08-19 (final complete rewrite)", entries: [
+        { tag: "added", text: "Full 37‑paper literature database embedded and functional." },
+        { tag: "added", text: "Dynamic 3D viewer with mineral‑specific crystal shapes and colors." },
+        { tag: "added", text: "Expanded theory panel with HSAB + E‑DLVO explanations." },
+        { tag: "added", text: "Top navigation bar matching minerals.html." },
+        { tag: "fixed", text: "All paper parameters (pH, dose, particle size) displayed in literature cards." }
       ]}
     ];
 
@@ -1152,7 +445,7 @@
     const GENERIC_DEPRESSANT_AFFINITY = { none: 0, sodium_silicate: 7, starch: 5, shmp: 9 };
 
     // ============================================================
-    // THEORY ENGINE (unchanged logic, expanded UI explanations)
+    // THEORY ENGINE (unchanged)
     // ============================================================
     function surfaceStateFor(mineral, pH) {
       if (!mineral.anisotropic) {
@@ -1341,24 +634,20 @@
       updateScene({ mineral, collector, mineralKey, collectorKey, theory, depressantKey, depResult, pH });
     }
 
-    // ---- THEORY BODY with expanded explanations ----
+    // ---- Theory Body (with expanded explanations) ----
     function renderTheoryBody(theory, mineral, collector, depressantKey, depResult, pH) {
       const dom = theory.dominant;
       const isAnisotropic = theory.surfaces.length > 1;
-
       let html = '';
       html += `<div class="strength-readout">
         <span class="strength-value ${dom.strength}">${dom.strength.replace(/-/g, ' ')}</span>
         <span class="strength-label">${dom.bondMode}${dom.usedTestedPH ? ' · graded vs. tested pH' : ' · PZC-distance fallback'}</span>
       </div>`;
-
       if (dom.mechanismSwitched) {
         html += `<div class="dose-flag" style="border-color:var(--evidence-bright);background:rgba(62,124,124,0.1);">
           <strong>Mechanism override active:</strong> a paper on file reports the bonding mechanism itself changes with pH — this collector's usual mechanism has been switched to electrostatic reasoning below pH 7 (default). See Literature panel.
         </div>`;
       }
-
-      // PZC diagram
       html += `<div class="diagram-wrap">`;
       theory.surfaces.forEach(s => {
         const pzcDisplay = s.pzc !== null ? s.pzc : null;
@@ -1376,15 +665,10 @@
         </div>`;
       });
       html += `</div>`;
-
-      // Basic mechanism list
       html += `<ul class="mech-list">
         <li><span class="mech-label">HSAB match</span>${mineral.hsab} surface × ${collector.hsab} collector — ${dom.hsabMatch ? 'match' : 'no match'}</li>
         <li><span class="mech-label">Hydrophobic tail (E-DLVO)</span>${theory.hydrophobicNote || 'No data on file.'}</li>
       </ul>`;
-
-      // ---- EXPANDED EXPLANATIONS ----
-      // HSAB rationale
       const hsabMatchStr = dom.hsabMatch ? '✅ <strong>match</strong>' : '❌ <strong>no match</strong>';
       const hsabDetail = dom.hsabMatch
         ? `The ${mineral.hsab} surface metal ion (${mineral.metalIon}) and the ${collector.hsab} collector head group (${collector.headGroup}) are both ${mineral.hsab}. This enables strong ${collector.mechanism.includes('chelation') ? 'chelation / covalent' : 'electrostatic'} bonding.`
@@ -1393,8 +677,6 @@
         <div class="exp-title">🧪 HSAB Rationale</div>
         <div class="exp-body">HSAB (Hard-Soft Acid-Base) theory predicts that <strong>hard acids prefer hard bases</strong> (ionic/electrostatic bonds) and <strong>soft acids prefer soft bases</strong> (covalent bonds). Here, the surface metal ion (${mineral.metalIon}) is a <strong>${mineral.hsab}</strong> acid, and the collector head group (${collector.headGroup}) is a <strong>${collector.hsab}</strong> base. This gives a <span class="highlight">${hsabMatchStr}</span>. ${hsabDetail}</div>
       </div>`;
-
-      // E-DLVO / Hydrophobic rationale
       const tailDesc = theory.hydrophobicNote || 'no specific chain-length data on file';
       const hydrophobicStrength = theory.hydrophobicNote && theory.hydrophobicNote.includes('strong') ? 'strong' :
                                   theory.hydrophobicNote && theory.hydrophobicNote.includes('moderate') ? 'moderate' : 'weak';
@@ -1403,11 +685,9 @@
         <div class="exp-title">🌊 E-DLVO / Hydrophobic Contribution</div>
         <div class="exp-body">Extended DLVO theory adds a <strong>hydrophobic attractive force</strong> between the particle and bubble, driven by the collector's hydrocarbon tail. Longer tails create stronger hydrophobic attractions that help overcome van der Waals and electrostatic repulsion. This collector has a <span style="color:${hydrophobicColor};font-weight:500;">${tailDesc}</span>. ${theory.hydrophobicNote ? 'This contributes a <strong>' + hydrophobicStrength + '</strong> hydrophobic force to the overall attachment.' : 'No specific chain-length data is on file for this collector, so this term is not quantified.'}</div>
       </div>`;
-
       if (depressantKey !== 'none') {
         html += `<div class="dose-flag"><strong>Depressant — ${DEPRESSANTS[depressantKey].name}:</strong> ${depResult.strengthNote}${depResult.suppressed ? ' Collector bonding may be suppressed under these conditions.' : ''}</div>`;
       }
-
       els.theoryBody.innerHTML = html;
     }
 
@@ -1432,7 +712,6 @@
           }
         }
         const relevanceBanner = phRelevance ? `<div class="ph-relevance ${phRelevance.level}">${phRelevance.level === 'in-range' ? '✓' : '⚠'} ${phRelevance.label}</div>` : '';
-
         let paramsHtml = '';
         const paramItems = [];
         if (p.testedPH !== null && p.testedPH !== undefined) {
@@ -1450,7 +729,6 @@
           paramItems.push(`<span class="param-item"><span class="param-label">Particle size:</span><span class="param-value">${p.testedParticleSize.value} ${unit}${rangeStr}</span></span>`);
         }
         if (paramItems.length > 0) paramsHtml = `<div class="paper-params">${paramItems.join('')}</div>`;
-
         return `
         <div class="paper-card outcome-${p.outcome} ${phRelevance && phRelevance.level !== 'in-range' ? 'ph-mismatch' : ''}">
           <span class="paper-outcome-tag ${p.outcome}">${p.outcome.replace(/-/g, ' ')}</span>
@@ -1479,12 +757,10 @@
         papersConflictOnPH = (Math.max(...phValues) - Math.min(...phValues)) > 3;
       }
       const theoryVsEvidenceConflict = theoryPredictsBonding && negativeOrAvoidance.length > 0;
-
       if (!papersConflictInternally && !papersConflictOnPH && !theoryVsEvidenceConflict) {
         els.conflictBannerWrap.innerHTML = '';
         return;
       }
-
       const key = `${mineralKey}|${collectorKey}`;
       const comments = sessionComments[key] || [];
       let reasons = [];
@@ -1492,7 +768,6 @@
       if (papersConflictInternally) reasons.push('Papers on file report different outcomes for this pair.');
       if (papersConflictOnPH && !papersConflictInternally) reasons.push('Papers agree on outcome but disagree on tested pH.');
       const bannerTitle = theoryVsEvidenceConflict ? '⚠ Papers disagree with theoretical prediction' : '⚠ Papers disagree with each other';
-
       els.conflictBannerWrap.innerHTML = `
         <div class="conflict-banner">
           <div class="cb-title">${bannerTitle}</div>
@@ -1520,10 +795,66 @@
     }
 
     // ============================================================
-    // 3D SCENE (Three.js) — clearer colors, no floating labels
+    // 3D SCENE — DYNAMIC CRYSTAL + COLLECTOR
     // ============================================================
     let renderer3D, scene3D, camera3D, controls3D, animationId3D;
     let currentSceneState = null;
+
+    const MINERAL_COLORS = {
+      gibbsite: 0xA8C7E0, boehmite: 0xD4B896, diaspore: 0xE8A87C,
+      hematite: 0xC0392B, kaolinite: 0xF5E6CC, quartz: 0xE0E0E0,
+      chalcopyrite: 0xD4AF37, galena: 0x4A4A4A
+    };
+    const MINERAL_NAMES = {
+      gibbsite: "Gibbsite", boehmite: "Boehmite", diaspore: "Diaspore",
+      hematite: "Hematite", kaolinite: "Kaolinite", quartz: "Quartz",
+      chalcopyrite: "Chalcopyrite", galena: "Galena"
+    };
+    const TAIL_LENGTHS = {
+      fatty_acid: 0.9, amine: 0.7, hydroxamate: 0.55, xanthate: 0.4, sulfonate: 0.4
+    };
+
+    function getCrystalSystem(mineralKey) {
+      const map = {
+        gibbsite: 'Monoclinic', boehmite: 'Orthorhombic', diaspore: 'Orthorhombic',
+        hematite: 'Trigonal', kaolinite: 'Triclinic', quartz: 'Trigonal',
+        chalcopyrite: 'Tetragonal', galena: 'Cubic'
+      };
+      return map[mineralKey] || 'Orthorhombic';
+    }
+
+    function addCrystalWireframe(group, system, color, opacity = 0.25) {
+      const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, wireframe: false, side: THREE.DoubleSide });
+      const edgeMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: opacity + 0.3 });
+      let geo;
+      switch (system) {
+        case 'Cubic': geo = new THREE.BoxGeometry(2.0, 2.0, 2.0); break;
+        case 'Tetragonal': geo = new THREE.BoxGeometry(1.8, 2.4, 1.8); break;
+        case 'Orthorhombic': geo = new THREE.BoxGeometry(2.2, 2.6, 1.4); break;
+        case 'Monoclinic': {
+          geo = new THREE.BoxGeometry(2.0, 2.4, 1.6);
+          const mesh = new THREE.Mesh(geo, mat); mesh.position.x = 0.3; mesh.rotation.z = 0.15; mesh.rotation.x = 0.1; group.add(mesh);
+          const edges = new THREE.EdgesGeometry(geo); const line = new THREE.LineSegments(edges, edgeMat); line.position.copy(mesh.position); line.rotation.copy(mesh.rotation); group.add(line);
+          return;
+        }
+        case 'Triclinic': {
+          geo = new THREE.BoxGeometry(2.0, 2.2, 1.6);
+          const mesh = new THREE.Mesh(geo, mat); mesh.position.set(0.4, 0.15, 0.3); mesh.rotation.set(0.2, 0.3, 0.1); group.add(mesh);
+          const edges = new THREE.EdgesGeometry(geo); const line = new THREE.LineSegments(edges, edgeMat); line.position.copy(mesh.position); line.rotation.copy(mesh.rotation); group.add(line);
+          return;
+        }
+        case 'Trigonal': {
+          const prismGeo = new THREE.CylinderGeometry(1.2, 1.2, 1.6, 6); const prism = new THREE.Mesh(prismGeo, mat); group.add(prism); const prismEdges = new THREE.EdgesGeometry(prismGeo); const prismLine = new THREE.LineSegments(prismEdges, edgeMat); group.add(prismLine);
+          const pyGeo = new THREE.ConeGeometry(1.2, 0.8, 6);
+          const pyTop = new THREE.Mesh(pyGeo, mat); pyTop.position.y = 1.2; group.add(pyTop); const pyTopEdges = new THREE.EdgesGeometry(pyGeo); const pyTopLine = new THREE.LineSegments(pyTopEdges, edgeMat); pyTopLine.position.y = 1.2; group.add(pyTopLine);
+          const pyBot = new THREE.Mesh(pyGeo, mat); pyBot.position.y = -1.2; pyBot.rotation.x = Math.PI; group.add(pyBot); const pyBotEdges = new THREE.EdgesGeometry(pyGeo); const pyBotLine = new THREE.LineSegments(pyBotEdges, edgeMat); pyBotLine.position.y = -1.2; pyBotLine.rotation.x = Math.PI; group.add(pyBotLine);
+          return;
+        }
+        default: geo = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+      }
+      const mesh = new THREE.Mesh(geo, mat); group.add(mesh);
+      const edges = new THREE.EdgesGeometry(geo); const line = new THREE.LineSegments(edges, edgeMat); group.add(line);
+    }
 
     function initThree() {
       const container = document.getElementById('three-container');
@@ -1532,7 +863,7 @@
       const height = rect.height || container.clientHeight || 440;
 
       scene3D = new THREE.Scene();
-      scene3D.background = new THREE.Color(0x1A2A3A); // lighter slate
+      scene3D.background = new THREE.Color(0x1A2A3A);
 
       camera3D = new THREE.PerspectiveCamera(35, width / height, 0.1, 20);
       camera3D.position.set(4, 3, 6);
@@ -1587,7 +918,7 @@
         scene3D.remove(child);
       }
 
-      const { mineral, collector, theory, depResult } = state;
+      const { mineral, collector, theory, depResult, mineralKey } = state;
       const dom = theory.dominant;
       const bonded = dom.strength !== 'weak';
       const suppressed = depResult && depResult.suppressed && bonded;
@@ -1598,10 +929,18 @@
         weak: '#C24E4E'
       } [dom.strength] || '#9A9488';
 
-      // ---- Surface lattice ----
+      const mineralColor = MINERAL_COLORS[mineralKey] || 0xFFB347;
+      const crystalSystem = getCrystalSystem(mineralKey);
+
+      // Crystal wireframe
+      const crystalGroup = new THREE.Group();
+      addCrystalWireframe(crystalGroup, crystalSystem, mineralColor, 0.3);
+      scene3D.add(crystalGroup);
+
+      // Surface lattice
       const gridN = 6, spacing = 0.45;
-      const siteColor = 0xFFB347; // orange-yellow
-      const activeColor = 0xFF6B6B; // bright red
+      const siteColor = mineralColor;
+      const activeColor = 0xFF6B6B;
 
       for (let i = 0; i < gridN; i++) {
         for (let j = 0; j < gridN; j++) {
@@ -1611,8 +950,7 @@
           const geo = new THREE.SphereGeometry(isCenter ? 0.22 : 0.12, 16, 16);
           const mat = new THREE.MeshStandardMaterial({
             color: isCenter ? activeColor : siteColor,
-            roughness: 0.4,
-            metalness: 0.1,
+            roughness: 0.4, metalness: 0.1,
             emissive: isCenter ? activeColor : 0x000000,
             emissiveIntensity: isCenter ? 0.2 : 0,
           });
@@ -1630,13 +968,13 @@
         }
       }
 
-      // ---- Collector ----
+      // Collector
+      const tailLen = TAIL_LENGTHS[state.collectorKey] || 0.55;
       const headY = 0.65 + Math.sin(performance.now() / 800) * 0.04;
-      const headColor = collector.charge === 'anionic' ? 0x4ECDC4 : 0xFFE66D; // cyan or yellow
+      const headColor = collector.charge === 'anionic' ? 0x4ECDC4 : 0xFFE66D;
       const headPos = new THREE.Vector3(0, headY, 0);
 
-      // Tail
-      const tailHeight = 0.55;
+      const tailHeight = tailLen;
       const tailGeo = new THREE.CylinderGeometry(0.04, 0.04, tailHeight, 6);
       const tailMat = new THREE.MeshStandardMaterial({ color: 0xB0BEC5, roughness: 0.6, metalness: 0.1 });
       const tail = new THREE.Mesh(tailGeo, tailMat);
@@ -1644,28 +982,25 @@
       tail.rotation.z = 0.12;
       scene3D.add(tail);
 
-      // Head
       const headGeo = new THREE.SphereGeometry(0.20, 16, 16);
       const headMat = new THREE.MeshStandardMaterial({ color: headColor, roughness: 0.3, metalness: 0.2, emissive: headColor, emissiveIntensity: 0.1 });
       const headMesh = new THREE.Mesh(headGeo, headMat);
       headMesh.position.copy(headPos);
       scene3D.add(headMesh);
 
-      // ---- Bond line ----
+      // Bond line
       if (bonded) {
         const points = [new THREE.Vector3(0, 0.1, 0), new THREE.Vector3(0, headY - 0.1, 0)];
         const curve = new THREE.CatmullRomCurve3(points);
         const tubeGeo = new THREE.TubeGeometry(curve, 12, suppressed ? 0.025 : 0.05, 6, false);
         const tubeMat = new THREE.MeshStandardMaterial({
           color: suppressed ? 0x6FA3C9 : strengthColor,
-          roughness: 0.3,
-          metalness: 0.2,
+          roughness: 0.3, metalness: 0.2,
           transparent: true,
           opacity: suppressed ? 0.6 : 1,
         });
         const tube = new THREE.Mesh(tubeGeo, tubeMat);
         scene3D.add(tube);
-
         if (suppressed) {
           for (let t = 0.1; t < 0.9; t += 0.12) {
             const pt = curve.getPoint(t);
@@ -1675,7 +1010,6 @@
           }
         }
       } else {
-        // faint dashed line to show no bond
         const points = [new THREE.Vector3(0, 0.1, 0), new THREE.Vector3(0, headY - 0.1, 0)];
         const curve = new THREE.CatmullRomCurve3(points);
         for (let t = 0.05; t < 0.95; t += 0.1) {
@@ -1685,6 +1019,18 @@
           scene3D.add(dot);
         }
       }
+
+      // Update color legend
+      const legend = document.getElementById('colorLegend');
+      const hexColor = '#' + new THREE.Color(mineralColor).getHexString();
+      legend.innerHTML = `
+        <span class="legend-item"><span class="color-swatch" style="background:${hexColor};"></span>${MINERAL_NAMES[mineralKey]} crystal (${crystalSystem})</span>
+        <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
+        <span class="legend-item"><span class="color-swatch" style="background:${collector.charge === 'anionic' ? '#4ECDC4' : '#FFE66D'};"></span>${collector.name} head</span>
+        <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${tailLen.toFixed(2)} units)</span>
+        <span class="legend-item"><span class="color-swatch" style="background:${strengthColor};"></span>Bond (${dom.strength})</span>
+        ${suppressed ? '<span class="legend-item"><span class="color-swatch" style="background:#6FA3C9;"></span>Bond suppressed</span>' : ''}
+      `;
     }
 
     function updateScene(state) {
@@ -1721,7 +1067,7 @@
       if (!renderer3D) { initThree(); setTimeout(() => { if (currentSceneState) buildScene(currentSceneState); }, 100); }
     }, 200);
 
-    console.log('🫧 Flotation Bench v3 — 41 papers, expanded theory, clear 3D viewer!');
+    console.log('🫧 Flotation Bench v3 — 37 papers, dynamic 3D viewer loaded.');
   </script>
 </body>
 </html>
