@@ -7,41 +7,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ====== GLOBAL THEME (matches minerals.html) ====== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg-primary: #0F172A;
-      --bg-secondary: #1E293B;
-      --bg-card: #273548;
-      --bg-card-hover: #334155;
-      --bg-panel: #1E293B;
-      --text-primary: #EDF2F7;
-      --text-secondary: #94A3B8;
-      --text-mid: #C4BEB2;
-      --text-dim: #64748B;
-      --border-subtle: #334155;
-      --border-bright: #4A453F;
-      --radius: 12px;
-      --color-active: #D35400;
-      --ochre-bright: #D9A24E;
-      --evidence-bright: #5FAFAF;
-      --warn: #B85C3B;
-      --good: #7A9B5C;
-      --conflict: #C24E4E;
+      --bg-primary: #0F172A; --bg-secondary: #1E293B; --bg-card: #273548;
+      --bg-card-hover: #334155; --text-primary: #EDF2F7; --text-secondary: #94A3B8;
+      --text-mid: #C4BEB2; --text-dim: #64748B; --border-subtle: #334155;
+      --border-bright: #4A453F; --radius: 12px; --color-active: #D35400;
+      --ochre-bright: #D9A24E; --evidence-bright: #5FAFAF; --warn: #B85C3B;
+      --good: #7A9B5C; --conflict: #C24E4E;
     }
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-size: 15px;
-      min-height: 100vh;
-      padding: 0 24px 48px;
-      -webkit-font-smoothing: antialiased;
+      font-family: 'Inter', sans-serif; background-color: var(--bg-primary);
+      color: var(--text-primary); font-size: 15px; min-height: 100vh;
+      padding: 0 24px 48px; -webkit-font-smoothing: antialiased;
     }
     .mono { font-family: 'JetBrains Mono', monospace; }
     ::selection { background: rgba(184, 134, 59, 0.3); color: var(--text-primary); }
 
-    /* ====== NAVIGATION ====== */
     .navbar {
       max-width: 1400px; margin: 0 auto; padding: 24px 0 16px;
       border-bottom: 1px solid var(--border-subtle);
@@ -50,14 +32,10 @@
     .logo { font-weight: 700; font-size: 1.3rem; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 8px; }
     .logo span { color: var(--color-active); }
     .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a {
-      color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem;
-      padding-bottom: 6px; border-bottom: 2px solid transparent; transition: 0.2s ease;
-    }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding-bottom: 6px; border-bottom: 2px solid transparent; transition: 0.2s ease; }
     .nav-links a:hover { color: #fff; }
     .nav-links a.active { color: #fff; border-bottom-color: var(--color-active); }
 
-    /* ====== HEADER ====== */
     header {
       max-width: 1400px; margin: 0 auto; padding: 16px 0 12px;
       display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;
@@ -71,151 +49,161 @@
     .dot.theory { background: var(--ochre-bright); }
     .dot.evidence { background: var(--evidence-bright); }
 
-    /* ====== CONTROLS ====== */
     .controls {
       max-width: 1400px; margin: 0 auto; padding: 20px 0; border-bottom: 1px solid var(--border-subtle);
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px 28px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px 20px;
     }
-    .control-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+    .control-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
     .control-group select, .control-group input[type="range"] { width: 100%; }
-    .control-group select { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 9px 12px; font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .control-group select { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 7px 10px; font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s; }
     .control-group select:focus { border-color: var(--ochre-bright); }
-    .slider-row { display: flex; align-items: center; gap: 12px; }
+    .slider-row { display: flex; align-items: center; gap: 8px; }
     .slider-row input[type="range"] { accent-color: var(--ochre-bright); flex: 1; }
-    .slider-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--ochre-bright); min-width: 44px; text-align: right; flex-shrink: 0; }
+    .slider-val { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ochre-bright); min-width: 40px; text-align: right; flex-shrink: 0; }
+    .slider-note { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-dim); margin-top: 2px; line-height: 1.3; }
+    .slider-note.warn { color: var(--warn); }
 
-    /* ====== MAIN 2-PANEL ====== */
     .main-grid {
-      max-width: 1400px; margin: 24px auto 0;
+      max-width: 1400px; margin: 20px auto 0;
       display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
       background: var(--border-subtle); border-radius: var(--radius); overflow: hidden;
     }
     @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; border-radius: 0; } }
 
-    .panel { background: var(--bg-primary); padding: 24px 28px 32px; }
-    .panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle); }
+    .panel { background: var(--bg-primary); padding: 20px 24px 28px; }
+    .panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle); }
     .panel-head .dot { width: 10px; height: 10px; }
     .panel-head h2 { font-size: 16px; font-weight: 600; margin: 0; }
-    .panel-head .tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 4px; margin-left: auto; }
+    .panel-head .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 4px; margin-left: auto; }
     .panel.theory .panel-head .tag { background: rgba(184, 134, 59, 0.15); color: var(--ochre-bright); border: 1px solid rgba(184, 134, 59, 0.3); }
     .panel.evidence .panel-head .tag { background: rgba(62, 124, 124, 0.15); color: var(--evidence-bright); border: 1px solid rgba(62, 124, 124, 0.3); }
 
-    .scope-note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); background: var(--bg-secondary); border-left: 2px solid var(--border-bright); padding: 10px 14px; margin-bottom: 18px; border-radius: 4px; line-height: 1.6; }
+    .scope-note { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); background: var(--bg-secondary); border-left: 2px solid var(--border-bright); padding: 8px 12px; margin-bottom: 14px; border-radius: 4px; line-height: 1.6; }
 
-    /* ====== THEORY PANEL ====== */
-    .strength-readout { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
-    .strength-value { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+    .strength-readout { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .strength-value { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
     .strength-value.strong { color: var(--good); }
     .strength-value.moderate-to-strong { color: var(--ochre-bright); }
     .strength-value.weak-to-moderate { color: var(--warn); }
     .strength-value.weak { color: var(--conflict); }
-    .strength-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+    .strength-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
 
-    .diagram-wrap { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; margin-bottom: 18px; }
-    .pzc-bar { position: relative; height: 34px; background: var(--bg-primary); border-radius: 4px; margin: 10px 0 6px; overflow: visible; }
+    .diagram-wrap { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+    .pzc-bar { position: relative; height: 30px; background: var(--bg-primary); border-radius: 4px; margin: 8px 0 4px; overflow: visible; }
     .pzc-bar .zone { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
-    .pzc-bar .zone.pos { background: linear-gradient(90deg, rgba(184, 92, 59, 0.35), rgba(184, 92, 59, 0.05)); left: 0; }
-    .pzc-bar .zone.neg { background: linear-gradient(90deg, rgba(95, 175, 175, 0.05), rgba(95, 175, 175, 0.35)); right: 0; }
-    .pzc-bar .marker { position: absolute; top: -6px; width: 2px; height: 46px; background: var(--text-primary); }
+    .pzc-bar .zone.pos { background: linear-gradient(90deg, rgba(184, 92, 59, 0.3), rgba(184, 92, 59, 0.05)); left: 0; }
+    .pzc-bar .zone.neg { background: linear-gradient(90deg, rgba(95, 175, 175, 0.05), rgba(95, 175, 175, 0.3)); right: 0; }
+    .pzc-bar .marker { position: absolute; top: -5px; width: 2px; height: 40px; background: var(--text-primary); }
     .pzc-bar .marker.ph-marker { background: var(--ochre-bright); width: 3px; }
-    .pzc-bar .marker .mtag { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 9.5px; white-space: nowrap; }
-    .pzc-axis { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-dim); }
+    .pzc-bar .marker .mtag { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 8.5px; white-space: nowrap; }
+    .pzc-axis { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--text-dim); }
 
-    .mech-list { list-style: none; padding: 0; margin: 0 0 16px; font-size: 13.5px; color: var(--text-secondary); }
-    .mech-list li { padding: 8px 0; border-bottom: 1px solid var(--border-subtle); }
+    /* Speciation hint */
+    .speciation-hint { margin-top: 10px; padding: 8px 12px; background: var(--bg-primary); border-radius: 4px; border: 1px solid var(--border-subtle); }
+    .speciation-hint .spec-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .speciation-hint .spec-bar { display: flex; height: 12px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .speciation-hint .spec-bar .spec-frac { transition: width 0.3s; }
+    .speciation-hint .spec-frac.spec-pos { background: rgba(184, 92, 59, 0.6); }
+    .speciation-hint .spec-frac.spec-neg { background: rgba(95, 175, 175, 0.6); }
+    .speciation-hint .spec-frac.spec-neutral { background: rgba(148, 163, 184, 0.3); }
+    .speciation-hint .spec-labels { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--text-dim); margin-top: 2px; }
+
+    .mech-list { list-style: none; padding: 0; margin: 0 0 14px; font-size: 13px; color: var(--text-secondary); }
+    .mech-list li { padding: 6px 0; border-bottom: 1px solid var(--border-subtle); }
     .mech-list li:last-child { border-bottom: none; }
-    .mech-list .mech-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 3px; }
+    .mech-list .mech-label { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px; }
 
-    .theory-explanation { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px 16px; margin-top: 14px; }
-    .theory-explanation .exp-title { font-weight: 600; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-    .theory-explanation .exp-body { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+    .theory-explanation { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; margin-top: 12px; }
+    .theory-explanation .exp-title { font-weight: 600; font-size: 12.5px; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .theory-explanation .exp-body { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
     .theory-explanation .exp-body strong { color: var(--text-primary); }
     .theory-explanation .exp-body .highlight { color: var(--ochre-bright); font-weight: 500; }
 
-    .dose-flag { border-radius: 8px; padding: 12px 14px; margin-top: 14px; font-size: 13px; line-height: 1.5; background: rgba(184, 92, 59, 0.08); border: 1px solid var(--warn); color: var(--text-secondary); }
+    .dose-flag { border-radius: 6px; padding: 10px 12px; margin-top: 12px; font-size: 12px; line-height: 1.5; background: rgba(184, 92, 59, 0.08); border: 1px solid var(--warn); color: var(--text-secondary); }
 
-    /* ====== EVIDENCE PANEL ====== */
-    .evidence-weight { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 5px 12px; border-radius: 4px; margin-bottom: 16px; }
+    .evidence-weight { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 4px; margin-bottom: 12px; }
     .evidence-weight.none { background: var(--bg-secondary); color: var(--text-dim); border: 1px solid var(--border-subtle); }
     .evidence-weight.single-source { background: rgba(184, 134, 59, 0.1); color: var(--ochre-bright); border: 1px solid rgba(184, 134, 59, 0.3); }
     .evidence-weight.multiple-consistent { background: rgba(122, 155, 92, 0.12); color: var(--good); border: 1px solid var(--good); }
     .evidence-weight.multiple-conflicting { background: rgba(194, 78, 78, 0.12); color: var(--conflict); border: 1px solid var(--conflict); }
 
-    .empty-state { padding: 32px 20px; text-align: center; color: var(--text-dim); font-size: 13.5px; border: 1px dashed var(--border-bright); border-radius: var(--radius); }
+    .empty-state { padding: 28px 16px; text-align: center; color: var(--text-dim); font-size: 13px; border: 1px dashed var(--border-bright); border-radius: var(--radius); }
 
-    .paper-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px; transition: border-color 0.2s; }
+    .paper-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; transition: border-color 0.2s; }
     .paper-card.outcome-negative { border-left: 4px solid var(--warn); }
     .paper-card.outcome-selective-avoidance { border-left: 4px solid var(--evidence-bright); }
     .paper-card.outcome-positive { border-left: 4px solid var(--good); }
-    .paper-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; color: #f1f5f9; }
-    .paper-meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); margin-bottom: 8px; }
-    .paper-outcome-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 10px; border-radius: 4px; margin-bottom: 8px; }
+    .paper-title { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; line-height: 1.4; color: #f1f5f9; }
+    .paper-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 6px; }
+    .paper-outcome-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
     .paper-outcome-tag.positive { background: rgba(122, 155, 92, 0.15); color: var(--good); }
     .paper-outcome-tag.negative { background: rgba(184, 92, 59, 0.15); color: var(--warn); }
     .paper-outcome-tag.selective-avoidance { background: rgba(95, 175, 175, 0.15); color: var(--evidence-bright); }
-    .paper-conditions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-    .cond-chip { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 4px 10px; color: var(--text-secondary); }
-    .paper-result { font-size: 13px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 8px; }
-    .paper-mechanism { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; font-style: italic; }
-    .paper-divergence { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-subtle); font-size: 12px; color: var(--ochre-bright); line-height: 1.5; }
-    .paper-params { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 6px 16px; }
-    .paper-params .param-item { display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--bg-primary); padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border-subtle); }
+    .paper-conditions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .cond-chip { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 3px 8px; color: var(--text-secondary); }
+    .paper-result { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px; }
+    .paper-mechanism { font-size: 12px; color: var(--text-dim); line-height: 1.5; font-style: italic; }
+    .paper-divergence { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-subtle); font-size: 11.5px; color: var(--ochre-bright); line-height: 1.5; }
+    .paper-params { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-subtle); font-size: 11.5px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+    .paper-params .param-item { display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; background: var(--bg-primary); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-subtle); }
     .paper-params .param-item .param-label { color: var(--text-dim); font-weight: 400; }
     .paper-params .param-item .param-value { color: var(--text-primary); font-weight: 500; }
-    .unverified-flag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); margin-left: 8px; text-transform: uppercase; }
-    .ph-relevance { font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.5; border-radius: 4px; padding: 6px 12px; margin-bottom: 10px; }
+    .unverified-flag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--text-dim); margin-left: 6px; text-transform: uppercase; }
+    .verify-btn { background: transparent; border: 1px solid var(--border-subtle); color: var(--text-secondary); padding: 1px 10px; border-radius: 12px; font-size: 9px; font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: 0.2s; margin-left: 6px; }
+    .verify-btn:hover { background: var(--good); border-color: var(--good); color: #fff; }
+    .verify-btn.verified { background: rgba(122, 155, 92, 0.15); border-color: var(--good); color: var(--good); cursor: default; }
+    .verify-btn.verified:hover { background: rgba(122, 155, 92, 0.25); }
+
+    .ph-relevance { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; line-height: 1.4; border-radius: 4px; padding: 4px 10px; margin-bottom: 8px; }
     .ph-relevance.in-range { background: rgba(122, 155, 92, 0.08); color: var(--good); border: 1px solid var(--good); }
     .ph-relevance.outside { background: rgba(184, 92, 59, 0.08); color: var(--warn); border: 1px solid var(--warn); }
     .ph-relevance.far-outside { background: rgba(194, 78, 78, 0.1); color: var(--conflict); border: 1px solid var(--conflict); }
     .paper-card.ph-mismatch { opacity: 0.75; }
     .paper-card.ph-mismatch .paper-outcome-tag { filter: grayscale(0.3); }
 
-    .conflict-banner { background: rgba(194, 78, 78, 0.12); border: 1px solid var(--conflict); border-radius: 8px; padding: 14px 16px; color: var(--text-primary); margin-bottom: 18px; }
-    .conflict-banner .cb-title { font-weight: 600; font-size: 13.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-    .conflict-banner textarea { width: 100%; margin-top: 10px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px; resize: vertical; min-height: 60px; }
-    .conflict-banner .cb-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 6px; }
-    .comment-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
-    .comment-item { background: var(--bg-primary); border-radius: 4px; padding: 8px 12px; font-size: 12.5px; color: var(--text-secondary); }
+    .conflict-banner { background: rgba(194, 78, 78, 0.12); border: 1px solid var(--conflict); border-radius: 8px; padding: 12px 14px; color: var(--text-primary); margin-bottom: 14px; }
+    .conflict-banner .cb-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .conflict-banner textarea { width: 100%; margin-top: 8px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 12px; padding: 8px; resize: vertical; min-height: 50px; }
+    .conflict-banner .cb-hint { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-dim); margin-top: 4px; }
+    .comment-list { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .comment-item { background: var(--bg-primary); border-radius: 4px; padding: 6px 10px; font-size: 12px; color: var(--text-secondary); }
 
-    /* ====== 3D SCENE ====== */
-    .scene-section { max-width: 1400px; margin: 24px auto 0; padding: 24px 28px 28px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
-    .scene-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .scene-section { max-width: 1400px; margin: 20px auto 0; padding: 20px 24px 24px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
+    .scene-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
     .scene-head h2 { font-size: 16px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
-    .scene-hint { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); }
-    .scene-wrap { position: relative; background: #1A2A3A; border: 1px solid var(--border-subtle); border-radius: var(--radius); overflow: hidden; touch-action: none; height: 440px; }
+    .scene-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); }
+    .scene-wrap { position: relative; background: #1A2A3A; border: 1px solid var(--border-subtle); border-radius: var(--radius); overflow: hidden; touch-action: none; height: 420px; }
     .scene-wrap canvas { display: block; width: 100% !important; height: 100% !important; }
+    .scene-overlay-label { position: absolute; bottom: 12px; right: 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5); pointer-events: none; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 4px; }
 
-    .color-legend { display: flex; flex-wrap: wrap; gap: 16px 28px; margin-top: 16px; padding: 12px 16px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 8px; }
-    .color-legend .legend-item { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-secondary); }
-    .color-legend .color-swatch { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.15); }
+    .color-legend { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 12px; padding: 10px 14px; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 8px; }
+    .color-legend .legend-item { display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-secondary); }
+    .color-legend .color-swatch { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); }
 
-    /* ====== CHANGELOG ====== */
-    .changelog-section { max-width: 1400px; margin: 24px auto 0; padding: 24px 28px 32px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
-    .changelog-section .scene-head { margin-bottom: 16px; }
-    .changelog-entry { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
-    .changelog-date { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .changelog-entry ul { margin: 0; padding-left: 18px; }
-    .changelog-entry li { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 3px; }
-    .changelog-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; padding: 1px 8px; border-radius: 4px; margin-right: 6px; vertical-align: middle; }
+    .changelog-section { max-width: 1400px; margin: 20px auto 0; padding: 20px 24px 28px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border-subtle); }
+    .changelog-section .scene-head { margin-bottom: 12px; }
+    .changelog-entry { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+    .changelog-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .changelog-entry ul { margin: 0; padding-left: 16px; }
+    .changelog-entry li { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 2px; }
+    .changelog-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; margin-right: 4px; vertical-align: middle; }
     .changelog-tag.added { background: rgba(122, 155, 92, 0.15); color: var(--good); }
     .changelog-tag.fixed { background: rgba(184, 92, 59, 0.15); color: var(--warn); }
     .changelog-tag.corrected { background: rgba(194, 78, 78, 0.15); color: var(--conflict); }
 
-    /* ====== FOOTER ====== */
-    footer { max-width: 1400px; margin: 24px auto 0; padding: 18px 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim); text-align: center; border-top: 1px solid var(--border-subtle); }
+    footer { max-width: 1400px; margin: 20px auto 0; padding: 14px 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: center; border-top: 1px solid var(--border-subtle); }
 
-    /* ====== RESPONSIVE ====== */
     @media (max-width: 600px) {
       body { padding: 0 12px 32px; font-size: 14px; }
-      .controls { grid-template-columns: 1fr 1fr; gap: 14px; }
-      .panel { padding: 16px 16px 24px; }
-      .scene-section, .changelog-section { padding: 16px 16px 24px; }
-      .scene-wrap { height: 300px; }
-      .color-legend { gap: 10px 16px; font-size: 10px; }
-      .color-legend .legend-item { font-size: 10px; }
-      .navbar { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .nav-links { gap: 16px; flex-wrap: wrap; }
-      .legend-header { font-size: 10px; gap: 12px; flex-wrap: wrap; }
+      .controls { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .panel { padding: 14px 14px 20px; }
+      .scene-section, .changelog-section { padding: 14px 14px 20px; }
+      .scene-wrap { height: 280px; }
+      .color-legend { gap: 8px 12px; font-size: 9px; }
+      .color-legend .legend-item { font-size: 9px; }
+      .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .nav-links { gap: 14px; flex-wrap: wrap; }
+      .legend-header { font-size: 10px; gap: 10px; flex-wrap: wrap; }
       .strength-value { font-size: 22px; }
     }
     @media (max-width: 400px) { .controls { grid-template-columns: 1fr; } }
@@ -223,7 +211,6 @@
 </head>
 <body>
 
-  <!-- ====== NAVIGATION ====== -->
   <nav class="navbar">
     <div class="logo">🫧 Flotation<span>Bench</span></div>
     <ul class="nav-links">
@@ -234,19 +221,17 @@
     </ul>
   </nav>
 
-  <!-- ====== HEADER ====== -->
   <header>
     <div>
       <h1>🧪 Reagent Bonding Explorer</h1>
       <div class="sub">Theory vs. Literature — flotation &amp; surface chemistry</div>
     </div>
     <div class="legend-header">
-      <span><span class="dot theory"></span>Theory — mechanistic reasoning</span>
-      <span><span class="dot evidence"></span>Literature — paper-verified evidence</span>
+      <span><span class="dot theory"></span>Theory — mechanistic</span>
+      <span><span class="dot evidence"></span>Literature — paper-verified</span>
     </div>
   </header>
 
-  <!-- ====== CONTROLS ====== -->
   <div class="controls">
     <div class="control-group">
       <label for="mineral">Mineral</label>
@@ -266,9 +251,24 @@
         <input type="range" id="ph" min="1" max="14" step="0.1" value="7" />
       </div>
     </div>
+    <div class="control-group">
+      <label for="collectorDose">Collector dose — <span id="collectorDoseUnit" class="mono">g/t</span></label>
+      <div class="slider-row">
+        <input type="range" id="collectorDose" min="0" max="1200" step="5" value="400" />
+        <span class="slider-val" id="collectorDoseVal">400</span>
+      </div>
+      <div class="slider-note" id="collectorDoseNote"></div>
+    </div>
+    <div class="control-group">
+      <label for="particleSize">Particle size — <span id="particleSizeUnit" class="mono">µm</span></label>
+      <div class="slider-row">
+        <input type="range" id="particleSize" min="1" max="300" step="1" value="75" />
+        <span class="slider-val" id="particleSizeVal">75</span>
+      </div>
+      <div class="slider-note" id="particleSizeNote"></div>
+    </div>
   </div>
 
-  <!-- ====== MAIN 2-PANEL ====== -->
   <div class="main-grid">
     <section class="panel theory">
       <div class="panel-head">
@@ -292,26 +292,26 @@
     </section>
   </div>
 
-  <!-- ====== 3D SCENE ====== -->
   <section class="scene-section">
     <div class="scene-head">
       <h2>🔬 Molecular bonding view</h2>
       <span class="scene-hint">🖱️ drag to rotate · scroll to zoom · updates live</span>
     </div>
-    <div class="scene-wrap" id="three-container"></div>
+    <div class="scene-wrap" id="three-container">
+      <div class="scene-overlay-label" id="crystalSystemLabel">Crystal System</div>
+    </div>
     <div class="color-legend" id="colorLegend">
       <span class="legend-item"><span class="color-swatch" style="background:#FFB347;"></span>Surface site</span>
       <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
       <span class="legend-item"><span class="color-swatch" style="background:#4ECDC4;"></span>Collector head (anionic)</span>
       <span class="legend-item"><span class="color-swatch" style="background:#FFE66D;"></span>Collector head (cationic)</span>
       <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail</span>
-      <span class="legend-item"><span class="color-swatch" style="background:#7A9B5C;"></span>Bond line (strong)</span>
-      <span class="legend-item"><span class="color-swatch" style="background:#D9A24E;"></span>Bond line (moderate)</span>
-      <span class="legend-item"><span class="color-swatch" style="background:#C24E4E;"></span>Bond line (weak / none)</span>
+      <span class="legend-item"><span class="color-swatch" style="background:#7A9B5C;"></span>Bond (strong)</span>
+      <span class="legend-item"><span class="color-swatch" style="background:#D9A24E;"></span>Bond (moderate)</span>
+      <span class="legend-item"><span class="color-swatch" style="background:#C24E4E;"></span>Bond (weak / none)</span>
     </div>
   </section>
 
-  <!-- ====== CHANGELOG ====== -->
   <section class="changelog-section" id="changelogSection">
     <div class="scene-head">
       <h2>📋 Changelog</h2>
@@ -322,7 +322,6 @@
 
   <footer>Mechanistic predictions (Theory panel) are not validated against measured recovery data. Verified findings appear only in the Literature panel where a specific paper is on file.</footer>
 
-  <!-- ====== THREE.JS ====== -->
   <script type="importmap">
     {
       "imports": {
@@ -333,11 +332,9 @@
   </script>
 
   <script type="module">
-    // ============================================================
-    // IMPORTS
-    // ============================================================
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
     // ============================================================
     // DATA LAYER
@@ -368,9 +365,7 @@
       shmp: { name: "Sodium hexametaphosphate (SHMP)", mechanism: "P-O-Al bridging bonds" }
     };
 
-    // ============================================================
-    // PAPERS — 37 entries (full list)
-    // ============================================================
+    // ---- FULL PAPERS ARRAY (37 entries) ----
     const PAPERS = [
       { id: "gib-hyd-01", mineral: "gibbsite", collector: "hydroxamate", verified: true, outcome: "positive", title: "The Flotation of Marginal Gibbsitic Bauxite Ores from Paragominas – Brazil", authors: "Marino, C.A. et al.", year: null, source: "University of Utah thesis", testedPH: 10.5, testedPHRange: [9.5, 10.5], testedDose: { value: 1.0, unit: "kg/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "Direct gibbsite flotation with alkyl hydroxamate-fatty acid; Al₂O₃:SiO₂ ratio 8.44–10.58.", mechanism: "Chelation of hydroxamate onto Al-OH via 5-membered ring complex.", divergenceNote: null },
       { id: "gib-hyd-02", mineral: "gibbsite", collector: "hydroxamate", verified: true, outcome: "positive", title: "Removal of Iron-Bearing Minerals from Gibbsitic Bauxite by Direct Froth Flotation", authors: null, year: 2016, source: "Tecnol. Metal. Mater. Miner.", testedPH: 9.5, testedPHRange: [8.5, 10.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, testedParticleSize: null, reportedResult: "Optimum flotation at pH 9.5; performance dropped at pH 8.5 or 10.5.", mechanism: "Chelation; dropoff at pH 8.5 attributed to site availability.", divergenceNote: "Narrower optimum than Marino (9.5 vs 10.5) — likely ore-source differences." },
@@ -411,19 +406,26 @@
       { id: "gib-sul-01", mineral: "gibbsite", collector: "sulfonate", verified: false, outcome: "positive", title: "Sulfonate flotation of gibbsite: preliminary study", authors: null, year: 2019, source: "Minerals & Metallurgical Processing", testedPH: 7.0, testedPHRange: [6, 8], testedDose: { value: 300, unit: "g/t", range: null, singleSource: true }, testedParticleSize: null, reportedResult: "Sulfonate shows moderate gibbsite recovery at pH 6–8.", mechanism: "Electrostatic attraction.", divergenceNote: "Limited literature — single source." }
     ];
 
-    // ---- DEPRESSANT PAPERS ----
+    // ---- DEPRESSANT PAPERS (expanded) ----
     const DEPRESSANT_PAPERS = [
-      { id: "shmp-diaspore-01", depressant: "shmp", mineral: "diaspore", verified: true, testedPH: 6.0, testedPHRange: [5.5, 8.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, reportedResult: "SHMP adsorption onto diaspore (P-O-Al bridging) peaks near pH 6.", source: "J. Cent. South Univ. Technol., 2005" }
+      { id: "shmp-diaspore-01", depressant: "shmp", mineral: "diaspore", verified: true, testedPH: 6.0, testedPHRange: [5.5, 8.5], testedDose: { value: null, unit: null, range: null, singleSource: false }, reportedResult: "SHMP adsorption onto diaspore (P-O-Al bridging) peaks near pH 6.", source: "J. Cent. South Univ. Technol., 2005" },
+      { id: "starch-kaolinite-01", depressant: "starch", mineral: "kaolinite", verified: false, testedPH: 8.0, testedPHRange: [7, 9], testedDose: { value: 200, unit: "g/t", range: null, singleSource: true }, reportedResult: "Starch adsorbs onto kaolinite edge sites via H-bonding, depressing its flotation.", source: "Minerals Engineering, 2017" },
+      { id: "silicate-gibbsite-01", depressant: "sodium_silicate", mineral: "gibbsite", verified: false, testedPH: 9.5, testedPHRange: [8.5, 10.5], testedDose: { value: 500, unit: "g/t", range: null, singleSource: true }, reportedResult: "Sodium silicate disperses gibbsite and blocks collector adsorption.", source: "Int. J. Miner. Process., 2016" }
     ];
 
     // ---- CHANGELOG ----
     const CHANGELOG = [
-      { date: "2026-08-19 (final complete rewrite)", entries: [
-        { tag: "added", text: "Full 37‑paper literature database embedded and functional." },
+      { date: "2026-08-19 (all-upgrade)", entries: [
+        { tag: "added", text: "3D viewer: detailed crystal shapes, axes labels (a, b, c), crystal-system name displayed directly on the scene." },
+        { tag: "added", text: "Speciation hints: qualitative surface-charge curves (Al-OH₂⁺ vs Al-O⁻) beside the PZC bar." },
+        { tag: "added", text: "Verify Paper buttons: each unverified paper gets a 'Verify' button with localStorage persistence." },
+        { tag: "added", text: "Re-added collector dose and particle size sliders with tier-penalty logic affecting bond strength." },
+        { tag: "added", text: "Expanded depressant papers (starch+kaolinite, silicate+gibbsite)." }
+      ]},
+      { date: "2026-08-19 (initial)", entries: [
+        { tag: "added", text: "Full 37‑paper literature database." },
         { tag: "added", text: "Dynamic 3D viewer with mineral‑specific crystal shapes and colors." },
-        { tag: "added", text: "Expanded theory panel with HSAB + E‑DLVO explanations." },
-        { tag: "added", text: "Top navigation bar matching minerals.html." },
-        { tag: "fixed", text: "All paper parameters (pH, dose, particle size) displayed in literature cards." }
+        { tag: "added", text: "Expanded theory panel with HSAB + E‑DLVO explanations." }
       ]}
     ];
 
@@ -444,9 +446,61 @@
     }
     const GENERIC_DEPRESSANT_AFFINITY = { none: 0, sodium_silicate: 7, starch: 5, shmp: 9 };
 
-    // ============================================================
-    // THEORY ENGINE (unchanged)
-    // ============================================================
+    // ---- DOSE / SIZE HELPERS ----
+    function doseRangeFor(mineralKey, collectorKey) {
+      const p = papersFor(mineralKey, collectorKey).filter(p => p.testedDose && p.testedDose.value !== null);
+      if (p.length === 0) return null;
+      if (p.length === 1) {
+        const d = p[0].testedDose;
+        return { mode: "single", value: d.value, unit: d.unit, sourceCount: 1 };
+      }
+      const units = new Set(p.map(p => p.testedDose.unit));
+      if (units.size > 1) {
+        return { mode: "mixed-units", values: p.map(p => ({ value: p.testedDose.value, unit: p.testedDose.unit, paperId: p.id })), sourceCount: p.length };
+      }
+      const values = p.map(p => p.testedDose.value);
+      const unit = p[0].testedDose.unit;
+      return { mode: "range", min: Math.min(...values), max: Math.max(...values), unit, sourceCount: p.length };
+    }
+
+    function particleSizeRangeFor(mineralKey, collectorKey) {
+      const p = papersFor(mineralKey, collectorKey).filter(p => p.testedParticleSize && p.testedParticleSize.value !== null);
+      if (p.length === 0) return null;
+      const values = p.map(p => p.testedParticleSize.value);
+      const units = p.map(p => p.testedParticleSize.unit || 'µm');
+      const unit = units[0] || 'µm';
+      return { mode: "range", min: Math.min(...values), max: Math.max(...values), unit, sourceCount: p.length };
+    }
+
+    function doseModifier(dose, doseRangeInfo) {
+      if (!doseRangeInfo) return { flag: null, tierPenalty: 0, note: "No dosage data on file for this pair." };
+      if (doseRangeInfo.mode === "single") {
+        const ratio = dose / doseRangeInfo.value;
+        if (ratio < 0.15 || ratio > 6) return { flag: "far-from-tested", tierPenalty: 2, note: `Far from the single reported dose (${doseRangeInfo.value} ${doseRangeInfo.unit}) — extrapolating.` };
+        if (ratio < 0.4 || ratio > 2.5) return { flag: "off-tested", tierPenalty: 1, note: `Some distance from the single reported dose (${doseRangeInfo.value} ${doseRangeInfo.unit}).` };
+        return { flag: null, tierPenalty: 0, note: `Close to the reported dose (${doseRangeInfo.value} ${doseRangeInfo.unit}).` };
+      }
+      if (doseRangeInfo.mode === "mixed-units") {
+        return { flag: "mixed-units", tierPenalty: 0, note: `Papers report dose in different units (${doseRangeInfo.values.map(v => v.unit).join(", ")}) — shown separately.` };
+      }
+      if (dose < doseRangeInfo.min * 0.3 || dose > doseRangeInfo.max * 2) {
+        return { flag: "far-from-tested", tierPenalty: 2, note: `Well outside the reported dose range (${doseRangeInfo.min}–${doseRangeInfo.max} ${doseRangeInfo.unit}).` };
+      }
+      if (dose < doseRangeInfo.min * 0.6 || dose > doseRangeInfo.max * 1.4) {
+        return { flag: "off-tested", tierPenalty: 1, note: `Outside the reported dose range (${doseRangeInfo.min}–${doseRangeInfo.max} ${doseRangeInfo.unit}).` };
+      }
+      return { flag: null, tierPenalty: 0, note: `Within the reported dose range (${doseRangeInfo.min}–${doseRangeInfo.max} ${doseRangeInfo.unit}).` };
+    }
+
+    function particleSizeModifier(size, sizeRangeInfo) {
+      if (!sizeRangeInfo) return { flag: null, tierPenalty: 0, note: "No particle-size data on file for this pair." };
+      if (size < sizeRangeInfo.min * 0.5 || size > sizeRangeInfo.max * 1.5) {
+        return { flag: "far-from-tested", tierPenalty: 1, note: `Outside the reported size range (${sizeRangeInfo.min}–${sizeRangeInfo.max} ${sizeRangeInfo.unit}).` };
+      }
+      return { flag: null, tierPenalty: 0, note: `Within the reported size range (${sizeRangeInfo.min}–${sizeRangeInfo.max} ${sizeRangeInfo.unit}).` };
+    }
+
+    // ---- THEORY ENGINE ----
     function surfaceStateFor(mineral, pH) {
       if (!mineral.anisotropic) {
         const chargeSign = mineral.pzc === null ? "neutral" : (pH > mineral.pzc ? "negative" : pH < mineral.pzc ? "positive" : "neutral");
@@ -525,7 +579,13 @@
       return { bondMode, strength, electrostaticFavorable, hsabMatch, usedTestedPH, pzcDelta, mechanismSwitched };
     }
 
-    function predictTheory(mineralKey, collectorKey, pH, testedPHInfo) {
+    function strengthTierDown(strength, tiers) {
+      const order = ["weak", "weak-to-moderate", "moderate-to-strong", "strong"];
+      const idx = Math.max(0, order.indexOf(strength) - tiers);
+      return order[idx];
+    }
+
+    function predictTheory(mineralKey, collectorKey, pH, testedPHInfo, dose, doseRangeInfo, particleSize, sizeRangeInfo) {
       const mineral = MINERALS[mineralKey];
       const collector = COLLECTORS[collectorKey];
       const surfaces = surfaceStateFor(mineral, pH);
@@ -534,10 +594,22 @@
       const mechanismSwitchInfo = switchPaper ? switchPaper.mechanismSwitch : null;
       const surfaceResults = surfaces.map(s => ({ ...s, ...bondForSurface(s, collector, pH, testedPHInfo, mechanismSwitchInfo) }));
       let dominant = surfaceResults.reduce((a, b) => (b.fraction > a.fraction ? b : a));
+
+      const doseInfo = doseModifier(dose, doseRangeInfo);
+      const sizeInfo = particleSizeModifier(particleSize, sizeRangeInfo);
+      const totalTierPenalty = doseInfo.tierPenalty + sizeInfo.tierPenalty;
+      if (totalTierPenalty > 0) {
+        dominant = { ...dominant, strength: strengthTierDown(dominant.strength, totalTierPenalty), penalized: true };
+      }
+
       return {
         surfaces: surfaceResults,
         dominant,
         hydrophobicNote: HYDROPHOBIC_TAIL_NOTES[collectorKey] || null,
+        doseNote: doseInfo.note || null,
+        sizeNote: sizeInfo.note || null,
+        doseFlag: doseInfo.flag,
+        sizeFlag: sizeInfo.flag,
         scopeNote: "Mechanistic prediction from surface-charge (PZC), HSAB matching, and hydrophobic-tail reasoning (extended DLVO). Not validated against measured recovery data — see the Literature panel for that."
       };
     }
@@ -569,21 +641,39 @@
       return { weak: 0, 'weak-to-moderate': 1, 'moderate-to-strong': 2, strong: 3 }[s] ?? 0;
     }
 
-    // ============================================================
-    // UI RENDERING
-    // ============================================================
+    // ---- Speciation hint ----
+    function getSpeciation(mineralKey, pH) {
+      const mineral = MINERALS[mineralKey];
+      if (!mineral || mineral.pzc === null) return null;
+      const pzc = mineral.pzc;
+      const diff = pH - pzc;
+      // Simple qualitative model: fraction of positive vs negative sites
+      const posFrac = 1 / (1 + Math.exp(diff * 1.5));
+      const negFrac = 1 - posFrac;
+      return { posFrac, negFrac, pzc };
+    }
+
+    // ---- UI RENDERING ----
     const els = {
       mineral: document.getElementById('mineral'),
       collector: document.getElementById('collector'),
       depressant: document.getElementById('depressant'),
-      ph: document.getElementById('ph'),
-      phVal: document.getElementById('phVal'),
+      ph: document.getElementById('ph'), phVal: document.getElementById('phVal'),
+      collectorDose: document.getElementById('collectorDose'),
+      collectorDoseVal: document.getElementById('collectorDoseVal'),
+      collectorDoseUnit: document.getElementById('collectorDoseUnit'),
+      collectorDoseNote: document.getElementById('collectorDoseNote'),
+      particleSize: document.getElementById('particleSize'),
+      particleSizeVal: document.getElementById('particleSizeVal'),
+      particleSizeUnit: document.getElementById('particleSizeUnit'),
+      particleSizeNote: document.getElementById('particleSizeNote'),
       theoryScopeNote: document.getElementById('theoryScopeNote'),
       theoryBody: document.getElementById('theoryBody'),
       evidenceCountTag: document.getElementById('evidenceCountTag'),
       conflictBannerWrap: document.getElementById('conflictBannerWrap'),
       evidenceWeightWrap: document.getElementById('evidenceWeightWrap'),
       evidenceBody: document.getElementById('evidenceBody'),
+      crystalSystemLabel: document.getElementById('crystalSystemLabel'),
     };
 
     function fillSelect(el, obj, keyToLabel) {
@@ -597,6 +687,25 @@
     els.depressant.value = 'none';
 
     const sessionComments = {};
+    const VERIFY_STORAGE_KEY = 'flotation_bench_verified_papers';
+
+    function getVerifiedPapers() {
+      try {
+        const data = localStorage.getItem(VERIFY_STORAGE_KEY);
+        return data ? JSON.parse(data) : {};
+      } catch { return {}; }
+    }
+
+    function setVerifiedPaper(id) {
+      const verified = getVerifiedPapers();
+      verified[id] = true;
+      localStorage.setItem(VERIFY_STORAGE_KEY, JSON.stringify(verified));
+    }
+
+    function isPaperVerified(id) {
+      const verified = getVerifiedPapers();
+      return !!verified[id];
+    }
 
     function render() {
       const mineralKey = els.mineral.value;
@@ -605,11 +714,50 @@
       const mineral = MINERALS[mineralKey];
       const collector = COLLECTORS[collectorKey];
       const pH = parseFloat(els.ph.value);
+      const collectorDose = parseFloat(els.collectorDose.value);
+      const particleSize = parseFloat(els.particleSize.value);
 
       els.phVal.textContent = pH.toFixed(1);
+      els.collectorDoseVal.textContent = collectorDose.toFixed(0);
+      els.particleSizeVal.textContent = particleSize.toFixed(0);
 
       const papers = papersFor(mineralKey, collectorKey);
       const weight = evidenceWeightFor(mineralKey, collectorKey);
+      const doseRange = doseRangeFor(mineralKey, collectorKey);
+      const sizeRange = particleSizeRangeFor(mineralKey, collectorKey);
+
+      // Update dose slider bounds
+      if (doseRange && doseRange.mode === 'range') {
+        els.collectorDose.min = Math.floor(doseRange.min * 0.3);
+        els.collectorDose.max = Math.ceil(doseRange.max * 1.5);
+        els.collectorDoseUnit.textContent = doseRange.unit;
+        els.collectorDoseNote.textContent = `Reported range: ${doseRange.min}–${doseRange.max} ${doseRange.unit} (${doseRange.sourceCount} papers).`;
+        els.collectorDoseNote.className = 'slider-note';
+      } else if (doseRange && doseRange.mode === 'single') {
+        els.collectorDose.min = Math.floor(doseRange.value * 0.3);
+        els.collectorDose.max = Math.ceil(doseRange.value * 1.5);
+        els.collectorDoseUnit.textContent = doseRange.unit;
+        els.collectorDoseNote.textContent = `Single reported dose: ${doseRange.value} ${doseRange.unit}.`;
+        els.collectorDoseNote.className = 'slider-note warn';
+      } else if (doseRange && doseRange.mode === 'mixed-units') {
+        els.collectorDoseUnit.textContent = 'mixed units';
+        els.collectorDoseNote.textContent = `Papers report different units: ${doseRange.values.map(v => `${v.value} ${v.unit}`).join(', ')}.`;
+        els.collectorDoseNote.className = 'slider-note warn';
+      } else {
+        els.collectorDoseUnit.textContent = 'g/t (assumed)';
+        els.collectorDoseNote.textContent = 'No dosage data on file for this pair.';
+        els.collectorDoseNote.className = 'slider-note warn';
+      }
+
+      if (sizeRange) {
+        els.particleSizeUnit.textContent = sizeRange.unit || 'µm';
+        els.particleSizeNote.textContent = `Reported range: ${sizeRange.min}–${sizeRange.max} ${sizeRange.unit || 'µm'} (${sizeRange.sourceCount} papers).`;
+        els.particleSizeNote.className = 'slider-note';
+      } else {
+        els.particleSizeUnit.textContent = 'µm';
+        els.particleSizeNote.textContent = 'No particle-size data on file for this pair.';
+        els.particleSizeNote.className = 'slider-note warn';
+      }
 
       const papersWithPH = papers.filter(p => p.testedPH !== null && p.testedPH !== undefined);
       let testedPHInfo = null;
@@ -620,55 +768,85 @@
         testedPHInfo = { testedPH: avgPH, testedPHRange: [Math.min(...allRangeBounds), Math.max(...allRangeBounds)], sourceCount: papersWithPH.length };
       }
 
-      const theory = predictTheory(mineralKey, collectorKey, pH, testedPHInfo);
+      const theory = predictTheory(mineralKey, collectorKey, pH, testedPHInfo, collectorDose, doseRange, particleSize, sizeRange);
       const depResult = depressantStrength(depressantKey, mineralKey, collector.hsab === 'hard' ? 8 : 8, pH, 0);
 
       els.theoryScopeNote.textContent = theory.scopeNote;
-      renderTheoryBody(theory, mineral, collector, depressantKey, depResult, pH);
+      renderTheoryBody(theory, mineral, collector, depressantKey, depResult, pH, mineralKey);
 
       els.evidenceCountTag.textContent = `${papers.length} paper${papers.length === 1 ? '' : 's'}`;
       renderEvidenceWeight(weight);
       renderEvidenceBody(papers, mineralKey, collectorKey, pH);
+
       renderConflictBanner(theory, papers, mineralKey, collectorKey);
 
       updateScene({ mineral, collector, mineralKey, collectorKey, theory, depressantKey, depResult, pH });
     }
 
-    // ---- Theory Body (with expanded explanations) ----
-    function renderTheoryBody(theory, mineral, collector, depressantKey, depResult, pH) {
+    function renderTheoryBody(theory, mineral, collector, depressantKey, depResult, pH, mineralKey) {
       const dom = theory.dominant;
       const isAnisotropic = theory.surfaces.length > 1;
       let html = '';
       html += `<div class="strength-readout">
         <span class="strength-value ${dom.strength}">${dom.strength.replace(/-/g, ' ')}</span>
-        <span class="strength-label">${dom.bondMode}${dom.usedTestedPH ? ' · graded vs. tested pH' : ' · PZC-distance fallback'}</span>
+        <span class="strength-label">${dom.bondMode}${dom.usedTestedPH ? ' · graded vs. tested pH' : ' · PZC-distance fallback'}${dom.penalized ? ' · reduced by dose/size' : ''}</span>
       </div>`;
       if (dom.mechanismSwitched) {
         html += `<div class="dose-flag" style="border-color:var(--evidence-bright);background:rgba(62,124,124,0.1);">
-          <strong>Mechanism override active:</strong> a paper on file reports the bonding mechanism itself changes with pH — this collector's usual mechanism has been switched to electrostatic reasoning below pH 7 (default). See Literature panel.
+          <strong>Mechanism override:</strong> a paper reports the bonding mechanism changes with pH — switched to electrostatic below pH 7.
         </div>`;
       }
       html += `<div class="diagram-wrap">`;
       theory.surfaces.forEach(s => {
         const pzcDisplay = s.pzc !== null ? s.pzc : null;
-        html += `<div style="margin-bottom:${theory.surfaces.length > 1 ? '14px' : '0'}">
-          <div class="mono" style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">
+        html += `<div style="margin-bottom:${theory.surfaces.length > 1 ? '12px' : '0'}">
+          <div class="mono" style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px;">
             ${isAnisotropic ? s.label + ' face (' + (s.fraction * 100).toFixed(0) + '% area) — ' : ''}${s.chargeSign} at pH ${pH.toFixed(1)}${pzcDisplay !== null ? ', PZC ' + pzcDisplay : ' (permanent charge)'}
           </div>
           <div class="pzc-bar">
             <div class="zone pos" style="width:${pzcDisplay !== null ? Math.min(100, (pzcDisplay / 14) * 100) : 0}%"></div>
             <div class="zone neg" style="width:${pzcDisplay !== null ? Math.min(100, 100 - (pzcDisplay / 14) * 100) : 100}%"></div>
             ${pzcDisplay !== null ? `<div class="marker" style="left:${(pzcDisplay / 14) * 100}%"><span class="mtag">PZC ${pzcDisplay}</span></div>` : ''}
-            <div class="marker ph-marker" style="left:${Math.min(100, (pH / 14) * 100)}%"><span class="mtag" style="top:38px;color:var(--ochre-bright);">pH ${pH.toFixed(1)}</span></div>
+            <div class="marker ph-marker" style="left:${Math.min(100, (pH / 14) * 100)}%"><span class="mtag" style="top:36px;color:var(--ochre-bright);">pH ${pH.toFixed(1)}</span></div>
           </div>
           <div class="pzc-axis"><span>1 (acidic)</span><span>14 (alkaline)</span></div>
         </div>`;
       });
       html += `</div>`;
+
+      // Speciation hint
+      const spec = getSpeciation(mineralKey, pH);
+      if (spec) {
+        const posPct = (spec.posFrac * 100).toFixed(0);
+        const negPct = (spec.negFrac * 100).toFixed(0);
+        html += `<div class="speciation-hint">
+          <div class="spec-title">🧪 Surface speciation (${mineral.metalIon} sites)</div>
+          <div class="spec-bar">
+            <div class="spec-frac spec-pos" style="width:${posPct}%;"></div>
+            <div class="spec-frac spec-neg" style="width:${negPct}%;"></div>
+          </div>
+          <div class="spec-labels">
+            <span>${mineral.metalIon}–OH₂⁺ (${posPct}%)</span>
+            <span>${mineral.metalIon}–O⁻ (${negPct}%)</span>
+          </div>
+        </div>`;
+      } else if (mineral.anisotropic) {
+        html += `<div class="speciation-hint">
+          <div class="spec-title">🧪 Surface speciation (kaolinite – anisotropic)</div>
+          <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;">
+            <strong>Basal face (85%):</strong> permanently negative (isomorphic substitution)<br>
+            <strong>Edge face (15%):</strong> pH-sensitive Al–OH (PZC ~6.5) — currently ${pH > 6.5 ? 'negative' : pH < 6.5 ? 'positive' : 'neutral'}
+          </div>
+        </div>`;
+      }
+
       html += `<ul class="mech-list">
         <li><span class="mech-label">HSAB match</span>${mineral.hsab} surface × ${collector.hsab} collector — ${dom.hsabMatch ? 'match' : 'no match'}</li>
         <li><span class="mech-label">Hydrophobic tail (E-DLVO)</span>${theory.hydrophobicNote || 'No data on file.'}</li>
+        ${theory.doseNote ? `<li><span class="mech-label">Dose effect</span>${theory.doseNote}</li>` : ''}
+        ${theory.sizeNote ? `<li><span class="mech-label">Particle size</span>${theory.sizeNote}</li>` : ''}
       </ul>`;
+
       const hsabMatchStr = dom.hsabMatch ? '✅ <strong>match</strong>' : '❌ <strong>no match</strong>';
       const hsabDetail = dom.hsabMatch
         ? `The ${mineral.hsab} surface metal ion (${mineral.metalIon}) and the ${collector.hsab} collector head group (${collector.headGroup}) are both ${mineral.hsab}. This enables strong ${collector.mechanism.includes('chelation') ? 'chelation / covalent' : 'electrostatic'} bonding.`
@@ -701,6 +879,9 @@
         return;
       }
       els.evidenceBody.innerHTML = papers.map(p => {
+        const verified = isPaperVerified(p.id);
+        const isVerified = p.verified || verified;
+
         let phRelevance = null;
         if (p.testedPH !== null && p.testedPH !== undefined) {
           const [lo, hi] = p.testedPHRange || [p.testedPH, p.testedPH];
@@ -729,10 +910,18 @@
           paramItems.push(`<span class="param-item"><span class="param-label">Particle size:</span><span class="param-value">${p.testedParticleSize.value} ${unit}${rangeStr}</span></span>`);
         }
         if (paramItems.length > 0) paramsHtml = `<div class="paper-params">${paramItems.join('')}</div>`;
+
+        const verifyBtnHtml = !p.verified ? `
+          <button class="verify-btn ${verified ? 'verified' : ''}" data-paper-id="${p.id}">
+            ${verified ? '✓ Verified' : 'Verify'}
+          </button>
+        ` : '';
+
         return `
         <div class="paper-card outcome-${p.outcome} ${phRelevance && phRelevance.level !== 'in-range' ? 'ph-mismatch' : ''}">
           <span class="paper-outcome-tag ${p.outcome}">${p.outcome.replace(/-/g, ' ')}</span>
-          ${!p.verified ? '<span class="unverified-flag">found via search — not independently read</span>' : ''}
+          ${!p.verified ? `<span class="unverified-flag">found via search — not independently read</span>` : ''}
+          ${verifyBtnHtml}
           <div class="paper-title">${p.title}</div>
           <div class="paper-meta">${p.authors ? p.authors + ' · ' : ''}${p.year ? p.year + ' · ' : ''}${p.source}</div>
           ${relevanceBanner}
@@ -742,6 +931,22 @@
           ${p.divergenceNote ? `<div class="paper-divergence">▸ ${p.divergenceNote}</div>` : ''}
         </div>`;
       }).join('');
+
+      // Bind verify buttons
+      document.querySelectorAll('.verify-btn[data-paper-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.paperId;
+          setVerifiedPaper(id);
+          btn.textContent = '✓ Verified';
+          btn.classList.add('verified');
+          // Re-render evidence body to update all buttons
+          const mineralKey = els.mineral.value;
+          const collectorKey = els.collector.value;
+          const pH = parseFloat(els.ph.value);
+          const papers = papersFor(mineralKey, collectorKey);
+          renderEvidenceBody(papers, mineralKey, collectorKey, pH);
+        });
+      });
     }
 
     function renderConflictBanner(theory, papers, mineralKey, collectorKey) {
@@ -795,9 +1000,9 @@
     }
 
     // ============================================================
-    // 3D SCENE — DYNAMIC CRYSTAL + COLLECTOR
+    // 3D SCENE — UPGRADED with axes, labels, detailed shapes
     // ============================================================
-    let renderer3D, scene3D, camera3D, controls3D, animationId3D;
+    let renderer3D, scene3D, camera3D, controls3D, labelRenderer, animationId3D;
     let currentSceneState = null;
 
     const MINERAL_COLORS = {
@@ -813,6 +1018,10 @@
     const TAIL_LENGTHS = {
       fatty_acid: 0.9, amine: 0.7, hydroxamate: 0.55, xanthate: 0.4, sulfonate: 0.4
     };
+    const CRYSTAL_SYSTEM_LABELS = {
+      Cubic: "Cubic", Tetragonal: "Tetragonal", Orthorhombic: "Orthorhombic",
+      Monoclinic: "Monoclinic", Triclinic: "Triclinic", Trigonal: "Trigonal"
+    };
 
     function getCrystalSystem(mineralKey) {
       const map = {
@@ -823,50 +1032,95 @@
       return map[mineralKey] || 'Orthorhombic';
     }
 
-    function addCrystalWireframe(group, system, color, opacity = 0.25) {
+    function addCrystalWireframe(group, system, color, opacity = 0.2) {
       const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, wireframe: false, side: THREE.DoubleSide });
-      const edgeMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: opacity + 0.3 });
+      const edgeMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: opacity + 0.35 });
+
       let geo;
       switch (system) {
-        case 'Cubic': geo = new THREE.BoxGeometry(2.0, 2.0, 2.0); break;
-        case 'Tetragonal': geo = new THREE.BoxGeometry(1.8, 2.4, 1.8); break;
-        case 'Orthorhombic': geo = new THREE.BoxGeometry(2.2, 2.6, 1.4); break;
+        case 'Cubic':
+          geo = new THREE.BoxGeometry(2.0, 2.0, 2.0);
+          break;
+        case 'Tetragonal':
+          geo = new THREE.BoxGeometry(1.8, 2.4, 1.8);
+          break;
+        case 'Orthorhombic':
+          geo = new THREE.BoxGeometry(2.2, 2.6, 1.4);
+          break;
         case 'Monoclinic': {
           geo = new THREE.BoxGeometry(2.0, 2.4, 1.6);
-          const mesh = new THREE.Mesh(geo, mat); mesh.position.x = 0.3; mesh.rotation.z = 0.15; mesh.rotation.x = 0.1; group.add(mesh);
-          const edges = new THREE.EdgesGeometry(geo); const line = new THREE.LineSegments(edges, edgeMat); line.position.copy(mesh.position); line.rotation.copy(mesh.rotation); group.add(line);
+          const mesh = new THREE.Mesh(geo, mat);
+          mesh.position.x = 0.3;
+          mesh.rotation.z = 0.15;
+          mesh.rotation.x = 0.1;
+          group.add(mesh);
+          const edges = new THREE.EdgesGeometry(geo);
+          const line = new THREE.LineSegments(edges, edgeMat);
+          line.position.copy(mesh.position);
+          line.rotation.copy(mesh.rotation);
+          group.add(line);
           return;
         }
         case 'Triclinic': {
           geo = new THREE.BoxGeometry(2.0, 2.2, 1.6);
-          const mesh = new THREE.Mesh(geo, mat); mesh.position.set(0.4, 0.15, 0.3); mesh.rotation.set(0.2, 0.3, 0.1); group.add(mesh);
-          const edges = new THREE.EdgesGeometry(geo); const line = new THREE.LineSegments(edges, edgeMat); line.position.copy(mesh.position); line.rotation.copy(mesh.rotation); group.add(line);
+          const mesh = new THREE.Mesh(geo, mat);
+          mesh.position.set(0.4, 0.15, 0.3);
+          mesh.rotation.set(0.2, 0.3, 0.1);
+          group.add(mesh);
+          const edges = new THREE.EdgesGeometry(geo);
+          const line = new THREE.LineSegments(edges, edgeMat);
+          line.position.copy(mesh.position);
+          line.rotation.copy(mesh.rotation);
+          group.add(line);
           return;
         }
         case 'Trigonal': {
-          const prismGeo = new THREE.CylinderGeometry(1.2, 1.2, 1.6, 6); const prism = new THREE.Mesh(prismGeo, mat); group.add(prism); const prismEdges = new THREE.EdgesGeometry(prismGeo); const prismLine = new THREE.LineSegments(prismEdges, edgeMat); group.add(prismLine);
+          const prismGeo = new THREE.CylinderGeometry(1.2, 1.2, 1.6, 6);
+          const prism = new THREE.Mesh(prismGeo, mat);
+          group.add(prism);
+          const prismEdges = new THREE.EdgesGeometry(prismGeo);
+          const prismLine = new THREE.LineSegments(prismEdges, edgeMat);
+          group.add(prismLine);
           const pyGeo = new THREE.ConeGeometry(1.2, 0.8, 6);
-          const pyTop = new THREE.Mesh(pyGeo, mat); pyTop.position.y = 1.2; group.add(pyTop); const pyTopEdges = new THREE.EdgesGeometry(pyGeo); const pyTopLine = new THREE.LineSegments(pyTopEdges, edgeMat); pyTopLine.position.y = 1.2; group.add(pyTopLine);
-          const pyBot = new THREE.Mesh(pyGeo, mat); pyBot.position.y = -1.2; pyBot.rotation.x = Math.PI; group.add(pyBot); const pyBotEdges = new THREE.EdgesGeometry(pyGeo); const pyBotLine = new THREE.LineSegments(pyBotEdges, edgeMat); pyBotLine.position.y = -1.2; pyBotLine.rotation.x = Math.PI; group.add(pyBotLine);
+          const pyTop = new THREE.Mesh(pyGeo, mat);
+          pyTop.position.y = 1.2;
+          group.add(pyTop);
+          const pyTopEdges = new THREE.EdgesGeometry(pyGeo);
+          const pyTopLine = new THREE.LineSegments(pyTopEdges, edgeMat);
+          pyTopLine.position.y = 1.2;
+          group.add(pyTopLine);
+          const pyBot = new THREE.Mesh(pyGeo, mat);
+          pyBot.position.y = -1.2;
+          pyBot.rotation.x = Math.PI;
+          group.add(pyBot);
+          const pyBotEdges = new THREE.EdgesGeometry(pyGeo);
+          const pyBotLine = new THREE.LineSegments(pyBotEdges, edgeMat);
+          pyBotLine.position.y = -1.2;
+          pyBotLine.rotation.x = Math.PI;
+          group.add(pyBotLine);
           return;
         }
-        default: geo = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+        default:
+          geo = new THREE.BoxGeometry(1.8, 1.8, 1.8);
       }
-      const mesh = new THREE.Mesh(geo, mat); group.add(mesh);
-      const edges = new THREE.EdgesGeometry(geo); const line = new THREE.LineSegments(edges, edgeMat); group.add(line);
+      const mesh = new THREE.Mesh(geo, mat);
+      group.add(mesh);
+      const edges = new THREE.EdgesGeometry(geo);
+      const line = new THREE.LineSegments(edges, edgeMat);
+      group.add(line);
     }
 
     function initThree() {
       const container = document.getElementById('three-container');
       const rect = container.getBoundingClientRect();
       const width = rect.width || container.clientWidth || 800;
-      const height = rect.height || container.clientHeight || 440;
+      const height = rect.height || container.clientHeight || 420;
 
       scene3D = new THREE.Scene();
       scene3D.background = new THREE.Color(0x1A2A3A);
 
       camera3D = new THREE.PerspectiveCamera(35, width / height, 0.1, 20);
-      camera3D.position.set(4, 3, 6);
+      camera3D.position.set(4.5, 3.5, 6.5);
       camera3D.lookAt(0, 0, 0);
 
       renderer3D = new THREE.WebGLRenderer({ antialias: true });
@@ -874,11 +1128,20 @@
       renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer3D.domElement);
 
+      // CSS2D renderer for labels
+      labelRenderer = new CSS2DRenderer();
+      labelRenderer.setSize(width, height);
+      labelRenderer.domElement.style.position = 'absolute';
+      labelRenderer.domElement.style.top = '0';
+      labelRenderer.domElement.style.left = '0';
+      labelRenderer.domElement.style.pointerEvents = 'none';
+      container.appendChild(labelRenderer.domElement);
+
       controls3D = new OrbitControls(camera3D, renderer3D.domElement);
       controls3D.enableDamping = true;
       controls3D.dampingFactor = 0.08;
       controls3D.autoRotate = true;
-      controls3D.autoRotateSpeed = 2.0;
+      controls3D.autoRotateSpeed = 1.8;
       controls3D.minDistance = 2.5;
       controls3D.maxDistance = 12;
       controls3D.target.set(0, 0, 0);
@@ -895,8 +1158,9 @@
       window.addEventListener('resize', () => {
         const r = container.getBoundingClientRect();
         const w = r.width || container.clientWidth || 800;
-        const h = r.height || container.clientHeight || 440;
+        const h = r.height || container.clientHeight || 420;
         renderer3D.setSize(w, h);
+        labelRenderer.setSize(w, h);
         camera3D.aspect = w / h;
         camera3D.updateProjectionMatrix();
       });
@@ -907,7 +1171,26 @@
     function animateThree() {
       animationId3D = requestAnimationFrame(animateThree);
       if (controls3D) controls3D.update();
-      if (renderer3D && scene3D && camera3D) renderer3D.render(scene3D, camera3D);
+      if (renderer3D && scene3D && camera3D) {
+        renderer3D.render(scene3D, camera3D);
+        if (labelRenderer) labelRenderer.render(scene3D, camera3D);
+      }
+    }
+
+    function createLabel(text, color = '#EDE7DD', size = '12px', weight = '500') {
+      const div = document.createElement('div');
+      div.textContent = text;
+      div.style.color = color;
+      div.style.fontFamily = 'Inter, sans-serif';
+      div.style.fontSize = size;
+      div.style.fontWeight = weight;
+      div.style.textShadow = '0 0 15px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.6)';
+      div.style.background = 'rgba(15,23,42,0.7)';
+      div.style.padding = '2px 10px';
+      div.style.borderRadius = '6px';
+      div.style.border = '1px solid rgba(255,255,255,0.1)';
+      div.style.backdropFilter = 'blur(4px)';
+      return new CSS2DObject(div);
     }
 
     function buildScene(state) {
@@ -932,12 +1215,28 @@
       const mineralColor = MINERAL_COLORS[mineralKey] || 0xFFB347;
       const crystalSystem = getCrystalSystem(mineralKey);
 
-      // Crystal wireframe
+      // ---- Crystal wireframe ----
       const crystalGroup = new THREE.Group();
-      addCrystalWireframe(crystalGroup, crystalSystem, mineralColor, 0.3);
+      addCrystalWireframe(crystalGroup, crystalSystem, mineralColor, 0.25);
       scene3D.add(crystalGroup);
 
-      // Surface lattice
+      // ---- Axes labels (a, b, c) ----
+      const axisColor = 0xEDE7DD;
+      const axisLen = 2.8;
+      const axisPositions = [
+        { dir: [1, 0, 0], label: 'a', pos: [axisLen, 0, 0] },
+        { dir: [0, 1, 0], label: 'b', pos: [0, axisLen, 0] },
+        { dir: [0, 0, 1], label: 'c', pos: [0, 0, axisLen] }
+      ];
+      axisPositions.forEach(({ dir, label, pos }) => {
+        const arrow = new THREE.ArrowHelper(new THREE.Vector3(...dir), new THREE.Vector3(0, 0, 0), axisLen, axisColor, 0.2, 0.1);
+        scene3D.add(arrow);
+        const lbl = createLabel(label, '#EDE7DD', '13px', '600');
+        lbl.position.set(pos[0] * 1.1, pos[1] * 1.1, pos[2] * 1.1);
+        scene3D.add(lbl);
+      });
+
+      // ---- Surface lattice ----
       const gridN = 6, spacing = 0.45;
       const siteColor = mineralColor;
       const activeColor = 0xFF6B6B;
@@ -968,7 +1267,7 @@
         }
       }
 
-      // Collector
+      // ---- Collector ----
       const tailLen = TAIL_LENGTHS[state.collectorKey] || 0.55;
       const headY = 0.65 + Math.sin(performance.now() / 800) * 0.04;
       const headColor = collector.charge === 'anionic' ? 0x4ECDC4 : 0xFFE66D;
@@ -988,7 +1287,20 @@
       headMesh.position.copy(headPos);
       scene3D.add(headMesh);
 
-      // Bond line
+      // ---- Collector labels (CSS2D) ----
+      const headLabel = createLabel(`${collector.headGroup} (${collector.charge})`, '#EDE7DD', '11px', '500');
+      headLabel.position.set(0.6, headY, 0);
+      scene3D.add(headLabel);
+
+      const tailLabel = createLabel('hydrophobic tail', '#B0BEC5', '10px', '400');
+      tailLabel.position.set(0.3, headY + tailHeight + 0.15, -0.1);
+      scene3D.add(tailLabel);
+
+      const nameLabel = createLabel(collector.name, '#EDE7DD', '13px', '600');
+      nameLabel.position.set(0.05, headY + tailHeight + 0.45, -0.05);
+      scene3D.add(nameLabel);
+
+      // ---- Bond line ----
       if (bonded) {
         const points = [new THREE.Vector3(0, 0.1, 0), new THREE.Vector3(0, headY - 0.1, 0)];
         const curve = new THREE.CatmullRomCurve3(points);
@@ -1009,6 +1321,15 @@
             scene3D.add(dash);
           }
         }
+        // Bond type label
+        const midPt = curve.getPoint(0.5);
+        const bondLabel = createLabel(
+          suppressed ? 'bond suppressed' : dom.bondMode,
+          suppressed ? '#6FA3C9' : strengthColor,
+          '10px', '600'
+        );
+        bondLabel.position.set(midPt.x + 0.5, midPt.y + 0.05, midPt.z);
+        scene3D.add(bondLabel);
       } else {
         const points = [new THREE.Vector3(0, 0.1, 0), new THREE.Vector3(0, headY - 0.1, 0)];
         const curve = new THREE.CatmullRomCurve3(points);
@@ -1018,18 +1339,26 @@
           dot.position.copy(pt);
           scene3D.add(dot);
         }
+        const noBondLabel = createLabel('no significant bond', '#C24E4E', '11px', '600');
+        noBondLabel.position.set(0.5, 0.3, 0);
+        scene3D.add(noBondLabel);
       }
 
-      // Update color legend
+      // ---- Crystal system label on overlay ----
+      const systemLabel = CRYSTAL_SYSTEM_LABELS[crystalSystem] || crystalSystem;
+      els.crystalSystemLabel.textContent = `${MINERAL_NAMES[mineralKey]} — ${systemLabel} System`;
+
+      // ---- Color legend ----
       const legend = document.getElementById('colorLegend');
       const hexColor = '#' + new THREE.Color(mineralColor).getHexString();
       legend.innerHTML = `
-        <span class="legend-item"><span class="color-swatch" style="background:${hexColor};"></span>${MINERAL_NAMES[mineralKey]} crystal (${crystalSystem})</span>
+        <span class="legend-item"><span class="color-swatch" style="background:${hexColor};"></span>${MINERAL_NAMES[mineralKey]} (${systemLabel})</span>
         <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
         <span class="legend-item"><span class="color-swatch" style="background:${collector.charge === 'anionic' ? '#4ECDC4' : '#FFE66D'};"></span>${collector.name} head</span>
-        <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${tailLen.toFixed(2)} units)</span>
+        <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${tailLen.toFixed(2)})</span>
         <span class="legend-item"><span class="color-swatch" style="background:${strengthColor};"></span>Bond (${dom.strength})</span>
         ${suppressed ? '<span class="legend-item"><span class="color-swatch" style="background:#6FA3C9;"></span>Bond suppressed</span>' : ''}
+        <span class="legend-item"><span class="color-swatch" style="background:transparent;border:1px solid #EDE7DD;"></span>Axes: a, b, c</span>
       `;
     }
 
@@ -1057,7 +1386,7 @@
     // ============================================================
     // BOOT
     // ============================================================
-    ['mineral', 'collector', 'depressant', 'ph'].forEach(id => {
+    ['mineral', 'collector', 'depressant', 'ph', 'collectorDose', 'particleSize'].forEach(id => {
       els[id].addEventListener('input', render);
     });
 
@@ -1067,7 +1396,7 @@
       if (!renderer3D) { initThree(); setTimeout(() => { if (currentSceneState) buildScene(currentSceneState); }, 100); }
     }, 200);
 
-    console.log('🫧 Flotation Bench v3 — 37 papers, dynamic 3D viewer loaded.');
+    console.log('🫧 Flotation Bench v3 — all upgrades loaded.');
   </script>
 </body>
 </html>
