@@ -5,618 +5,724 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>
+    <title>
 
-Flotation Simulation Hub | Mineral Database
+        Flotation Simulation Hub | Mineral Database
 
-</title>
+    </title>
 
-<meta name="description"
-content="Mineral database for flotation, surface chemistry and collector selection.">
+    <meta name="description"
+          content="Mineral database for flotation, surface chemistry and collector selection.">
 
-<link rel="stylesheet"
-href="css/styles.css">
+    <link rel="stylesheet"
+          href="css/styles.css">
+
+    <style>
+
+        .modal-overlay {
+
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+
+        }
+
+        .modal-overlay.active {
+
+            display: flex;
+
+        }
+
+        .modal-box {
+
+            background: #fff;
+            border-radius: 8px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+        }
+
+        .modal-close {
+
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            color: #444;
+
+        }
+
+        .modal-box h3 {
+
+            margin-top: 0;
+            margin-bottom: 4px;
+
+        }
+
+        .modal-formula {
+
+            color: #666;
+            margin-bottom: 18px;
+            font-style: italic;
+
+        }
+
+        .modal-box p {
+
+            margin: 10px 0;
+
+        }
+
+        .modal-wiki-link {
+
+            display: inline-block;
+            margin-top: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #0645AD;
+
+        }
+
+        .modal-wiki-link:hover {
+
+            text-decoration: underline;
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-<header class="hero">
+    <header class="hero">
 
-<nav class="navbar">
+        <nav class="navbar">
 
-<div class="logo">
+            <div class="logo">
 
-FLOTATION
-<span>SIMULATION HUB</span>
+                FLOTATION
+                <span>SIMULATION HUB</span>
 
-</div>
+            </div>
 
-<ul class="nav-links">
+            <ul class="nav-links">
 
-<li><a href="index.html">Home</a></li>
+                <li><a href="index.html">Home</a></li>
 
-<li><a href="literature.html">Literature</a></li>
+                <li><a href="literature.html">Literature</a></li>
 
-<li><a href="collectors.html">Collectors</a></li>
+                <li><a href="collectors.html">Collectors</a></li>
 
-<li><a href="chemistry.html">Surface Chemistry</a></li>
+                <li><a href="chemistry.html">Surface Chemistry</a></li>
 
-<li><a href="references.html">References</a></li>
+                <li><a href="references.html">References</a></li>
 
-</ul>
+            </ul>
 
-</nav>
+        </nav>
 
-<div class="hero-content">
+        <div class="hero-content">
 
-<h1>
+            <h1>
 
-Mineral Database
+                Mineral Database
 
-</h1>
+            </h1>
 
-<p>
+            <p>
 
-Explore flotation behavior,
-surface chemistry,
-point of zero charge,
-collector selection
-and adsorption mechanisms.
+                Explore flotation behavior,
+                surface chemistry,
+                point of zero charge,
+                collector selection
+                and adsorption mechanisms.
 
-</p>
+            </p>
 
-</div>
+        </div>
 
-</header>
+    </header>
 
-<main>
+    <main>
 
-<section>
+        <section>
 
-<h2>
+            <h2>
 
-Aluminum-Bearing Minerals
+                Aluminum-Bearing Minerals
 
-</h2>
+            </h2>
 
-<div class="dashboard-grid">
+            <div class="dashboard-grid">
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Boehmite
+                        Boehmite
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-AlO(OH)
+                        AlO(OH)
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈9
+                        ≈9
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Hard acid
+                        Hard acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Hydroxamate,
-Fatty acid,
-Amine
+                        Hydroxamate,
+                        Fatty acid,
+                        Amine
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Chelation
+                        Chelation
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('boehmite')">
+                    <button onclick="showMineral('boehmite')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Gibbsite
+                        Gibbsite
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-Al(OH)₃
+                        Al(OH)₃
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈10
+                        ≈10
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Hard acid
+                        Hard acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Hydroxamate,
-Fatty acid
+                        Hydroxamate,
+                        Fatty acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Chemisorption
+                        Chemisorption
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('gibbsite')">
+                    <button onclick="showMineral('gibbsite')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Diaspore
+                        Diaspore
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-AlO(OH)
+                        AlO(OH)
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈8
+                        ≈8
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Hard acid
+                        Hard acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Hydroxamate,
-Amine
+                        Hydroxamate,
+                        Amine
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Surface complexation
+                        Surface complexation
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('diaspore')">
+                    <button onclick="showMineral('diaspore')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</section>
+        </section>
 
-<section>
+        <section>
 
-<h2>
+            <h2>
 
-Silicate Minerals
+                Silicate Minerals
 
-</h2>
+            </h2>
 
-<div class="dashboard-grid">
+            <div class="dashboard-grid">
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Kaolinite
+                        Kaolinite
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-Al₂Si₂O₅(OH)₄
+                        Al₂Si₂O₅(OH)₄
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈4
+                        ≈4
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Hard acid
+                        Hard acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Amine,
-Hydroxamate
+                        Amine,
+                        Hydroxamate
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Electrostatic attraction
+                        Electrostatic attraction
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('kaolinite')">
+                    <button onclick="showMineral('kaolinite')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Quartz
+                        Quartz
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-SiO₂
+                        SiO₂
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈2
+                        ≈2
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Hard acid
+                        Hard acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Amine
+                        Amine
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Electrostatic attraction
+                        Electrostatic attraction
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('quartz')">
+                    <button onclick="showMineral('quartz')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</section>
+        </section>
 
-<section>
+        <section>
 
-<h2>
+            <h2>
 
-Ore Minerals
+                Ore Minerals
 
-</h2>
+            </h2>
 
-<div class="dashboard-grid">
+            <div class="dashboard-grid">
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Hematite
+                        Hematite
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-Fe₂O₃
+                        Fe₂O₃
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈8
+                        ≈8
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Hard acid
+                        Hard acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Hydroxamate,
-Fatty acid
+                        Hydroxamate,
+                        Fatty acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Chelation
+                        Chelation
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('hematite')">
+                    <button onclick="showMineral('hematite')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Galena
+                        Galena
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-PbS
+                        PbS
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈6
+                        ≈6
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Soft acid
+                        Soft acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Xanthate
+                        Xanthate
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Chemisorption
+                        Chemisorption
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('galena')">
+                    <button onclick="showMineral('galena')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-<div class="card">
+                <div class="card">
 
-<h3>
+                    <h3>
 
-Chalcopyrite
+                        Chalcopyrite
 
-</h3>
+                    </h3>
 
-<p>
+                    <p>
 
-Formula:
+                        Formula:
 
-CuFeS₂
+                        CuFeS₂
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-PZC:
+                        PZC:
 
-≈5
+                        ≈5
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-HSAB:
+                        HSAB:
 
-Soft acid
+                        Soft acid
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Typical collectors:
+                        Typical collectors:
 
-Xanthate
+                        Xanthate
 
-</p>
+                    </p>
 
-<p>
+                    <p>
 
-Mechanism:
+                        Mechanism:
 
-Chemisorption
+                        Chemisorption
 
-</p>
+                    </p>
 
-<button
-onclick="showMineral('chalcopyrite')">
+                    <button onclick="showMineral('chalcopyrite')">
 
-More Information
+                        More Information
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</section>
+        </section>
 
-<section>
+    </main>
 
-<h2>
+    <footer>
 
-Mineral Information
+        <p>
 
-</h2>
+            © 2026 Flotation Simulation Hub
 
-<div
-class="result-box"
-id="mineralDetails">
+        </p>
 
-Select a mineral to view
-additional information.
+    </footer>
 
-</div>
+    <!-- Modal popup for mineral details -->
 
-</section>
+    <div class="modal-overlay"
+         id="mineralModal"
+         onclick="closeMineralModalOnOverlay(event)">
 
-</main>
+        <div class="modal-box">
 
-<footer>
+            <button class="modal-close"
+                    onclick="closeMineralModal()"
+                    aria-label="Close">
 
-<p>
+                &times;
 
-© 2026 Flotation Simulation Hub
+            </button>
 
-</p>
+            <h3 id="modalMineralName"></h3>
 
-</footer>
+            <p class="modal-formula" id="modalMineralFormula"></p>
 
-<script>
+            <p id="modalMineralBody"></p>
 
-const minerals = {
+            <a id="modalWikiLink"
+               class="modal-wiki-link"
+               href="#"
+               target="_blank"
+               rel="noopener noreferrer">
 
-boehmite:
+                View on Wikipedia →
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <script>const minerals = {
+
+boehmite: {
+
+    displayName: "Boehmite",
+
+    formula: "AlO(OH)",
+
+    wiki: "https://en.wikipedia.org/wiki/Boehmite",
+
+    body:
 
 `Industrial importance:
 
@@ -628,9 +734,19 @@ Al-OH groups.
 
 Compatible collectors:
 
-Hydroxamates and fatty acids.`,
+Hydroxamates and fatty acids.`
 
-gibbsite:
+},
+
+gibbsite: {
+
+    displayName: "Gibbsite",
+
+    formula: "Al(OH)₃",
+
+    wiki: "https://en.wikipedia.org/wiki/Gibbsite",
+
+    body:
 
 `Industrial importance:
 
@@ -642,9 +758,19 @@ Hydroxyl groups.
 
 Compatible collectors:
 
-Hydroxamates.`,
+Hydroxamates.`
 
-diaspore:
+},
+
+diaspore: {
+
+    displayName: "Diaspore",
+
+    formula: "AlO(OH)",
+
+    wiki: "https://en.wikipedia.org/wiki/Diaspore_(mineral)",
+
+    body:
 
 `Industrial importance:
 
@@ -656,9 +782,19 @@ Al-OH groups.
 
 Compatible collectors:
 
-Hydroxamates and amines.`,
+Hydroxamates and amines.`
 
-kaolinite:
+},
+
+kaolinite: {
+
+    displayName: "Kaolinite",
+
+    formula: "Al₂Si₂O₅(OH)₄",
+
+    wiki: "https://en.wikipedia.org/wiki/Kaolinite",
+
+    body:
 
 `Industrial importance:
 
@@ -670,9 +806,19 @@ Siloxane and aluminol surfaces.
 
 Compatible collectors:
 
-Amines.`,
+Amines.`
 
-quartz:
+},
+
+quartz: {
+
+    displayName: "Quartz",
+
+    formula: "SiO₂",
+
+    wiki: "https://en.wikipedia.org/wiki/Quartz",
+
+    body:
 
 `Industrial importance:
 
@@ -684,9 +830,19 @@ Silanol groups.
 
 Compatible collectors:
 
-Amines.`,
+Amines.`
 
-hematite:
+},
+
+hematite: {
+
+    displayName: "Hematite",
+
+    formula: "Fe₂O₃",
+
+    wiki: "https://en.wikipedia.org/wiki/Hematite",
+
+    body:
 
 `Industrial importance:
 
@@ -698,9 +854,19 @@ Fe-OH groups.
 
 Compatible collectors:
 
-Hydroxamates and fatty acids.`,
+Hydroxamates and fatty acids.`
 
-galena:
+},
+
+galena: {
+
+    displayName: "Galena",
+
+    formula: "PbS",
+
+    wiki: "https://en.wikipedia.org/wiki/Galena",
+
+    body:
 
 `Industrial importance:
 
@@ -712,9 +878,19 @@ Lead sulfide.
 
 Compatible collectors:
 
-Xanthates.`,
+Xanthates.`
 
-chalcopyrite:
+},
+
+chalcopyrite: {
+
+    displayName: "Chalcopyrite",
+
+    formula: "CuFeS₂",
+
+    wiki: "https://en.wikipedia.org/wiki/Chalcopyrite",
+
+    body:
 
 `Industrial importance:
 
@@ -728,19 +904,48 @@ Compatible collectors:
 
 Xanthates.`
 
+}
+
 };
 
 function showMineral(name){
 
-document.getElementById(
-"mineralDetails"
-).innerText=
+    const data = minerals[name];
 
-minerals[name];
+    if(!data){
+        return;
+    }
+
+    document.getElementById("modalMineralName").innerText = data.displayName;
+    document.getElementById("modalMineralFormula").innerText = "Formula: " + data.formula;
+    document.getElementById("modalMineralBody").innerText = data.body;
+    document.getElementById("modalWikiLink").href = data.wiki;
+
+    document.getElementById("mineralModal").classList.add("active");
 
 }
 
-</script>
+function closeMineralModal(){
+
+    document.getElementById("mineralModal").classList.remove("active");
+
+}
+
+function closeMineralModalOnOverlay(event){
+
+    if(event.target === event.currentTarget){
+        closeMineralModal();
+    }
+
+}
+
+document.addEventListener("keydown", function(event){
+
+    if(event.key === "Escape"){
+        closeMineralModal();
+    }
+
+});</script>
 
 </body>
 
