@@ -227,14 +227,8 @@
     }
 
     @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.96);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      0% { opacity: 0; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .modal-box {
@@ -452,50 +446,6 @@
       margin-top: 8px;
       letter-spacing: 0.3px;
     }
-
-    @media (max-width: 600px) {
-      .data-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .nav-links {
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .modal-box {
-        padding: 24px 16px;
-      }
-      .page-header h1 {
-        font-size: 1.6rem;
-        flex-wrap: wrap;
-      }
-      .category-grid {
-        grid-template-columns: 1fr;
-      }
-      #crystal-container {
-        height: 280px;
-      }
-      .tab-btn {
-        font-size: 0.7rem;
-        min-width: 70px;
-        padding: 8px 0;
-      }
-      .modal-mineral-name {
-        font-size: 1.5rem;
-      }
-    }
-
-    .modal-box::-webkit-scrollbar {
-      width: 5px;
-    }
-    .modal-box::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .modal-box::-webkit-scrollbar-thumb {
-      background: var(--border-subtle);
-      border-radius: 8px;
-    }
-
     .color-legend {
       display: flex;
       flex-wrap: wrap;
@@ -521,6 +471,20 @@
       flex-shrink: 0;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    @media (max-width: 600px) {
+      .data-grid { grid-template-columns: 1fr; gap: 10px; }
+      .nav-links { gap: 16px; flex-wrap: wrap; }
+      .modal-box { padding: 24px 16px; }
+      .page-header h1 { font-size: 1.6rem; flex-wrap: wrap; }
+      .category-grid { grid-template-columns: 1fr; }
+      #crystal-container { height: 280px; }
+      .tab-btn { font-size: 0.7rem; min-width: 70px; padding: 8px 0; }
+      .modal-mineral-name { font-size: 1.5rem; }
+    }
+    .modal-box::-webkit-scrollbar { width: 5px; }
+    .modal-box::-webkit-scrollbar-track { background: transparent; }
+    .modal-box::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 8px; }
   </style>
 </head>
 <body>
@@ -592,7 +556,6 @@
         </div>
         <div id="crystal-container"></div>
         <div class="crystal-hint">🖱️ Drag to rotate · Scroll to zoom · Auto‑rotates</div>
-        <!-- Color legend -->
         <div class="color-legend" id="colorLegend">
           <span class="legend-item"><span class="color-swatch" style="background:#FFB347;"></span>Surface site</span>
           <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
@@ -622,7 +585,7 @@
     import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
     // ============================================================
-    // MINERAL DATA (with new fields: lattice, cleavagePlane, papersCount)
+    // MINERAL DATA (with updated papersCount)
     // ============================================================
     const minerals = [
       // ---------- ALUMINUM-BEARING ----------
@@ -642,7 +605,7 @@
         mohs: '3.5',
         lattice: { a: '3.69', b: '12.22', c: '2.87', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '010',
-        papersCount: 2,
+        papersCount: 4,   // boe-am-01, boe-fa-01, boe-fa-02, boe-hyd-01
         industrial: 'Major ore in karst bauxites. Processed via reverse flotation to remove silicates. Temperature-sensitive; requires high caustic soda digestion.',
         category: 'Aluminum-Bearing Minerals',
         categoryColor: '#D35400',
@@ -664,7 +627,7 @@
         mohs: '2.5',
         lattice: { a: '8.67', b: '5.06', c: '9.72', alpha: '90°', beta: '94.5°', gamma: '90°' },
         cleavagePlane: '001',
-        papersCount: 8,
+        papersCount: 10,  // 3 hyd + 1 review + 3 amine + 2 fatty + 1 sulfonate
         industrial: 'Predominant in weathered bauxites. Often floated at higher pH. Soft and easily ground, but slimes interfere with settling.',
         category: 'Aluminum-Bearing Minerals',
         categoryColor: '#D35400',
@@ -686,7 +649,7 @@
         mohs: '6.5',
         lattice: { a: '4.40', b: '9.43', c: '2.84', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '010',
-        papersCount: 3,
+        papersCount: 4,   // dia-hyd-01, dia-am-01, dia-am-02, dia-fa-01
         industrial: 'Common in diasporic bauxite (China). Floated at pH 9–11 to separate from silicates. Harder than gibbsite, requiring more energy to grind.',
         category: 'Aluminum-Bearing Minerals',
         categoryColor: '#D35400',
@@ -709,7 +672,7 @@
         mohs: '2.0',
         lattice: { a: '5.15', b: '8.94', c: '7.41', alpha: '91.9°', beta: '104.8°', gamma: '89.8°' },
         cleavagePlane: '001',
-        papersCount: 5,
+        papersCount: 7,   // 2 hyd + 3 amine + 2 fatty
         industrial: 'Primary gangue in bauxite. Removed via reverse flotation using amines. Strongly slimy; increases viscosity and consumes reagents.',
         category: 'Silicate Minerals',
         categoryColor: '#D4A373',
@@ -731,7 +694,7 @@
         mohs: '7.0',
         lattice: { a: '4.91', b: '4.91', c: '5.41', alpha: '90°', beta: '90°', gamma: '120°' },
         cleavagePlane: null,
-        papersCount: 4,
+        papersCount: 5,   // 4 amine + 1 fatty (negative)
         industrial: 'Common impurity in iron ore and bauxite. Easily floated with amine at pH 6–11. Used as a standard reference mineral for electrostatic studies.',
         category: 'Silicate Minerals',
         categoryColor: '#D4A373',
@@ -754,7 +717,7 @@
         mohs: '5.5',
         lattice: { a: '5.04', b: '5.04', c: '13.74', alpha: '90°', beta: '90°', gamma: '120°' },
         cleavagePlane: null,
-        papersCount: 3,
+        papersCount: 4,   // 2 fatty + 1 hydroxamate + 1 amine (negative)
         industrial: 'Major iron ore. In bauxite, it is a heavy impurity. Separated using WHIMS or floated with hydroxamate in oxidized ore circuits.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -776,7 +739,7 @@
         mohs: '2.5',
         lattice: { a: '5.94', b: '5.94', c: '5.94', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '100',
-        papersCount: 3,
+        papersCount: 3,   // gal-xan-01,02,03
         industrial: 'Primary lead sulfide. Floats rapidly with xanthates at alkaline pH. Often depressed with dichromate or sulfite in selective circuits.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -798,7 +761,7 @@
         mohs: '3.5',
         lattice: { a: '5.28', b: '5.28', c: '10.42', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '011',
-        papersCount: 5,
+        papersCount: 6,   // 5 experimental + 1 review
         industrial: 'Major copper source. Floats with xanthate. In selective flotation, depressed with lime to separate from pyrite while copper remains floated.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -821,7 +784,7 @@
         mohs: '6.0',
         lattice: { a: '5.42', b: '5.42', c: '5.42', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '100',
-        papersCount: 2,
+        papersCount: 2,   // pyr-xan-01,02
         industrial: 'Common sulfide gangue mineral. Often floated with xanthate but can be depressed with lime in selective flotation circuits. Also a source of acid mine drainage.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -844,7 +807,7 @@
         mohs: '4.0',
         lattice: { a: '4.69', b: '4.69', c: '15.38', alpha: '90°', beta: '90°', gamma: '120°' },
         cleavagePlane: '101',
-        papersCount: 1,
+        papersCount: 2,   // sid-fa-01, sid-hyd-01
         industrial: 'Iron carbonate mineral, found in some iron ores. Floated with fatty acids at pH 7–9; sensitive to depressants like sodium silicate.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -1001,7 +964,7 @@
     }
 
     // ============================================================
-    // 3D CRYSTAL VIEWER (upgraded with axes, cleavage plane)
+    // 3D CRYSTAL VIEWER (with axes, cleavage plane)
     // ============================================================
     let renderer, scene, camera, controls, labelRenderer, animationId;
     let currentViewerMineralId = null;
@@ -1113,7 +1076,6 @@
 
     function getCleavagePlaneNormal(planeStr) {
       if (!planeStr) return null;
-      // Extract first three digits, e.g., "010" -> (0,1,0)
       const match = planeStr.match(/(\d)(\d)(\d)/);
       if (!match) return null;
       const [h, k, l] = [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
@@ -1124,7 +1086,6 @@
 
     function createCleavagePlane(normal, size = 1.8) {
       if (!normal) return null;
-      // Create a plane perpendicular to normal, centered at origin, with given size
       const plane = new THREE.PlaneGeometry(size, size);
       const mat = new THREE.MeshBasicMaterial({
         color: 0xB0BEC5,
@@ -1134,7 +1095,6 @@
         depthWrite: false,
       });
       const mesh = new THREE.Mesh(plane, mat);
-      // Orient the plane to face normal
       const up = new THREE.Vector3(0, 1, 0);
       const quat = new THREE.Quaternion().setFromUnitVectors(up, normal.clone().normalize());
       mesh.quaternion.copy(quat);
@@ -1145,29 +1105,24 @@
       const container = document.getElementById('crystal-container');
       if (!container) return;
 
-      // Dispose old
       disposeCrystalViewer();
 
       const rect = container.getBoundingClientRect();
       const width = rect.width || container.clientWidth || 600;
       const height = rect.height || container.clientHeight || 400;
 
-      // Scene
       scene = new THREE.Scene();
       scene.background = new THREE.Color(0x0A0F1A);
 
-      // Camera
       camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 20);
       camera.position.set(3.5, 2.5, 4.5);
       camera.lookAt(0, 0, 0);
 
-      // WebGL Renderer
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer.domElement);
 
-      // CSS2D Renderer for labels
       labelRenderer = new CSS2DRenderer();
       labelRenderer.setSize(width, height);
       labelRenderer.domElement.style.position = 'absolute';
@@ -1176,7 +1131,6 @@
       labelRenderer.domElement.style.pointerEvents = 'none';
       container.appendChild(labelRenderer.domElement);
 
-      // Controls
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
@@ -1186,7 +1140,6 @@
       controls.maxDistance = 10;
       controls.target.set(0, 0, 0);
 
-      // Lights
       const amb = new THREE.AmbientLight(0x404060);
       scene.add(amb);
       const dir = new THREE.DirectionalLight(0xffffff, 1.8);
@@ -1223,7 +1176,7 @@
         scene.add(label);
       });
 
-      // Cleavage plane (if exists and visible)
+      // Cleavage plane
       if (mineral.cleavagePlane) {
         const normal = getCleavagePlaneNormal(mineral.cleavagePlane);
         if (normal) {
@@ -1236,8 +1189,6 @@
       }
 
       currentViewerMineralId = mineral.id;
-
-      // Start animation
       animate();
     }
 
@@ -1291,7 +1242,6 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // Toggle cleavage plane
     document.getElementById('showCleavage').addEventListener('change', (e) => {
       currentCleavageVisible = e.target.checked;
       if (cleavageMesh) {
@@ -1299,7 +1249,6 @@
       }
     });
 
-    // Resize handler
     window.addEventListener('resize', () => {
       if (renderer && currentViewerMineralId) {
         const container = document.getElementById('crystal-container');
@@ -1321,7 +1270,7 @@
     // BOOT
     // ============================================================
     renderCategories();
-    console.log('🫧 Mineral Database upgraded with lattice parameters, cleavage planes, and new minerals!');
+    console.log('🫧 Mineral Database — paper counts updated to match 46‑paper literature database.');
   </script>
 </body>
 </html>
