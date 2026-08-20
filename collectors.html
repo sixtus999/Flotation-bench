@@ -435,6 +435,27 @@
       margin-left: 4px;
     }
 
+    /* ====== LITERATURE LINK (NEW) ====== */
+    .literature-link-collector {
+      margin-top: 14px;
+      text-align: center;
+    }
+    .literature-link-collector a {
+      color: var(--ochre-bright);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      border: 1px solid var(--ochre-bright);
+      padding: 6px 18px;
+      border-radius: 20px;
+      display: inline-block;
+      transition: 0.2s;
+    }
+    .literature-link-collector a:hover {
+      background: var(--ochre-bright);
+      color: #0F172A;
+    }
+
     /* Tabs */
     .tabs {
       display: flex;
@@ -658,12 +679,16 @@
         <div class="data-grid" id="chemicalGrid"></div>
       </div>
 
-      <!-- Tab 2: Applications -->
+      <!-- Tab 2: Applications (with Literature Link) -->
       <div id="tabApplications" class="tab-content">
         <div class="data-grid" id="applicationsGrid"></div>
         <div class="industrial-text" id="industrialText">
           <strong>🏭 Industrial applications:</strong>
           <span id="industrialTextContent">Loading...</span>
+        </div>
+        <!-- 👇 LITERATURE LINK ADDED HERE 👇 -->
+        <div class="literature-link-collector">
+          <a href="literature.html" id="literatureLink">📄 View all papers for this collector</a>
         </div>
       </div>
 
@@ -765,7 +790,7 @@
     };
 
     // ============================================================
-    // COMPATIBILITY MATRIX (based on targetedMinerals)
+    // COMPATIBILITY MATRIX
     // ============================================================
     const MINERALS_LIST = [
       'Gibbsite', 'Boehmite', 'Diaspore', 'Hematite', 'Kaolinite',
@@ -779,18 +804,11 @@
       const collector = COLLECTOR_DATA[collectorKey];
       if (!collector) return 'no';
       if (collector.targetedMinerals.includes(mineralName)) return 'yes';
-      // Special cases: selective avoidance
       if (mineralName === 'Kaolinite' && collectorKey === 'hydroxamate') return 'avoid';
       if (mineralName === 'Quartz' && collectorKey === 'fatty_acid') return 'avoid';
       if (mineralName === 'Hematite' && collectorKey === 'amine') return 'avoid';
       return 'no';
     }
-
-    // ============================================================
-    // PAPER COUNTS (from index.html paper database)
-    // ============================================================
-    // We'll compute paper counts dynamically using the same logic as index.html
-    // For the standalone page, we use pre-computed counts from COLLECTOR_DATA
 
     // ============================================================
     // RENDER COLLECTOR GRID
@@ -878,6 +896,9 @@
       document.getElementById('modalPaperBadge').textContent = `📄 ${c.papersCount} papers`;
       document.getElementById('modalFormula').textContent = c.formula;
 
+      // 👇 UPDATE LITERATURE LINK 👇
+      document.getElementById('literatureLink').href = `literature.html?collector=${c.id}`;
+
       // Update bench link
       updateBenchLink();
 
@@ -944,17 +965,6 @@
       updateBenchLink();
     }
 
-    // Click on the bench link cycles the mineral
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.bench-link-collector')) {
-        e.preventDefault();
-        // The link's onclick will handle navigation; we cycle first
-        // We need to intercept: the link's click will trigger navigation
-        // Instead, we use a custom handler
-      }
-    });
-
-    // Better: attach click handler directly
     document.getElementById('benchLinkCollector').addEventListener('click', function(e) {
       e.preventDefault();
       if (currentTargetedMinerals.length === 0) return;
@@ -962,7 +972,6 @@
       window.location.href = `index.html?mineral=${mineral.toLowerCase()}&collector=${currentCollectorKey}`;
     });
 
-    // Also cycle on right-click or double-click? We'll add a cycle on click of the hint text
     document.getElementById('pairHint').addEventListener('click', function(e) {
       e.stopPropagation();
       if (currentTargetedMinerals.length === 0) return;
@@ -972,16 +981,12 @@
 
     function renderLiteratureTab(c) {
       const container = document.getElementById('literatureContent');
-      // Use the paper IDs to show papers for this collector
       const paperIds = c.paperIds || [];
       if (paperIds.length === 0) {
         container.innerHTML = `<div class="empty-state">No papers on file for this collector.</div>`;
         return;
       }
 
-      // For a standalone page, we show a summary. In a full integration, we'd fetch from index.html.
-      // Here we show a list of papers with mineral pairs.
-      // We'll generate some sample data based on the collector's targeted minerals.
       let html = `<p style="color:var(--text-secondary);margin-bottom:12px;">${paperIds.length} papers on file for ${c.name}. These papers document flotation with:</p>`;
       c.targetedMinerals.forEach(mineral => {
         html += `
@@ -1045,7 +1050,6 @@
     renderCollectors();
     renderMatrix();
 
-    // Auto-open if URL parameter present
     const collectorParam = getUrlParam('collector');
     if (collectorParam && COLLECTOR_DATA[collectorParam]) {
       setTimeout(() => {
@@ -1053,7 +1057,7 @@
       }, 300);
     }
 
-    console.log('🫧 Collector Database loaded with cycling mineral pairs!');
+    console.log('🫧 Collector Database — literature link added to Applications tab.');
   </script>
 </body>
 </html>
