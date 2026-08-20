@@ -390,6 +390,27 @@
       color: #fff;
     }
 
+    /* ====== LITERATURE LINK (NEW) ====== */
+    .literature-link {
+      margin-top: 14px;
+      text-align: center;
+    }
+    .literature-link a {
+      color: var(--ochre-bright);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      border: 1px solid var(--ochre-bright);
+      padding: 6px 18px;
+      border-radius: 20px;
+      display: inline-block;
+      transition: 0.2s;
+    }
+    .literature-link a:hover {
+      background: var(--ochre-bright);
+      color: #0F172A;
+    }
+
     /* Crystal Structure Tab */
     .crystal-header {
       margin-bottom: 16px;
@@ -534,12 +555,16 @@
         <div class="data-grid" id="physicalGrid"></div>
       </div>
 
-      <!-- Tab 2: Process -->
+      <!-- Tab 2: Process (with Literature Link) -->
       <div id="tabProcess" class="tab-content">
         <div class="data-grid" id="processGrid"></div>
         <div class="industrial-text" id="industrialRelevance">
           <strong>🏭 Industrial relevance:</strong>
           <span id="industrialText">Loading...</span>
+        </div>
+        <!-- 👇 LITERATURE LINK ADDED HERE 👇 -->
+        <div class="literature-link">
+          <a href="literature.html" id="literatureLink">📄 View all papers for this mineral</a>
         </div>
       </div>
 
@@ -605,7 +630,7 @@
         mohs: '3.5',
         lattice: { a: '3.69', b: '12.22', c: '2.87', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '010',
-        papersCount: 4,   // boe-am-01, boe-fa-01, boe-fa-02, boe-hyd-01
+        papersCount: 4,
         industrial: 'Major ore in karst bauxites. Processed via reverse flotation to remove silicates. Temperature-sensitive; requires high caustic soda digestion.',
         category: 'Aluminum-Bearing Minerals',
         categoryColor: '#D35400',
@@ -627,7 +652,7 @@
         mohs: '2.5',
         lattice: { a: '8.67', b: '5.06', c: '9.72', alpha: '90°', beta: '94.5°', gamma: '90°' },
         cleavagePlane: '001',
-        papersCount: 10,  // 3 hyd + 1 review + 3 amine + 2 fatty + 1 sulfonate
+        papersCount: 10,
         industrial: 'Predominant in weathered bauxites. Often floated at higher pH. Soft and easily ground, but slimes interfere with settling.',
         category: 'Aluminum-Bearing Minerals',
         categoryColor: '#D35400',
@@ -649,7 +674,7 @@
         mohs: '6.5',
         lattice: { a: '4.40', b: '9.43', c: '2.84', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '010',
-        papersCount: 4,   // dia-hyd-01, dia-am-01, dia-am-02, dia-fa-01
+        papersCount: 4,
         industrial: 'Common in diasporic bauxite (China). Floated at pH 9–11 to separate from silicates. Harder than gibbsite, requiring more energy to grind.',
         category: 'Aluminum-Bearing Minerals',
         categoryColor: '#D35400',
@@ -672,7 +697,7 @@
         mohs: '2.0',
         lattice: { a: '5.15', b: '8.94', c: '7.41', alpha: '91.9°', beta: '104.8°', gamma: '89.8°' },
         cleavagePlane: '001',
-        papersCount: 7,   // 2 hyd + 3 amine + 2 fatty
+        papersCount: 7,
         industrial: 'Primary gangue in bauxite. Removed via reverse flotation using amines. Strongly slimy; increases viscosity and consumes reagents.',
         category: 'Silicate Minerals',
         categoryColor: '#D4A373',
@@ -694,7 +719,7 @@
         mohs: '7.0',
         lattice: { a: '4.91', b: '4.91', c: '5.41', alpha: '90°', beta: '90°', gamma: '120°' },
         cleavagePlane: null,
-        papersCount: 5,   // 4 amine + 1 fatty (negative)
+        papersCount: 5,
         industrial: 'Common impurity in iron ore and bauxite. Easily floated with amine at pH 6–11. Used as a standard reference mineral for electrostatic studies.',
         category: 'Silicate Minerals',
         categoryColor: '#D4A373',
@@ -717,7 +742,7 @@
         mohs: '5.5',
         lattice: { a: '5.04', b: '5.04', c: '13.74', alpha: '90°', beta: '90°', gamma: '120°' },
         cleavagePlane: null,
-        papersCount: 4,   // 2 fatty + 1 hydroxamate + 1 amine (negative)
+        papersCount: 4,
         industrial: 'Major iron ore. In bauxite, it is a heavy impurity. Separated using WHIMS or floated with hydroxamate in oxidized ore circuits.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -739,7 +764,7 @@
         mohs: '2.5',
         lattice: { a: '5.94', b: '5.94', c: '5.94', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '100',
-        papersCount: 3,   // gal-xan-01,02,03
+        papersCount: 3,
         industrial: 'Primary lead sulfide. Floats rapidly with xanthates at alkaline pH. Often depressed with dichromate or sulfite in selective circuits.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -761,7 +786,7 @@
         mohs: '3.5',
         lattice: { a: '5.28', b: '5.28', c: '10.42', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '011',
-        papersCount: 6,   // 5 experimental + 1 review
+        papersCount: 6,
         industrial: 'Major copper source. Floats with xanthate. In selective flotation, depressed with lime to separate from pyrite while copper remains floated.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -784,7 +809,7 @@
         mohs: '6.0',
         lattice: { a: '5.42', b: '5.42', c: '5.42', alpha: '90°', beta: '90°', gamma: '90°' },
         cleavagePlane: '100',
-        papersCount: 2,   // pyr-xan-01,02
+        papersCount: 2,
         industrial: 'Common sulfide gangue mineral. Often floated with xanthate but can be depressed with lime in selective flotation circuits. Also a source of acid mine drainage.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -807,7 +832,7 @@
         mohs: '4.0',
         lattice: { a: '4.69', b: '4.69', c: '15.38', alpha: '90°', beta: '90°', gamma: '120°' },
         cleavagePlane: '101',
-        papersCount: 2,   // sid-fa-01, sid-hyd-01
+        papersCount: 2,
         industrial: 'Iron carbonate mineral, found in some iron ores. Floated with fatty acids at pH 7–9; sensitive to depressants like sodium silicate.',
         category: 'Ore Minerals',
         categoryColor: '#8E4A49',
@@ -892,6 +917,9 @@
       // Bench link
       const benchLink = document.getElementById('benchLink');
       benchLink.href = `index.html?mineral=${mineral.id}`;
+
+      // 👇 UPDATE LITERATURE LINK 👇
+      document.getElementById('literatureLink').href = `literature.html?mineral=${mineral.id}`;
 
       // Physical tab
       const physGrid = document.getElementById('physicalGrid');
@@ -1270,7 +1298,7 @@
     // BOOT
     // ============================================================
     renderCategories();
-    console.log('🫧 Mineral Database — paper counts updated to match 46‑paper literature database.');
+    console.log('🫧 Mineral Database — literature link added to Process Parameters tab.');
   </script>
 </body>
 </html>
