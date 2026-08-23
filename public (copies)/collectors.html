@@ -1,0 +1,1185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collector Database – FlotationBench</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-card: #273548;
+            --bg-card-hover: #334155;
+            --text-primary: #EDF2F7;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --border-subtle: #334155;
+            --color-anionic: #4ECDC4;
+            --color-cationic: #FFE66D;
+            --color-active: #D35400;
+            --ochre-bright: #D9A24E;
+            --good: #7A9B5C;
+            --warn: #B85C3B;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 15px;
+            min-height: 100vh;
+            padding: 0 24px 48px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        ::selection {
+            background: rgba(184, 134, 59, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* ====== NAVIGATION ====== */
+        .navbar {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px 0 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .logo span {
+                color: var(--color-active);
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+            .nav-links a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.95rem;
+                padding-bottom: 6px;
+                border-bottom: 2px solid transparent;
+                transition: 0.2s ease;
+            }
+
+                .nav-links a:hover {
+                    color: #fff;
+                }
+
+                .nav-links a.active {
+                    color: #fff;
+                    border-bottom-color: var(--color-active);
+                }
+
+        /* ====== HEADER ====== */
+        .page-header {
+            max-width: 1280px;
+            margin: 32px auto 0;
+            margin-bottom: 36px;
+        }
+
+            .page-header h1 {
+                font-size: 2.2rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 4px;
+            }
+
+            .page-header .subtitle {
+                font-size: 1.1rem;
+                font-weight: 400;
+                color: var(--text-secondary);
+                margin-top: 2px;
+                letter-spacing: 0.2px;
+            }
+
+                .page-header .subtitle strong {
+                    color: #f1f5f9;
+                    font-weight: 500;
+                }
+
+            .page-header .description {
+                color: var(--text-muted);
+                margin-top: 6px;
+                font-size: 1.05rem;
+                max-width: 680px;
+                line-height: 1.5;
+            }
+
+        /* ====== COLLECTOR GRID ====== */
+        .collector-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .collector-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 18px 18px;
+            border-left: 6px solid var(--cat-color, #fff);
+            box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+            .collector-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 18px 35px -10px rgba(0, 0, 0, 0.8);
+            }
+
+            .collector-card .card-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 10px;
+            }
+
+            .collector-card .card-icon {
+                font-size: 2.2rem;
+            }
+
+            .collector-card .charge-badge {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.7rem;
+                font-weight: 600;
+                padding: 3px 10px;
+                border-radius: 20px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+        .charge-badge.anionic {
+            background: rgba(78, 205, 196, 0.15);
+            color: var(--color-anionic);
+            border: 1px solid var(--color-anionic);
+        }
+
+        .charge-badge.cationic {
+            background: rgba(255, 230, 109, 0.15);
+            color: var(--color-cationic);
+            border: 1px solid var(--color-cationic);
+        }
+
+        .charge-badge.non-ionic {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-secondary);
+            border: 1px solid var(--text-secondary);
+        }
+
+        .collector-card .card-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 2px;
+        }
+
+        .collector-card .card-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .collector-card .card-func-group {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: var(--bg-secondary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .collector-card .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .collector-card .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+            .collector-card .card-meta span {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .collector-card .card-meta .label {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                color: var(--text-dim);
+                letter-spacing: 0.05em;
+            }
+
+        .collector-card .btn-more {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+            .collector-card .btn-more:hover {
+                background: var(--color-active);
+                border-color: var(--color-active);
+                color: #fff;
+            }
+
+        .paper-badge-small {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            background: rgba(122, 155, 92, 0.12);
+            color: var(--good);
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--good);
+            display: inline-block;
+        }
+
+        /* ====== COMPATIBILITY MATRIX ====== */
+        .matrix-section {
+            max-width: 1280px;
+            margin: 40px auto 0;
+            padding: 24px 28px 28px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-subtle);
+        }
+
+            .matrix-section h2 {
+                font-size: 1.2rem;
+                font-weight: 600;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+        .matrix-wrap {
+            overflow-x: auto;
+        }
+
+        .compat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 500px;
+        }
+
+            .compat-table th,
+            .compat-table td {
+                padding: 8px 12px;
+                text-align: left;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            .compat-table th {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                color: var(--text-dim);
+                letter-spacing: 0.05em;
+                border-bottom: 2px solid var(--border-subtle);
+            }
+
+            .compat-table td:first-child {
+                font-weight: 500;
+                color: #f1f5f9;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+            }
+
+            .compat-table .compat-yes {
+                color: var(--good);
+            }
+
+            .compat-table .compat-no {
+                color: var(--text-muted);
+            }
+
+            .compat-table .compat-avoid {
+                color: var(--warn);
+            }
+
+        /* ====== MODAL ====== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 16, 0.85);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            max-width: 820px;
+            width: 100%;
+            max-height: 92vh;
+            border-radius: 24px;
+            padding: 32px 34px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .modal-close:hover {
+                color: #fff;
+                transform: rotate(90deg);
+            }
+
+        .modal-collector-name {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+            .modal-collector-name .big-icon {
+                font-size: 2.6rem;
+            }
+
+        .modal-formula {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .modal-charge-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+            .modal-charge-badge.anionic {
+                background: rgba(78, 205, 196, 0.15);
+                color: var(--color-anionic);
+                border: 1px solid var(--color-anionic);
+            }
+
+            .modal-charge-badge.cationic {
+                background: rgba(255, 230, 109, 0.15);
+                color: var(--color-cationic);
+                border: 1px solid var(--color-cationic);
+            }
+
+        .bench-link-collector {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: rgba(217, 162, 78, 0.15);
+            color: var(--ochre-bright);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--ochre-bright);
+            text-decoration: none;
+            transition: 0.2s;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+            .bench-link-collector:hover {
+                background: var(--ochre-bright);
+                color: #0F172A;
+            }
+
+            .bench-link-collector .pair-hint {
+                font-size: 0.7rem;
+                opacity: 0.7;
+                margin-left: 4px;
+            }
+
+        /* ====== LITERATURE LINK (NEW) ====== */
+        .literature-link-collector {
+            margin-top: 14px;
+            text-align: center;
+        }
+
+            .literature-link-collector a {
+                color: var(--ochre-bright);
+                text-decoration: none;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                border: 1px solid var(--ochre-bright);
+                padding: 6px 18px;
+                border-radius: 20px;
+                display: inline-block;
+                transition: 0.2s;
+            }
+
+                .literature-link-collector a:hover {
+                    background: var(--ochre-bright);
+                    color: #0F172A;
+                }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #0F172A;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            min-width: 100px;
+        }
+
+            .tab-btn.active {
+                background: var(--color-active);
+                color: #fff;
+                box-shadow: 0 4px 12px rgba(211, 84, 0, 0.3);
+            }
+
+            .tab-btn:hover:not(.active) {
+                color: #fff;
+            }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        /* Data grids */
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+        }
+
+        .data-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .data-item .label {
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: var(--text-muted);
+                font-weight: 600;
+            }
+
+            .data-item .value {
+                font-size: 1rem;
+                font-weight: 500;
+                color: #f1f5f9;
+                margin-top: 2px;
+            }
+
+                .data-item .value.func-group {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 1.1rem;
+                    background: var(--bg-primary);
+                    padding: 4px 12px;
+                    border-radius: 4px;
+                    display: inline-block;
+                    border: 1px solid var(--border-subtle);
+                }
+
+        .target-minerals-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+            .target-minerals-list .mineral-tag {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                background: var(--bg-primary);
+                padding: 3px 12px;
+                border-radius: 12px;
+                border: 1px solid var(--border-subtle);
+                color: var(--text-secondary);
+                text-decoration: none;
+                transition: 0.2s;
+            }
+
+                .target-minerals-list .mineral-tag:hover {
+                    background: var(--color-active);
+                    color: #fff;
+                    border-color: var(--color-active);
+                }
+
+        .industrial-text {
+            background: rgba(211, 84, 0, 0.08);
+            border-left: 3px solid var(--color-active);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-top: 16px;
+            color: #d4dce8;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Literature tab inside modal */
+        .lit-paper-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+            .lit-paper-card .lit-title {
+                font-weight: 600;
+                font-size: 0.9rem;
+                color: #f1f5f9;
+            }
+
+            .lit-paper-card .lit-meta {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.7rem;
+                color: var(--text-dim);
+            }
+
+            .lit-paper-card .lit-minerals {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                margin-top: 4px;
+            }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 0 12px 32px;
+                font-size: 14px;
+            }
+
+            .collector-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .nav-links {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .modal-box {
+                padding: 24px 16px;
+            }
+
+            .page-header h1 {
+                font-size: 1.6rem;
+                flex-wrap: wrap;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .matrix-section {
+                padding: 16px;
+            }
+
+            .compat-table {
+                font-size: 0.75rem;
+                min-width: 400px;
+            }
+
+                .compat-table th, .compat-table td {
+                    padding: 5px 8px;
+                }
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .modal-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-box::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav class="navbar">
+        <div class="logo">🫧 Flotation<span>Bench</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="minerals.html">Mineral</a></li>
+            <li><a href="collectors.html" class="active">Collector</a></li>
+            <li><a href="literature.html">Literature</a></li>
+        </ul>
+    </nav>
+
+    <!-- ====== HEADER ====== -->
+    <div class="page-header">
+        <h1>🧪 Collector Database</h1>
+        <div class="subtitle"><strong>flotation reagents &amp; surface chemistry</strong></div>
+        <div class="description">Explore collector types, functional groups, adsorption mechanisms, targeted minerals, and literature evidence.</div>
+    </div>
+
+    <!-- ====== COLLECTOR GRID ====== -->
+    <div class="collector-grid" id="collectorGrid"></div>
+
+    <!-- ====== COMPATIBILITY MATRIX ====== -->
+    <section class="matrix-section">
+        <h2>📊 Collector–Mineral Compatibility Matrix</h2>
+        <div class="matrix-wrap">
+            <table class="compat-table" id="compatTable">
+                <thead>
+                    <tr>
+                        <th>Mineral</th>
+                        <th>Hydroxamate</th>
+                        <th>Fatty Acid</th>
+                        <th>Amine</th>
+                        <th>Xanthate</th>
+                        <th>Sulfonate</th>
+                    </tr>
+                </thead>
+                <tbody id="compatBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ====== MODAL ====== -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" id="modalCloseBtn">✕</button>
+
+            <div class="modal-collector-name">
+                <span class="big-icon" id="modalIcon">🧪</span>
+                <span id="modalName">Collector</span>
+                <span class="modal-charge-badge" id="modalChargeBadge">Anionic</span>
+                <span class="paper-badge-small" id="modalPaperBadge">📄 0 papers</span>
+                <span class="bench-link-collector" id="benchLinkCollector">
+                    🔬 Test in Flotation Bench
+                    <span class="pair-hint" id="pairHint">(cycle minerals)</span>
+                </span>
+            </div>
+            <div class="modal-formula" id="modalFormula">Formula</div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="chemical">🔬 Chemical Properties</button>
+                <button class="tab-btn" data-tab="applications">⚙️ Flotation Applications</button>
+                <button class="tab-btn" data-tab="literature">📄 Literature</button>
+            </div>
+
+            <!-- Tab 1: Chemical Properties -->
+            <div id="tabChemical" class="tab-content active">
+                <div class="data-grid" id="chemicalGrid"></div>
+            </div>
+
+            <!-- Tab 2: Applications (with Literature Link) -->
+            <div id="tabApplications" class="tab-content">
+                <div class="data-grid" id="applicationsGrid"></div>
+                <div class="industrial-text" id="industrialText">
+                    <strong>🏭 Industrial applications:</strong>
+                    <span id="industrialTextContent">Loading...</span>
+                </div>
+                <!-- 👇 LITERATURE LINK ADDED HERE 👇 -->
+                <div class="literature-link-collector">
+                    <a href="literature.html" id="literatureLink">📄 View all papers for this collector</a>
+                </div>
+            </div>
+
+            <!-- Tab 3: Literature -->
+            <div id="tabLiterature" class="tab-content">
+                <div id="literatureContent">
+                    <div class="empty-state">Loading papers...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== DATA ====== -->
+    <script>
+        // ============================================================
+        // COLLECTOR DATA
+        // ============================================================
+        const COLLECTOR_DATA = {
+            hydroxamate: {
+                id: 'hydroxamate',
+                name: 'Hydroxamate',
+                icon: '🧪',
+                formula: 'R–C(=O)NHOH',
+                charge: 'anionic',
+                functionalGroup: '-C(=O)NHOH',
+                hsab: 'Hard base',
+                mechanism: 'Chelation',
+                typicalPH: '7–10',
+                targetedMinerals: ['Boehmite', 'Gibbsite', 'Diaspore', 'Hematite', 'Siderite'],
+                industrialUse: 'Bauxite flotation (direct), iron ore beneficiation, selective against silicates.',
+                description: 'Strong chelating collector for hard metal ions (Al³⁺, Fe³⁺) via 5-membered ring complex. Provides excellent selectivity against kaolinite and quartz.',
+                papersCount: 12,
+                paperIds: ['gib-hyd-01', 'gib-hyd-02', 'gib-hyd-03', 'rev-gib-hyd-01', 'boe-hyd-01', 'dia-hyd-01', 'hem-hyd-01', 'sid-hyd-01']
+            },
+            fatty_acid: {
+                id: 'fatty_acid',
+                name: 'Fatty Acid',
+                icon: '🧴',
+                formula: 'R–COO⁻ (oleate)',
+                charge: 'anionic',
+                functionalGroup: '-COO⁻',
+                hsab: 'Hard base',
+                mechanism: 'Chemisorption + electrostatic',
+                typicalPH: '8–11',
+                targetedMinerals: ['Boehmite', 'Gibbsite', 'Hematite', 'Diaspore', 'Siderite'],
+                industrialUse: 'Oxide mineral flotation, iron ore beneficiation, phosphate flotation.',
+                description: 'Long-chain anionic surfactant (C17–C18). Chemisorbs onto metal hydroxide surfaces via carboxylate head group. Hydrophobic tail contributes strong E-DLVO attraction.',
+                papersCount: 8,
+                paperIds: ['gib-fa-01', 'gib-fa-02', 'boe-fa-01', 'boe-fa-02', 'dia-fa-01', 'hem-fa-01', 'hem-fa-02', 'sid-fa-01']
+            },
+            amine: {
+                id: 'amine',
+                name: 'Amine',
+                icon: '🔬',
+                formula: 'R–NH₃⁺ (DDA)',
+                charge: 'cationic',
+                functionalGroup: '-NH₃⁺',
+                hsab: 'Lewis base',
+                mechanism: 'Electrostatic attraction',
+                typicalPH: '6–10',
+                targetedMinerals: ['Quartz', 'Kaolinite'],
+                industrialUse: 'Reverse flotation of silicates (quartz, kaolinite) from bauxite, iron ore, and phosphate ores.',
+                description: 'Classic cationic collector for negatively-charged silicate surfaces. Works via pure electrostatic attraction on permanently charged basal faces (kaolinite) and pH-driven negative surfaces (quartz).',
+                papersCount: 11,
+                paperIds: ['gib-am-01', 'gib-am-02', 'gib-am-03', 'boe-am-01', 'dia-am-01', 'dia-am-02', 'kao-am-01', 'kao-am-02', 'kao-am-03', 'qtz-am-01', 'qtz-am-02', 'qtz-am-03', 'qtz-am-04']
+            },
+            xanthate: {
+                id: 'xanthate',
+                name: 'Xanthate',
+                icon: '⚡',
+                formula: 'R–OCS₂⁻',
+                charge: 'anionic',
+                functionalGroup: '-OCS₂⁻',
+                hsab: 'Soft base',
+                mechanism: 'Covalent chemisorption',
+                typicalPH: '7–11',
+                targetedMinerals: ['Chalcopyrite', 'Galena', 'Pyrite'],
+                industrialUse: 'Sulfide mineral flotation (copper, lead, zinc, pyrite).',
+                description: 'Classical sulfide collector. Forms covalent metal-xanthate surface species via soft-soft HSAB interaction. Electrochemically mediated; effective across a wide pH range.',
+                papersCount: 14,
+                paperIds: ['cpy-xan-01', 'cpy-xan-02', 'cpy-xan-03', 'cpy-xan-04', 'cpy-xan-05', 'rev-cpy-xan-01', 'gal-xan-01', 'gal-xan-02', 'gal-xan-03', 'pyr-xan-01', 'pyr-xan-02']
+            },
+            sulfonate: {
+                id: 'sulfonate',
+                name: 'Sulfonate',
+                icon: '🧂',
+                formula: 'R–SO₃⁻',
+                charge: 'anionic',
+                functionalGroup: '-SO₃⁻',
+                hsab: 'Hard base',
+                mechanism: 'Surface complexation',
+                typicalPH: '6–10',
+                targetedMinerals: ['Gibbsite'],
+                industrialUse: 'Limited industrial use; studied for oxide and silicate flotation.',
+                description: 'Weaker anionic collector. Acts primarily through electrostatic attraction and weak surface complexation. Limited literature compared to other collectors.',
+                papersCount: 1,
+                paperIds: ['gib-sul-01']
+            }
+        };
+
+        // ============================================================
+        // COMPATIBILITY MATRIX
+        // ============================================================
+        const MINERALS_LIST = [
+            'Gibbsite', 'Boehmite', 'Diaspore', 'Hematite', 'Kaolinite',
+            'Quartz', 'Chalcopyrite', 'Galena', 'Pyrite', 'Siderite'
+        ];
+
+        const COLLECTOR_KEYS = ['hydroxamate', 'fatty_acid', 'amine', 'xanthate', 'sulfonate'];
+        const COLLECTOR_LABELS = ['Hydroxamate', 'Fatty Acid', 'Amine', 'Xanthate', 'Sulfonate'];
+
+        function getCompatibility(collectorKey, mineralName) {
+            const collector = COLLECTOR_DATA[collectorKey];
+            if (!collector) return 'no';
+            if (collector.targetedMinerals.includes(mineralName)) return 'yes';
+            if (mineralName === 'Kaolinite' && collectorKey === 'hydroxamate') return 'avoid';
+            if (mineralName === 'Quartz' && collectorKey === 'fatty_acid') return 'avoid';
+            if (mineralName === 'Hematite' && collectorKey === 'amine') return 'avoid';
+            return 'no';
+        }
+
+        // ============================================================
+        // RENDER COLLECTOR GRID
+        // ============================================================
+        function renderCollectors() {
+            const grid = document.getElementById('collectorGrid');
+            grid.innerHTML = '';
+
+            COLLECTOR_KEYS.forEach(key => {
+                const c = COLLECTOR_DATA[key];
+                const chargeClass = c.charge === 'anionic' ? 'anionic' : c.charge === 'cationic' ? 'cationic' : 'non-ionic';
+                const card = document.createElement('div');
+                card.className = 'collector-card';
+                card.style.setProperty('--cat-color', c.charge === 'anionic' ? '#4ECDC4' : c.charge === 'cationic' ? '#FFE66D' : '#94A3B8');
+
+                card.innerHTML = `
+              <div class="card-top">
+                <span class="card-icon">${c.icon}</span>
+                <span class="charge-badge ${chargeClass}">${c.charge}</span>
+              </div>
+              <div class="card-name">${c.name}</div>
+              <div class="card-formula">${c.formula}</div>
+              <div class="card-func-group">${c.functionalGroup}</div>
+              <div class="card-desc">${c.description}</div>
+              <div class="card-meta">
+                <span><span class="label">Mechanism</span> ${c.mechanism}</span>
+                <span><span class="label">pH</span> ${c.typicalPH}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span class="paper-badge-small">📄 ${c.papersCount} papers</span>
+                <button class="btn-more" data-collector="${key}">More Info</button>
+              </div>
+            `;
+
+                const btn = card.querySelector('.btn-more');
+                btn.addEventListener('click', () => openModal(key));
+
+                grid.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // RENDER COMPATIBILITY MATRIX
+        // ============================================================
+        function renderMatrix() {
+            const tbody = document.getElementById('compatBody');
+            tbody.innerHTML = '';
+
+            MINERALS_LIST.forEach(mineral => {
+                const row = document.createElement('tr');
+                let html = `<td>${mineral}</td>`;
+                COLLECTOR_KEYS.forEach(key => {
+                    const compat = getCompatibility(key, mineral);
+                    let symbol, cls;
+                    if (compat === 'yes') { symbol = '✅'; cls = 'compat-yes'; }
+                    else if (compat === 'avoid') { symbol = '⚠️'; cls = 'compat-avoid'; }
+                    else { symbol = '❌'; cls = 'compat-no'; }
+                    html += `<td class="${cls}">${symbol}</td>`;
+                });
+                row.innerHTML = html;
+                tbody.appendChild(row);
+            });
+        }
+
+        // ============================================================
+        // MODAL LOGIC
+        // ============================================================
+        let currentCollectorKey = null;
+        let cycleIndex = 0;
+        let currentTargetedMinerals = [];
+
+        function openModal(key) {
+            const c = COLLECTOR_DATA[key];
+            if (!c) return;
+            currentCollectorKey = key;
+            currentTargetedMinerals = c.targetedMinerals.slice();
+            cycleIndex = 0;
+
+            // Header
+            document.getElementById('modalIcon').textContent = c.icon;
+            document.getElementById('modalName').textContent = c.name;
+            const chargeClass = c.charge === 'anionic' ? 'anionic' : c.charge === 'cationic' ? 'cationic' : 'non-ionic';
+            document.getElementById('modalChargeBadge').className = `modal-charge-badge ${chargeClass}`;
+            document.getElementById('modalChargeBadge').textContent = c.charge;
+            document.getElementById('modalPaperBadge').textContent = `📄 ${c.papersCount} papers`;
+            document.getElementById('modalFormula').textContent = c.formula;
+
+            // 👇 UPDATE LITERATURE LINK 👇
+            document.getElementById('literatureLink').href = `literature.html?collector=${c.id}`;
+
+            // Update bench link
+            updateBenchLink();
+
+            // Chemical tab
+            const chemGrid = document.getElementById('chemicalGrid');
+            chemGrid.innerHTML = `
+            <div class="data-item"><span class="label">Formula</span><span class="value">${c.formula}</span></div>
+            <div class="data-item"><span class="label">Charge</span><span class="value">${c.charge}</span></div>
+            <div class="data-item"><span class="label">Functional Group</span><span class="value func-group">${c.functionalGroup}</span></div>
+            <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${c.hsab}</span></div>
+            <div class="data-item"><span class="label">Bonding Mechanism</span><span class="value">${c.mechanism}</span></div>
+            <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
+          `;
+
+            // Applications tab
+            const appGrid = document.getElementById('applicationsGrid');
+            const mineralTags = c.targetedMinerals.map(m =>
+                `<a href="minerals.html?mineral=${m.toLowerCase()}" class="mineral-tag">${m}</a>`
+            ).join('');
+            appGrid.innerHTML = `
+            <div class="data-item" style="grid-column: 1 / -1;">
+              <span class="label">Targeted Minerals</span>
+              <div class="target-minerals-list">${mineralTags || '—'}</div>
+            </div>
+            <div class="data-item"><span class="label">Primary Mechanism</span><span class="value">${c.mechanism}</span></div>
+            <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
+          `;
+            document.getElementById('industrialTextContent').textContent = c.industrialUse;
+
+            // Literature tab
+            renderLiteratureTab(c);
+
+            // Reset tabs to chemical
+            switchTab('chemical');
+
+            // Show modal
+            document.getElementById('modalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateBenchLink() {
+            const c = COLLECTOR_DATA[currentCollectorKey];
+            const link = document.getElementById('benchLinkCollector');
+            const hint = document.getElementById('pairHint');
+
+            if (currentTargetedMinerals.length === 0) {
+                hint.textContent = '(no compatible minerals)';
+                link.style.opacity = '0.5';
+                return;
+            }
+
+            const mineral = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
+            hint.textContent = `→ ${mineral} (${cycleIndex % currentTargetedMinerals.length + 1}/${currentTargetedMinerals.length})`;
+            link.style.opacity = '1';
+            link.onclick = () => {
+                const m = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
+                window.location.href = `index.html?mineral=${m.toLowerCase()}&collector=${currentCollectorKey}`;
+            };
+        }
+
+        function cycleMineral() {
+            if (currentTargetedMinerals.length === 0) return;
+            cycleIndex = (cycleIndex + 1) % currentTargetedMinerals.length;
+            updateBenchLink();
+        }
+
+        document.getElementById('benchLinkCollector').addEventListener('click', function (e) {
+            e.preventDefault();
+            if (currentTargetedMinerals.length === 0) return;
+            const mineral = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
+            window.location.href = `index.html?mineral=${mineral.toLowerCase()}&collector=${currentCollectorKey}`;
+        });
+
+        document.getElementById('pairHint').addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (currentTargetedMinerals.length === 0) return;
+            cycleIndex = (cycleIndex + 1) % currentTargetedMinerals.length;
+            updateBenchLink();
+        });
+
+        function renderLiteratureTab(c) {
+            const container = document.getElementById('literatureContent');
+            const paperIds = c.paperIds || [];
+            if (paperIds.length === 0) {
+                container.innerHTML = `<div class="empty-state">No papers on file for this collector.</div>`;
+                return;
+            }
+
+            let html = `<p style="color:var(--text-secondary);margin-bottom:12px;">${paperIds.length} papers on file for ${c.name}. These papers document flotation with:</p>`;
+            c.targetedMinerals.forEach(mineral => {
+                html += `
+              <div class="lit-paper-card">
+                <div class="lit-title">📄 ${mineral} + ${c.name}</div>
+                <div class="lit-meta">${c.papersCount} papers available • see Flotation Bench for details</div>
+                <div class="lit-minerals">${c.mechanism} • pH ${c.typicalPH}</div>
+              </div>
+            `;
+            });
+            html += `<div style="margin-top:12px;color:var(--text-dim);font-size:0.85rem;text-align:center;">
+            <a href="index.html?collector=${c.id}" style="color:var(--ochre-bright);text-decoration:none;">
+              🔗 Open Flotation Bench with ${c.name} pre‑selected
+            </a>
+          </div>`;
+            container.innerHTML = html;
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+            document.getElementById('tabChemical').classList.toggle('active', tabId === 'chemical');
+            document.getElementById('tabApplications').classList.toggle('active', tabId === 'applications');
+            document.getElementById('tabLiterature').classList.toggle('active', tabId === 'literature');
+        }
+
+        // ============================================================
+        // URL PARAMETER HANDLING
+        // ============================================================
+        function getUrlParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                switchTab(btn.dataset.tab);
+            });
+        });
+
+        document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ============================================================
+        // BOOT
+        // ============================================================
+        renderCollectors();
+        renderMatrix();
+
+        const collectorParam = getUrlParam('collector');
+        if (collectorParam && COLLECTOR_DATA[collectorParam]) {
+            setTimeout(() => {
+                openModal(collectorParam);
+            }, 300);
+        }
+
+        console.log('🫧 Collector Database — literature link added to Applications tab.');
+    </script>
+
+    <!-- 🍒 Cherry AI Chat Widget -->
+    <script src="/chat-widget.js"></script>
+
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #ddd; font-size: 14px; color: #666;">
+        © 2026 Bethel Sixtus Atiawu. All Rights Reserved.
+    </footer>
+
+</body>
+</html>

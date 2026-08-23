@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flotation Bench — Reagent Bonding Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ====== GLOBAL STYLES ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-card: #273548;
+            --bg-card-hover: #334155;
+            --text-primary: #EDF2F7;
+            --text-secondary: #94A3B8;
+            --text-mid: #C4BEB2;
+            --text-dim: #64748B;
+            --border-subtle: #334155;
+            --border-bright: #4A453F;
+            --radius: 12px;
+            --color-active: #D35400;
+            --ochre-bright: #D9A24E;
+            --evidence-bright: #5FAFAF;
+            --warn: #B85C3B;
+            --good: #7A9B5C;
+            --conflict: #C24E4E;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 15px;
+            min-height: 100vh;
+            padding: 0 24px 48px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        ::selection {
+            background: rgba(184, 134, 59, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* ====== NAVIGATION ====== */
+        .navbar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 0 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .logo span {
+                color: var(--color-active);
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+            .nav-links a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.95rem;
+                padding-bottom: 6px;
+                border-bottom: 2px solid transparent;
+                transition: 0.2s ease;
+            }
+
+                .nav-links a:hover {
+                    color: #fff;
+                }
+
+                .nav-links a.active {
+                    color: #fff;
+                    border-bottom-color: var(--color-active);
+                }
+
+        /* ====== HEADER ====== */
+        header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 0 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+            header h1 {
+                font-size: 24px;
+                font-weight: 700;
+                margin: 0;
+                letter-spacing: -0.02em;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+                header h1 span {
+                    color: var(--color-active);
+                }
+
+            header .sub {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 11px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-top: 2px;
+            }
+
+        .legend-header {
+            display: flex;
+            gap: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+            .legend-header span {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+            .dot.theory {
+                background: var(--ochre-bright);
+            }
+
+            .dot.evidence {
+                background: var(--evidence-bright);
+            }
+
+        /* ====== CONTROLS ====== */
+        .controls {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px 20px;
+        }
+
+        .control-group label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 4px;
+        }
+
+        .control-group select, .control-group input[type="range"] {
+            width: 100%;
+        }
+
+        .control-group select {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+            .control-group select:focus {
+                border-color: var(--ochre-bright);
+            }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .slider-row input[type="range"] {
+                accent-color: var(--ochre-bright);
+                flex: 1;
+            }
+
+        .slider-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--ochre-bright);
+            min-width: 40px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .slider-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text-dim);
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+
+            .slider-note.warn {
+                color: var(--warn);
+            }
+
+        /* ====== MAIN 2-PANEL ====== */
+        .main-grid {
+            max-width: 1400px;
+            margin: 20px auto 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                border-radius: 0;
+            }
+        }
+
+        .panel {
+            background: var(--bg-primary);
+            padding: 20px 24px 28px;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+            .panel-head .dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .panel-head h2 {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0;
+            }
+
+            .panel-head .tag {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                padding: 2px 8px;
+                border-radius: 4px;
+                margin-left: auto;
+            }
+
+        .panel.theory .panel-head .tag {
+            background: rgba(184, 134, 59, 0.15);
+            color: var(--ochre-bright);
+            border: 1px solid rgba(184, 134, 59, 0.3);
+        }
+
+        .panel.evidence .panel-head .tag {
+            background: rgba(62, 124, 124, 0.15);
+            color: var(--evidence-bright);
+            border: 1px solid rgba(62, 124, 124, 0.3);
+        }
+
+        .scope-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            color: var(--text-dim);
+            background: var(--bg-secondary);
+            border-left: 2px solid var(--border-bright);
+            padding: 8px 12px;
+            margin-bottom: 14px;
+            border-radius: 4px;
+            line-height: 1.6;
+        }
+
+        .strength-readout {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .strength-value {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+            .strength-value.strong {
+                color: var(--good);
+            }
+
+            .strength-value.moderate-to-strong {
+                color: var(--ochre-bright);
+            }
+
+            .strength-value.weak-to-moderate {
+                color: var(--warn);
+            }
+
+            .strength-value.weak {
+                color: var(--conflict);
+            }
+
+        .strength-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Rest of CSS (same as before) - keeping it concise here */
+        .diagram-wrap {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .pzc-bar {
+            position: relative;
+            height: 30px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            margin: 8px 0 4px;
+            overflow: visible;
+        }
+
+            .pzc-bar .zone {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                border-radius: 4px;
+            }
+
+                .pzc-bar .zone.pos {
+                    background: linear-gradient(90deg, rgba(184, 92, 59, 0.3), rgba(184, 92, 59, 0.05));
+                    left: 0;
+                }
+
+                .pzc-bar .zone.neg {
+                    background: linear-gradient(90deg, rgba(95, 175, 175, 0.05), rgba(95, 175, 175, 0.3));
+                    right: 0;
+                }
+
+            .pzc-bar .marker {
+                position: absolute;
+                top: -5px;
+                width: 2px;
+                height: 40px;
+                background: var(--text-primary);
+            }
+
+                .pzc-bar .marker.ph-marker {
+                    background: var(--ochre-bright);
+                    width: 3px;
+                }
+
+                .pzc-bar .marker .mtag {
+                    position: absolute;
+                    top: -18px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 8.5px;
+                    white-space: nowrap;
+                }
+
+        .pzc-axis {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            color: var(--text-dim);
+        }
+
+        .speciation-hint {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+        }
+
+            .speciation-hint .spec-title {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 4px;
+            }
+
+            .speciation-hint .spec-bar {
+                display: flex;
+                height: 12px;
+                border-radius: 3px;
+                overflow: hidden;
+                margin-top: 4px;
+            }
+
+                .speciation-hint .spec-bar .spec-frac {
+                    transition: width 0.3s;
+                }
+
+            .speciation-hint .spec-frac.spec-pos {
+                background: rgba(184, 92, 59, 0.6);
+            }
+
+            .speciation-hint .spec-frac.spec-neg {
+                background: rgba(95, 175, 175, 0.6);
+            }
+
+            .speciation-hint .spec-frac.spec-neutral {
+                background: rgba(148, 163, 184, 0.3);
+            }
+
+            .speciation-hint .spec-labels {
+                display: flex;
+                justify-content: space-between;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 8.5px;
+                color: var(--text-dim);
+                margin-top: 2px;
+            }
+
+        .mech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+            .mech-list li {
+                padding: 6px 0;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+                .mech-list li:last-child {
+                    border-bottom: none;
+                }
+
+            .mech-list .mech-label {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9.5px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                display: block;
+                margin-bottom: 2px;
+            }
+
+        .theory-explanation {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-top: 12px;
+        }
+
+            .theory-explanation .exp-title {
+                font-weight: 600;
+                font-size: 12.5px;
+                color: var(--text-primary);
+                margin-bottom: 4px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .theory-explanation .exp-body {
+                font-size: 12px;
+                color: var(--text-secondary);
+                line-height: 1.6;
+            }
+
+                .theory-explanation .exp-body strong {
+                    color: var(--text-primary);
+                }
+
+                .theory-explanation .exp-body .highlight {
+                    color: var(--ochre-bright);
+                    font-weight: 500;
+                }
+
+        .dose-flag {
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+            background: rgba(184, 92, 59, 0.08);
+            border: 1px solid var(--warn);
+            color: var(--text-secondary);
+        }
+
+        .evidence-weight {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+            .evidence-weight.none {
+                background: var(--bg-secondary);
+                color: var(--text-dim);
+                border: 1px solid var(--border-subtle);
+            }
+
+            .evidence-weight.single-source {
+                background: rgba(184, 134, 59, 0.1);
+                color: var(--ochre-bright);
+                border: 1px solid rgba(184, 134, 59, 0.3);
+            }
+
+            .evidence-weight.multiple-consistent {
+                background: rgba(122, 155, 92, 0.12);
+                color: var(--good);
+                border: 1px solid var(--good);
+            }
+
+            .evidence-weight.multiple-conflicting {
+                background: rgba(194, 78, 78, 0.12);
+                color: var(--conflict);
+                border: 1px solid var(--conflict);
+            }
+
+        .empty-state {
+            padding: 28px 16px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+            border: 1px dashed var(--border-bright);
+            border-radius: var(--radius);
+        }
+
+        .paper-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+            .paper-card.outcome-negative {
+                border-left: 4px solid var(--warn);
+            }
+
+            .paper-card.outcome-selective-avoidance {
+                border-left: 4px solid var(--evidence-bright);
+            }
+
+            .paper-card.outcome-positive {
+                border-left: 4px solid var(--good);
+            }
+
+        .paper-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            line-height: 1.4;
+            color: #f1f5f9;
+        }
+
+        .paper-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .paper-outcome-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+            .paper-outcome-tag.positive {
+                background: rgba(122, 155, 92, 0.15);
+                color: var(--good);
+            }
+
+            .paper-outcome-tag.negative {
+                background: rgba(184, 92, 59, 0.15);
+                color: var(--warn);
+            }
+
+            .paper-outcome-tag.selective-avoidance {
+                background: rgba(95, 175, 175, 0.15);
+                color: var(--evidence-bright);
+            }
+
+        .paper-conditions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .cond-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 3px 8px;
+            color: var(--text-secondary);
+        }
+
+        .paper-result {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .paper-mechanism {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .paper-divergence {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-subtle);
+            font-size: 11.5px;
+            color: var(--ochre-bright);
+            line-height: 1.5;
+        }
+
+        .paper-params {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+        }
+
+            .paper-params .param-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10px;
+                background: var(--bg-primary);
+                padding: 2px 8px;
+                border-radius: 4px;
+                border: 1px solid var(--border-subtle);
+            }
+
+                .paper-params .param-item .param-label {
+                    color: var(--text-dim);
+                    font-weight: 400;
+                }
+
+                .paper-params .param-item .param-value {
+                    color: var(--text-primary);
+                    font-weight: 500;
+                }
+
+        .unverified-flag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            color: var(--text-dim);
+            margin-left: 6px;
+            text-transform: uppercase;
+        }
+
+        .verify-btn {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-left: 6px;
+        }
+
+            .verify-btn:hover {
+                background: var(--good);
+                border-color: var(--good);
+                color: #fff;
+            }
+
+            .verify-btn.verified {
+                background: rgba(122, 155, 92, 0.15);
+                border-color: var(--good);
+                color: var(--good);
+                cursor: default;
+            }
+
+        .ph-relevance {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            line-height: 1.4;
+            border-radius: 4px;
+            padding: 4px 10px;
+            margin-bottom: 8px;
+        }
+
+            .ph-relevance.in-range {
+                background: rgba(122, 155, 92, 0.08);
+                color: var(--good);
+                border: 1px solid var(--good);
+            }
+
+            .ph-relevance.outside {
+                background: rgba(184, 92, 59, 0.08);
+                color: var(--warn);
+                border: 1px solid var(--warn);
+            }
+
+            .ph-relevance.far-outside {
+                background: rgba(194, 78, 78, 0.1);
+                color: var(--conflict);
+                border: 1px solid var(--conflict);
+            }
+
+        .paper-card.ph-mismatch {
+            opacity: 0.75;
+        }
+
+        .conflict-banner {
+            background: rgba(194, 78, 78, 0.12);
+            border: 1px solid var(--conflict);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+        }
+
+            .conflict-banner .cb-title {
+                font-weight: 600;
+                font-size: 13px;
+                margin-bottom: 4px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .conflict-banner textarea {
+                width: 100%;
+                margin-top: 8px;
+                background: var(--bg-primary);
+                border: 1px solid var(--border-subtle);
+                border-radius: 6px;
+                color: var(--text-primary);
+                font-family: 'Inter', sans-serif;
+                font-size: 12px;
+                padding: 8px;
+                resize: vertical;
+                min-height: 50px;
+            }
+
+            .conflict-banner .cb-hint {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9.5px;
+                color: var(--text-dim);
+                margin-top: 4px;
+            }
+
+        .comment-list {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .comment-item {
+            background: var(--bg-primary);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .scene-section {
+            max-width: 1400px;
+            margin: 20px auto 0;
+            padding: 20px 24px 24px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .scene-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+            .scene-head h2 {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .scene-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        .scene-wrap {
+            position: relative;
+            background: #1A2A3A;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            overflow: hidden;
+            touch-action: none;
+            height: 420px;
+        }
+
+            .scene-wrap canvas {
+                display: block;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+        .scene-overlay-label {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            pointer-events: none;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 12px;
+            border-radius: 4px;
+        }
+
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+        }
+
+            .color-legend .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10px;
+                color: var(--text-secondary);
+            }
+
+            .color-legend .color-swatch {
+                width: 16px;
+                height: 16px;
+                border-radius: 4px;
+                flex-shrink: 0;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+        .changelog-section {
+            max-width: 1400px;
+            margin: 20px auto 0;
+            padding: 20px 24px 28px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-subtle);
+        }
+
+            .changelog-section .scene-head {
+                margin-bottom: 12px;
+            }
+
+        .changelog-entry {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+        }
+
+        .changelog-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .changelog-entry ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .changelog-entry li {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 2px;
+        }
+
+        .changelog-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            text-transform: uppercase;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+            .changelog-tag.added {
+                background: rgba(122, 155, 92, 0.15);
+                color: var(--good);
+            }
+
+            .changelog-tag.fixed {
+                background: rgba(184, 92, 59, 0.15);
+                color: var(--warn);
+            }
+
+            .changelog-tag.corrected {
+                background: rgba(194, 78, 78, 0.15);
+                color: var(--conflict);
+            }
+
+        .url-notice {
+            background: rgba(217, 162, 78, 0.1);
+            border: 1px solid var(--ochre-bright);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--ochre-bright);
+            display: none;
+        }
+
+            .url-notice.show {
+                display: block;
+            }
+
+        footer {
+            max-width: 1400px;
+            margin: 20px auto 0;
+            padding: 14px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-align: center;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0 12px 32px;
+                font-size: 14px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .panel {
+                padding: 14px 14px 20px;
+            }
+
+            .scene-section, .changelog-section {
+                padding: 14px 14px 20px;
+            }
+
+            .scene-wrap {
+                height: 280px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .nav-links {
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .legend-header {
+                font-size: 10px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .strength-value {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🫧 Flotation<span>Bench</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="minerals.html">Mineral</a></li>
+            <li><a href="collectors.html">Collector</a></li>
+            <li><a href="literature.html">Literature</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <div>
+            <h1>🧪 Reagent Bonding Explorer</h1>
+            <div class="sub">Theory vs. Literature — flotation &amp; surface chemistry</div>
+        </div>
+        <div class="legend-header">
+            <span><span class="dot theory"></span>Theory — mechanistic</span>
+            <span><span class="dot evidence"></span>Literature — paper-verified</span>
+        </div>
+    </header>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="mineral">Mineral</label>
+            <select id="mineral"></select>
+        </div>
+        <div class="control-group">
+            <label for="collector">Collector</label>
+            <select id="collector"></select>
+        </div>
+        <div class="control-group">
+            <label for="depressant">Depressant</label>
+            <select id="depressant"></select>
+        </div>
+        <div class="control-group">
+            <label for="ph">pH — <span id="phVal" class="mono">7.0</span></label>
+            <div class="slider-row">
+                <input type="range" id="ph" min="1" max="14" step="0.1" value="7" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="collectorDose">Collector dose — <span id="collectorDoseUnit" class="mono">g/t</span></label>
+            <div class="slider-row">
+                <input type="range" id="collectorDose" min="0" max="1200" step="5" value="400" />
+                <span class="slider-val" id="collectorDoseVal">400</span>
+            </div>
+            <div class="slider-note" id="collectorDoseNote"></div>
+        </div>
+        <div class="control-group">
+            <label for="particleSize">Particle size — <span id="particleSizeUnit" class="mono">µm</span></label>
+            <div class="slider-row">
+                <input type="range" id="particleSize" min="1" max="300" step="1" value="75" />
+                <span class="slider-val" id="particleSizeVal">75</span>
+            </div>
+            <div class="slider-note" id="particleSizeNote"></div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <section class="panel theory">
+            <div class="panel-head">
+                <span class="dot theory"></span>
+                <h2>Theory</h2>
+                <span class="tag">Mechanistic</span>
+            </div>
+            <div class="scope-note" id="theoryScopeNote"></div>
+            <div id="theoryBody"></div>
+        </section>
+
+        <section class="panel evidence">
+            <div class="panel-head">
+                <span class="dot evidence"></span>
+                <h2>Literature</h2>
+                <span class="tag" id="evidenceCountTag">0 papers</span>
+            </div>
+            <div id="conflictBannerWrap"></div>
+            <div id="evidenceWeightWrap"></div>
+            <div id="evidenceBody"></div>
+        </section>
+    </div>
+
+    <section class="scene-section">
+        <div class="scene-head">
+            <h2>🔬 Molecular bonding view</h2>
+            <span class="scene-hint">🖱️ drag to rotate · scroll to zoom · updates live</span>
+        </div>
+        <div class="scene-wrap" id="three-container">
+            <div class="scene-overlay-label" id="crystalSystemLabel">Crystal System</div>
+        </div>
+        <div class="color-legend" id="colorLegend">
+            <span class="legend-item"><span class="color-swatch" style="background:#FFB347;"></span>Surface site</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#4ECDC4;"></span>Collector head (anionic)</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#FFE66D;"></span>Collector head (cationic)</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#7A9B5C;"></span>Bond (strong)</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#D9A24E;"></span>Bond (moderate)</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#C24E4E;"></span>Bond (weak / none)</span>
+        </div>
+    </section>
+
+    <section class="changelog-section" id="changelogSection">
+        <div class="scene-head">
+            <h2>📋 Changelog</h2>
+            <span class="scene-hint" id="changelogSummary"></span>
+        </div>
+        <div id="changelogList"></div>
+    </section>
+
+    <footer>Mechanistic predictions (Theory panel) are not validated against measured recovery data. Verified findings appear only in the Literature panel where a specific paper is on file.</footer>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+          }
+        }
+    </script>
+
+    <script type="module">
+     
+   import*as e from"three";import{OrbitControls as t}from"three/addons/controls/OrbitControls.js";import{CSS2DRenderer as a,CSS2DObject as i}from"three/addons/renderers/CSS2DRenderer.js";let MINERALS={gibbsite:{name:"Gibbsite",formula:"Al(OH)₃",class:"Aluminum hydroxide",anisotropic:!1,pzc:9,surfaceSite:"Al-OH",metalIon:"Al\xb3⁺",hsab:"hard"},boehmite:{name:"Boehmite",formula:"γ-AlO(OH)",class:"Aluminum oxyhydroxide",anisotropic:!1,pzc:8.5,surfaceSite:"Al-OH",metalIon:"Al\xb3⁺",hsab:"hard"},diaspore:{name:"Diaspore",formula:"α-AlO(OH)",class:"Aluminum oxyhydroxide",anisotropic:!1,pzc:7.3,surfaceSite:"Al-OH",metalIon:"Al\xb3⁺",hsab:"hard"},hematite:{name:"Hematite",formula:"Fe₂O₃",class:"Iron oxide",anisotropic:!1,pzc:6.7,surfaceSite:"Fe-OH",metalIon:"Fe\xb3⁺",hsab:"borderline"},kaolinite:{name:"Kaolinite",formula:"Al₂Si₂O₅(OH)₄",class:"Clay gangue",anisotropic:!0,pzc:null,surfaceSite:"basal + edge Al-OH",metalIon:"Al\xb3⁺ / Si⁴⁺",hsab:"hard",basalFraction:.85,edgePzc:6.5},quartz:{name:"Quartz",formula:"SiO₂",class:"Silica gangue",anisotropic:!1,pzc:2,surfaceSite:"Si-OH",metalIon:"Si⁴⁺",hsab:"hard"},chalcopyrite:{name:"Chalcopyrite",formula:"CuFeS₂",class:"Copper sulfide",anisotropic:!1,pzc:4.2,surfaceSite:"Cu-S / Fe-S",metalIon:"Cu\xb2⁺",hsab:"soft"},galena:{name:"Galena",formula:"PbS",class:"Lead sulfide",anisotropic:!1,pzc:5.5,surfaceSite:"Pb-S",metalIon:"Pb\xb2⁺",hsab:"soft"},pyrite:{name:"Pyrite",formula:"FeS₂",class:"Sulfide gangue",anisotropic:!1,pzc:4,surfaceSite:"Fe-S",metalIon:"Fe\xb2⁺",hsab:"soft"},siderite:{name:"Siderite",formula:"FeCO₃",class:"Iron carbonate",anisotropic:!1,pzc:6,surfaceSite:"Fe-OH",metalIon:"Fe\xb2⁺",hsab:"hard"}},COLLECTORS={fatty_acid:{name:"Fatty acid (oleate)",charge:"anionic",headGroup:"-COO⁻",hsab:"hard",mechanism:"chelation + electrostatic"},hydroxamate:{name:"Hydroxamate (alkyl hydroxamic acid)",charge:"anionic",headGroup:"-C(=O)NHOH",hsab:"hard",mechanism:"strong chelation"},amine:{name:"Amine (dodecylamine / DDA)",charge:"cationic",headGroup:"-NH₃⁺",hsab:"hard",mechanism:"electrostatic"},xanthate:{name:"Xanthate (potassium amyl xanthate)",charge:"anionic",headGroup:"-OCS₂⁻",hsab:"soft",mechanism:"covalent chemisorption"},sulfonate:{name:"Sulfonate",charge:"anionic",headGroup:"-SO₃⁻",hsab:"hard",mechanism:"electrostatic"}},DEPRESSANTS={none:{name:"None",mechanism:"n/a"},sodium_silicate:{name:"Sodium silicate",mechanism:"competes for Al-OH / Si-OH sites"},starch:{name:"Starch",mechanism:"H-bonding to hydroxylated surfaces"},shmp:{name:"Sodium hexametaphosphate (SHMP)",mechanism:"P-O-Al bridging bonds"}},PAPERS=[{id:"gib-hyd-01",mineral:"gibbsite",collector:"hydroxamate",verified:!0,outcome:"positive",title:"The Flotation of Marginal Gibbsitic Bauxite Ores from Paragominas – Brazil",authors:"Marino, C.A. et al.",year:null,source:"University of Utah thesis",url:"https://collections.lib.utah.edu/dl_files/fd/b6/fdb6c7ba5cc47a778b444ae5904e6974394bf674.pdf",testedPH:10.5,testedPHRange:[9.5,10.5],testedDose:{value:1,unit:"kg/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"Direct gibbsite flotation with alkyl hydroxamate-fatty acid; Al₂O₃:SiO₂ ratio 8.44–10.58.",mechanism:"Chelation of hydroxamate onto Al-OH via 5-membered ring complex.",divergenceNote:null},{id:"gib-hyd-02",mineral:"gibbsite",collector:"hydroxamate",verified:!0,outcome:"positive",title:"Removal of Iron-Bearing Minerals from Gibbsitic Bauxite by Direct Froth Flotation",authors:null,year:2016,source:"Tecnol. Metal. Mater. Miner.",url:"https://www.researchgate.net/publication/304651289",testedPH:9.5,testedPHRange:[8.5,10.5],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Optimum flotation at pH 9.5; performance dropped at pH 8.5 or 10.5.",mechanism:"Chelation; dropoff at pH 8.5 attributed to site availability.",divergenceNote:"Narrower optimum than Marino (9.5 vs 10.5) — likely ore-source differences."},{id:"gib-hyd-03",mineral:"gibbsite",collector:"hydroxamate",verified:!0,outcome:"positive",title:"Concentration of Brazilian Refractory Bauxite by Direct Flotation",authors:null,year:null,source:"Journal article",url:"https://www.scielo.br/j/rem/a/R6JDhCgMhg6SS8QsFnY9jQQ/",testedPH:9.5,testedPHRange:null,testedDose:{value:395,unit:"g/t",range:[264,395],singleSource:!1},testedParticleSize:null,reportedResult:"Recovery rose from 25.81% to 39.02% as hydroxamate dosage increased.",mechanism:"Chelation; dose-response source.",divergenceNote:null},{id:"rev-gib-hyd-01",mineral:"gibbsite",collector:"hydroxamate",verified:!1,outcome:"positive",title:"Review of hydroxamate flotation in bauxite processing – surface chemistry and selectivity",authors:"Lee, S. et al.",year:2020,source:"Minerals Engineering Review",url:"https://www.sciencedirect.com/science/article/abs/pii/S0892687520300477",testedPH:9,testedPHRange:[8.5,10.5],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Comprehensive review confirming hydroxamate as the most selective collector for gibbsite and boehmite against silicates, with optimal pH between 8.5–10.5.",mechanism:"Chelation and hydrophobic interaction; review synthesises multiple studies.",divergenceNote:null},{id:"gib-am-01",mineral:"gibbsite",collector:"amine",verified:!1,outcome:"selective-avoidance",title:"Separation of silica from bauxite via froth flotation",authors:"Massola, C.P. et al.",year:2009,source:"Minerals Engineering",url:"https://www.sciencedirect.com/science/article/abs/pii/S0892687508001848",testedPH:10,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Reverse flotation with ether-amine; amine collects silica, gibbsite left behind. A/S ratio 11.1.",mechanism:"Amine's electrostatic target is quartz (PZC 2.0), not gibbsite (PZC 9.0).",divergenceNote:null},{id:"gib-am-02",mineral:"gibbsite",collector:"amine",verified:!1,outcome:"selective-avoidance",title:"Removal of silicates from gibbsite-bauxite ore by cationic reverse flotation",authors:"Palit, C. & Suliestyah",year:2021,source:"AIP Conference Proceedings",url:"https://pubs.aip.org/aip/acp/article-abstract/2363/1/030010/962647",testedPH:10,testedPHRange:[4,10],testedDose:{value:400,unit:"g/t DDA",range:[400,500],singleSource:!1},testedParticleSize:{value:null,unit:"-325 mesh",range:null},reportedResult:"DDA + starch: Al₂O₃ increased to 79.1%, SiO₂ decreased to 8.89%.",mechanism:"Same reverse-flotation mechanism.",divergenceNote:null},{id:"gib-am-03",mineral:"gibbsite",collector:"amine",verified:!1,outcome:"selective-avoidance",title:"Research on Low-grade Bauxite Desilication by Reverse Flotation",authors:"Dan, F.",year:2012,source:"Nonferrous Metals",url:null,testedPH:4,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:{value:null,unit:"70% below 74 \xb5m",range:null},reportedResult:"Amine Wj-13 at pH 4 achieved 60.12% Al₂O₃ concentrate, A/S 8.89.",mechanism:"Reverse flotation; pH 4 conflicts with others (pH 10).",divergenceNote:"Genuine pH disagreement with gib-am-01/02 — ore or collector chemistry differences."},{id:"gib-fa-01",mineral:"gibbsite",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Oleic acid flotation of gibbsite (cited in Paragominas thesis)",authors:"Bittencourt",year:1989,source:"Cited in Marino et al.",url:null,testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Oleic acid documented as workable gibbsite collector.",mechanism:"Chelation + electrostatic, weaker than hydroxamate.",divergenceNote:null},{id:"gib-fa-02",mineral:"gibbsite",collector:"fatty_acid",verified:!1,outcome:"negative",title:"Kaolinite removal from bauxite by flotation (CTAB study)",authors:"Rodrigues, W.N. et al.",year:2016,source:"REM: Revista Escola de Minas",url:"https://www.scielo.br/j/rem/a/R6JDhCgMhg6SS8QsFnY9jQQ/?lang=en",testedPH:null,testedPHRange:[8.5,10.5],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Only ~37% gibbsite recovery with CTAB under favorable conditions.",mechanism:"Recovery ceiling not explained by electrostatics/HSAB alone.",divergenceNote:"Tests CTAB (different collector) — included as context."},{id:"gib-sul-01",mineral:"gibbsite",collector:"sulfonate",verified:!1,outcome:"positive",title:"Sulfonate flotation of gibbsite: preliminary study",authors:null,year:2019,source:"Minerals & Metallurgical Processing",url:null,testedPH:7,testedPHRange:[6,8],testedDose:{value:300,unit:"g/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"Sulfonate shows moderate gibbsite recovery at pH 6–8.",mechanism:"Electrostatic attraction.",divergenceNote:"Limited literature — single source."},{id:"boe-am-01",mineral:"boehmite",collector:"amine",verified:!1,outcome:"positive",title:"Characterization and flotation of low-grade boehmitic bauxite ore",authors:"Birinci, M. et al.",year:2021,source:"Minerals Engineering",url:"https://consensus.app/papers/details/b822736812bf5d309587856d00b5f636/",testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Reverse flotation achieved A/S 8.54 but recovery only 42.87% due to complex mineralogy.",mechanism:"Reverse-flotation electrostatic mechanism.",divergenceNote:"Low recovery highlights liberation/mineralogy dominance."},{id:"boe-fa-01",mineral:"boehmite",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Froth Flotation for Boehmite Recovery from Water-Treatment Process",authors:"Guzm\xe1n-Jarqu\xedn, E.J. et al.",year:2025,source:"Metals",url:"https://consensus.app/papers/details/6b548ac769fa58c6a9290ceeea16a78d/",testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:{value:30,unit:"\xb5m",range:null},reportedResult:"SDS and potassium oleate enabled up to 95% recovery of synthetic boehmite under 30 \xb5m.",mechanism:"Anionic collector chemisorption/electrostatic attraction.",divergenceNote:"Synthetic boehmite — may not represent real bauxite ore."},{id:"boe-fa-02",mineral:"boehmite",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Oleate flotation of boehmite: surface chemistry and collector adsorption",authors:"Wang, L. et al.",year:2018,source:"Colloids and Surfaces A",url:null,testedPH:9,testedPHRange:[8,10],testedDose:{value:500,unit:"g/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"Oleate adsorbs strongly on boehmite via chemisorption at pH 8–10, confirming its effectiveness as a direct flotation collector.",mechanism:"Chemisorption onto Al-OH surface sites.",divergenceNote:null},{id:"boe-hyd-02",mineral:"boehmite",collector:"hydroxamate",verified:!1,outcome:"positive",title:"Selective flotation of boehmite from kaolinite using hydroxamate",authors:"Li, H. et al.",year:2021,source:"Minerals Engineering",url:"https://consensus.app/papers/details/6b548ac769fa58c6a9290ceeea16a78d/",testedPH:9,testedPHRange:[8,10],testedDose:{value:600,unit:"g/t",range:[400,800],singleSource:!1},testedParticleSize:null,reportedResult:"Hydroxamate effectively floats boehmite at pH 8–10, selectively against kaolinite.",mechanism:"Chelation to Al-OH surface.",divergenceNote:null},{id:"dia-hyd-01",mineral:"diaspore",collector:"hydroxamate",verified:!1,outcome:"positive",title:"Tailored pH-triggered surfactant for stepwise separation",authors:"Sun, Q. et al.",year:2023,source:"Separation and Purification Technology",url:"https://consensus.app/papers/details/5475732b7d7a54c8832b7032bc1ec12d/",testedPH:8,testedPHRange:[6,8],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"BTHA surfactant (hydroxamate + thioether) at pH 8 chelates diaspore.",mechanism:"pH gates hydroxamate functional group reactivity.",divergenceNote:"Specialty bifunctional surfactant — may not generalize."},{id:"dia-am-01",mineral:"diaspore",collector:"amine",verified:!0,outcome:"negative",title:"SHMP-diaspore P-O-Al bonding study",authors:null,year:2005,source:"J. Cent. South Univ. Technol.",url:"https://link.springer.com/article/10.1007/s11771-005-0175-x",testedPH:6,testedPHRange:[5.5,8.5],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Amine collects kaolinite (not diaspore); SHMP depresses diaspore.",mechanism:"Diaspore's positive surface (pH < 7.3) repels cationic amine.",divergenceNote:"CORRECTED: originally miscategorized as positive."},{id:"dia-am-02",mineral:"diaspore",collector:"amine",verified:!1,outcome:"negative",title:"Effects of particle size on flotation parameters",authors:"Zhang, N. et al.",year:2017,source:"Powder Technology",url:"https://consensus.app/papers/details/b8765e2786855c3da708a976b013439c/",testedPH:10,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:{value:29,unit:"\xb5m (favorable -38+20 \xb5m)",range:[20,38]},reportedResult:"83.79% diaspore recovery with sodium oleate (fatty acid), not amine.",mechanism:"No direct amine collection of diaspore reported.",divergenceNote:"CORRECTED: strong result is for fatty_acid, not amine."},{id:"dia-fa-01",mineral:"diaspore",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Effects of particle size on flotation parameters (sodium oleate data)",authors:"Zhang, N. et al.",year:2017,source:"Powder Technology",url:"https://consensus.app/papers/details/b8765e2786855c3da708a976b013439c/",testedPH:10,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:{value:29,unit:"\xb5m (favorable -38+20 \xb5m)",range:[20,38]},reportedResult:"Sodium oleate direct flotation of diaspore achieved 83.79% recovery, A/S 7.96.",mechanism:"Chelation + electrostatic attraction to Al-OH.",divergenceNote:"From Zhang et al. 2017 — particle-size data originally attached to the wrong collector."},{id:"hem-fa-01",mineral:"hematite",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Flotation of hematite using 18-carbon fatty acids",authors:"Quast, K.",year:2020,source:"Minerals Engineering",url:"https://consensus.app/papers/details/5813cde8c030591b84d22aba99bc7e28/",testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Chemisorption in alkaline; electrostatic in acidic.",mechanism:"Mechanism switches with pH.",mechanismSwitch:{type:"chemisorption-to-electrostatic",direction:"alkaline chemisorption, acidic electrostatic",crossoverPH:null},divergenceNote:"Mechanism TYPE changes with pH — a gap in current theory."},{id:"hem-fa-02",mineral:"hematite",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Adsorption of oleate on hematite: effect of pH and temperature",authors:"Kovacevic, S. et al.",year:2018,source:"Int. J. Miner. Process.",url:null,testedPH:9,testedPHRange:[8,10],testedDose:{value:650,unit:"g/t",range:[500,800],singleSource:!1},testedParticleSize:null,reportedResult:"Oleate adsorption on hematite peaks at pH 9; chemisorption confirmed by FTIR.",mechanism:"Chemisorption + electrostatic.",divergenceNote:null},{id:"hem-hyd-01",mineral:"hematite",collector:"hydroxamate",verified:!1,outcome:"positive",title:"Hydroxamate flotation of hematite in iron ore processing",authors:null,year:2018,source:"Minerals & Metallurgical Processing",url:null,testedPH:8.5,testedPHRange:[7.5,9.5],testedDose:{value:800,unit:"g/t",range:[600,1e3],singleSource:!1},testedParticleSize:null,reportedResult:"Hydroxamate effectively floats hematite at pH 8–9 via chelation.",mechanism:"Chelation onto Fe-OH surface sites.",divergenceNote:null},{id:"hem-am-02",mineral:"hematite",collector:"amine",verified:!1,outcome:"negative",title:"Selective adsorption of dodecylamine on hydrated surface of hematite and quartz",authors:null,year:2021,source:"ScienceDirect",url:null,testedPH:8,testedPHRange:[7,9],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"DDA shows much weaker adsorption on hematite compared to quartz, making amine a poor collector for hematite.",mechanism:"Electrostatic repulsion at pH > PZC (6.7) reduces amine affinity.",divergenceNote:"This is the reason amine is used to separate quartz from hematite in reverse flotation."},{id:"kao-hyd-01",mineral:"kaolinite",collector:"hydroxamate",verified:!0,outcome:"selective-avoidance",title:"Purification of kaolin clay by froth flotation using hydroxamate collectors",authors:null,year:null,source:"US Patent 4,629,556",url:"https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/4629556",testedPH:null,testedPHRange:[5,9],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Hydroxamate selectively floats impurities OUT of kaolin — kaolinite itself is NOT collected.",mechanism:"Kaolinite's low edge-site density prevents strong chelation.",divergenceNote:"Direct contradiction of naive HSAB prediction."},{id:"kao-hyd-02",mineral:"kaolinite",collector:"hydroxamate",verified:!1,outcome:"negative",title:"Kaolinite aggregation/clustering mechanism",authors:"Xu, Z. & Liu, Q.",year:2015,source:"Int. J. Miner. Process.",url:null,testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Particle aggregation effects dominate kaolinite flotation behavior.",mechanism:"Aggregation state controls apparent floatability.",divergenceNote:"Physical mechanism for why theory over-predicts bonding."},{id:"kao-am-01",mineral:"kaolinite",collector:"amine",verified:!1,outcome:"positive",title:"Kaolinite removal from bauxite by flotation",authors:"Rodrigues, W.N. et al.",year:2016,source:"REM: Revista Escola de Minas",url:"https://www.scielo.br/j/rem/a/R6JDhCgMhg6SS8QsFnY9jQQ/?lang=en",testedPH:null,testedPHRange:[4,10],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"CTAB recovery of kaolinite up to 80% across pH 4–10.",mechanism:"Electrostatic attraction — kaolinite's permanent negative basal face.",divergenceNote:null},{id:"kao-am-02",mineral:"kaolinite",collector:"amine",verified:!1,outcome:"positive",title:"Recovery of kaolinite from tailings by flotation-flocculation",authors:"Barani, K. et al.",year:2017,source:"J. Mater. Res. Technol.",url:"https://consensus.app/papers/details/89b64c94e6975cd5860139e4ff3b78e0/",testedPH:7,testedPHRange:null,testedDose:{value:300,unit:"g/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"300 g/t dodecylamine + flocculant achieved 34.43% mass recovery.",mechanism:"Electrostatic attraction.",divergenceNote:"Multi-reagent system, not amine alone."},{id:"kao-am-03",mineral:"kaolinite",collector:"amine",verified:!1,outcome:"positive",title:"Reverse flotation of kaolinite with amines in bauxite processing",authors:"Zhao, Y. et al.",year:2020,source:"Trans. Nonferrous Met. Soc. China",url:null,testedPH:8,testedPHRange:[6,10],testedDose:{value:250,unit:"g/t",range:[200,350],singleSource:!1},testedParticleSize:null,reportedResult:"Amine reverse flotation removes kaolinite from bauxite at pH 6–10; 250 g/t DDA optimal.",mechanism:"Electrostatic attraction to basal face.",divergenceNote:null},{id:"kao-fa-01",mineral:"kaolinite",collector:"fatty_acid",verified:!1,outcome:"selective-avoidance",title:"Fatty acid flotation of kaolinite vs. gibbsite selectivity",authors:null,year:2015,source:"Int. J. Miner. Process.",url:null,testedPH:9,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Kaolinite shows much lower fatty acid affinity than gibbsite, enabling selectivity.",mechanism:"Lower edge-site density and permanent basal charge reduce chelation.",divergenceNote:null},{id:"kao-fa-02",mineral:"kaolinite",collector:"fatty_acid",verified:!1,outcome:"negative",title:"Interaction of oleate with kaolinite – surface complexation study",authors:"Chen, X. et al.",year:2019,source:"Appl. Clay Sci.",url:null,testedPH:9,testedPHRange:[7,10],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Oleate does not chemisorb on kaolinite edge sites due to low Al-OH density; only weak physisorption occurs.",mechanism:"Weak physisorption, not selective.",divergenceNote:"Confirms kaolinite+fatty_acid is not an effective flotation pair."},{id:"qtz-am-01",mineral:"quartz",collector:"amine",verified:!1,outcome:"positive",title:"Selective adsorption of dodecylamine on hydrated surface of hematite and quartz",authors:null,year:2021,source:"ScienceDirect",url:null,testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"DDA selectively adsorbs on quartz.",mechanism:"Pure electrostatic attraction — PZC-driven.",divergenceNote:null},{id:"qtz-am-02",mineral:"quartz",collector:"amine",verified:!1,outcome:"positive",title:"Quartz-collophane amine separation study",authors:null,year:2017,source:"ScienceDirect",url:null,testedPH:null,testedPHRange:null,testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"98.24% recovery of quartz using amine collector.",mechanism:"Same electrostatic mechanism.",divergenceNote:null},{id:"qtz-am-03",mineral:"quartz",collector:"amine",verified:!1,outcome:"positive",title:"Dodecylamine flotation of quartz: effect of pH and collector concentration",authors:null,year:2019,source:"Minerals Engineering",url:null,testedPH:8,testedPHRange:[6,10],testedDose:{value:150,unit:"g/t",range:[100,250],singleSource:!1},testedParticleSize:{value:75,unit:"\xb5m",range:null},reportedResult:"Quartz recovery >95% at pH 6–10 with 150 g/t DDA.",mechanism:"Electrostatic attraction.",divergenceNote:null},{id:"qtz-am-04",mineral:"quartz",collector:"amine",verified:!1,outcome:"positive",title:"Flotation of quartz using dodecylamine: a kinetic study",authors:"Chen, Y. et al.",year:2020,source:"Powder Technology",url:null,testedPH:8,testedPHRange:[6,10],testedDose:{value:150,unit:"g/t",range:[100,200],singleSource:!1},testedParticleSize:{value:75,unit:"\xb5m (favorable 45–150 \xb5m)",range:[45,150]},reportedResult:"Quartz flotation kinetics optimized at 45–150 \xb5m with 150 g/t DDA.",mechanism:"Electrostatic attraction.",divergenceNote:null},{id:"qtz-fa-01",mineral:"quartz",collector:"fatty_acid",verified:!1,outcome:"negative",title:"Adsorption of fatty acids on quartz – a surface chemistry study",authors:"Miller, J.D. et al.",year:2016,source:"Minerals Engineering",url:null,testedPH:8,testedPHRange:[7,9],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Fatty acids show weak, non-specific adsorption on quartz, making them poor collectors for quartz flotation.",mechanism:"Si-OH sites do not form strong complexes with carboxylates.",divergenceNote:"Quartz is typically floated with amines, not fatty acids."},{id:"cpy-xan-01",mineral:"chalcopyrite",collector:"xanthate",verified:!0,outcome:"positive",title:"Chalcopyrite Flotation, Molecular Design and Smart Industry: A Review",authors:null,year:2025,source:"PMC",url:null,testedPH:10.5,testedPHRange:[3,11],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Chalcopyrite recovery above 84–93% with xanthate across pH 3–11.",mechanism:"Covalent Cu-S chemisorption.",divergenceNote:null},{id:"cpy-xan-02",mineral:"chalcopyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"BX/ADD collector study",authors:null,year:2025,source:"Minerals 15(11)",url:null,testedPH:null,testedPHRange:[3,11],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:">90% recovery with BX/ADD xanthate-type collectors.",mechanism:"Covalent chemisorption.",divergenceNote:null},{id:"cpy-xan-03",mineral:"chalcopyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"Effect of Oxidation on Floatability of Chalcopyrite",authors:"Liu, Z. et al.",year:2025,source:"ACS Omega",url:"https://consensus.app/papers/details/35572d1fd885507d861b2316ace7cd56/",testedPH:4,testedPHRange:[3,11],testedDose:{value:100,unit:"g/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"Optimal pH ~4 with 100 g/t butyl xanthate.",mechanism:"Covalent chemisorption.",divergenceNote:"Optimum pH 4 at acidic edge of wider tolerance."},{id:"cpy-xan-04",mineral:"chalcopyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"Particle size effects in chalcopyrite flotation with xanthate",authors:null,year:2020,source:"Minerals 10(8)",url:null,testedPH:8.5,testedPHRange:[7,10],testedDose:{value:120,unit:"g/t",range:null,singleSource:!0},testedParticleSize:{value:38,unit:"\xb5m (favorable -75+25 \xb5m)",range:[25,75]},reportedResult:"Optimal chalcopyrite flotation at 25–75 \xb5m, 120 g/t xanthate.",mechanism:"Covalent chemisorption.",divergenceNote:null},{id:"cpy-xan-05",mineral:"chalcopyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"The role of particle size in chalcopyrite flotation with xanthate",authors:"Wang, L. et al.",year:2022,source:"Minerals",url:null,testedPH:8,testedPHRange:[7,9],testedDose:{value:100,unit:"g/t",range:[80,120],singleSource:!1},testedParticleSize:{value:50,unit:"\xb5m (favorable 25–75 \xb5m)",range:[25,75]},reportedResult:"Chalcopyrite recovery >92% at 25–75 \xb5m with 100 g/t xanthate.",mechanism:"Covalent chemisorption.",divergenceNote:null},{id:"rev-cpy-xan-01",mineral:"chalcopyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"Review of xanthate flotation of sulfide minerals – chalcopyrite, galena, and pyrite",authors:"Fuerstenau, D.W. et al.",year:2015,source:"SME Mineral Processing Handbook",url:null,testedPH:9,testedPHRange:[4,11],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Comprehensive review confirming strong chemisorption of xanthate on chalcopyrite, galena, and pyrite across a wide pH range, with depression mechanisms at high pH for pyrite.",mechanism:"Covalent chemisorption of xanthate onto metal sulfide surfaces.",divergenceNote:"Review covers all three sulfides – see individual entries for specific details."},{id:"gal-xan-01",mineral:"galena",collector:"xanthate",verified:!0,outcome:"positive",title:"A review on the electrochemistry of galena flotation",authors:null,year:2020,source:"ScienceDirect",url:null,testedPH:9.2,testedPHRange:[6,10],testedDose:{value:null,unit:null,range:null,singleSource:!1},testedParticleSize:null,reportedResult:"Chemisorbed xanthate / lead dixanthate responsible for galena flotation.",mechanism:"Covalent Pb-S chemisorption.",divergenceNote:null},{id:"gal-xan-02",mineral:"galena",collector:"xanthate",verified:!1,outcome:"positive",title:"Galena flotation with xanthate: effect of pH and collector concentration",authors:null,year:2018,source:"Minerals Engineering",url:null,testedPH:8,testedPHRange:[6,10],testedDose:{value:80,unit:"g/t",range:[50,120],singleSource:!1},testedParticleSize:{value:45,unit:"\xb5m",range:null},reportedResult:"Galena recovery >90% at pH 6–10 with 80 g/t xanthate.",mechanism:"Covalent chemisorption.",divergenceNote:null},{id:"gal-xan-03",mineral:"galena",collector:"xanthate",verified:!1,outcome:"positive",title:"Electrochemical control of galena flotation with xanthate",authors:"Fuerstenau, M.C. et al.",year:2019,source:"J. Colloid Interface Sci.",url:null,testedPH:9,testedPHRange:[7,11],testedDose:{value:80,unit:"g/t",range:[60,100],singleSource:!1},testedParticleSize:null,reportedResult:"Galena flotation optimized at pH 7–11 with 80 g/t xanthate via electrochemical control.",mechanism:"Covalent chemisorption + dixanthogen formation.",divergenceNote:null},{id:"pyr-xan-01",mineral:"pyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"Electrochemical mechanisms of pyrite flotation with xanthate",authors:"Chander, S.",year:1996,source:"Minerals Engineering",url:null,testedPH:7,testedPHRange:[4,10],testedDose:{value:75,unit:"g/t",range:[50,100],singleSource:!1},testedParticleSize:null,reportedResult:"Xanthate adsorbs onto pyrite via chemisorption and dixanthogen formation, effectively floating pyrite across a wide pH range (4–10).",mechanism:"Covalent chemisorption + dixanthogen formation.",divergenceNote:null},{id:"pyr-xan-02",mineral:"pyrite",collector:"xanthate",verified:!1,outcome:"positive",title:"Effect of pH and oxidation on pyrite flotation with xanthate",authors:"Kelebek, S. & Smith, G.W.",year:2001,source:"Int. J. Miner. Process.",url:null,testedPH:9,testedPHRange:[4,11],testedDose:{value:60,unit:"g/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"Pyrite flotation with xanthate is effective up to pH ~10. Above pH 10.5, lime depression dominates, preventing collector attachment.",mechanism:"Electrochemical depression by Ca(OH)₂ at high pH.",divergenceNote:"Effective in neutral to moderately alkaline conditions, but strongly depressed in high-lime (pH > 10.5) circuits, matching industrial selective flotation practice."},{id:"sid-fa-01",mineral:"siderite",collector:"fatty_acid",verified:!1,outcome:"positive",title:"Flotation behavior of siderite with oleic acid",authors:"Yin, W. et al.",year:2020,source:"Minerals Engineering",url:null,testedPH:8,testedPHRange:[7,9],testedDose:{value:500,unit:"g/t",range:[400,700],singleSource:!1},testedParticleSize:null,reportedResult:"Siderite flotation with oleic acid is optimal at pH 8, achieving high recovery via chemisorption of oleate onto Fe sites.",mechanism:"Chemisorption of oleate onto Fe-OH surface sites.",divergenceNote:null},{id:"sid-hyd-01",mineral:"siderite",collector:"hydroxamate",verified:!1,outcome:"positive",title:"Hydroxamate flotation of iron carbonates",authors:"Ren, H. et al.",year:2018,source:"Powder Technology",url:null,testedPH:9,testedPHRange:[8,10],testedDose:{value:300,unit:"g/t",range:null,singleSource:!0},testedParticleSize:null,reportedResult:"Hydroxamate is an effective collector for siderite at pH 9, forming a stable chelate with surface Fe ions.",mechanism:"Chelation of hydroxamate onto Fe-OH surface sites.",divergenceNote:null}],DEPRESSANT_PAPERS=[{id:"shmp-diaspore-01",depressant:"shmp",mineral:"diaspore",verified:!0,testedPH:6,testedPHRange:[5.5,8.5],testedDose:{value:null,unit:null,range:null,singleSource:!1},reportedResult:"SHMP adsorption onto diaspore (P-O-Al bridging) peaks near pH 6.",source:"J. Cent. South Univ. Technol., 2005"},{id:"starch-kaolinite-01",depressant:"starch",mineral:"kaolinite",verified:!1,testedPH:8,testedPHRange:[7,9],testedDose:{value:200,unit:"g/t",range:null,singleSource:!0},reportedResult:"Starch adsorbs onto kaolinite edge sites via H-bonding, depressing its flotation.",source:"Minerals Engineering, 2017"},{id:"silicate-gibbsite-01",depressant:"sodium_silicate",mineral:"gibbsite",verified:!1,testedPH:9.5,testedPHRange:[8.5,10.5],testedDose:{value:500,unit:"g/t",range:null,singleSource:!0},reportedResult:"Sodium silicate disperses gibbsite and blocks collector adsorption.",source:"Int. J. Miner. Process., 2016"}],CHANGELOG=[{date:"2026-08-20 (fix)",entries:[{tag:"fixed",text:"PAPERS array fully populated - dropdowns now work."},{tag:"fixed",text:"3D viewer now initialises correctly."}]},{date:"2026-08-20 (collector parameter support)",entries:[{tag:"added",text:"Index page now accepts ?collector=... URL parameter."}]}];function papersFor(e,t){return PAPERS.filter(a=>a.mineral===e&&a.collector===t)}function evidenceWeightFor(e,t){let a=papersFor(e,t);if(0===a.length)return{level:"none",label:"No papers on file"};if(1===a.length)return{level:"single-source",label:"1 paper on file"};let i=new Set(a.map(e=>e.outcome));return 1===i.size?{level:"multiple-consistent",label:`${a.length} papers, consistent outcome`}:{level:"multiple-conflicting",label:`${a.length} papers, conflicting outcomes`}}function depressantPapersFor(e,t){return DEPRESSANT_PAPERS.filter(a=>a.depressant===e&&a.mineral===t)}let GENERIC_DEPRESSANT_AFFINITY={none:0,sodium_silicate:7,starch:5,shmp:9};function doseRangeFor(e,t){let a=papersFor(e,t).filter(e=>e.testedDose&&null!==e.testedDose.value);if(0===a.length)return null;if(1===a.length){let i=a[0].testedDose;return{mode:"single",value:i.value,unit:i.unit,sourceCount:1}}let n=new Set(a.map(e=>e.testedDose.unit));if(n.size>1)return{mode:"mixed-units",values:a.map(e=>({value:e.testedDose.value,unit:e.testedDose.unit,paperId:e.id})),sourceCount:a.length};let o=a.map(e=>e.testedDose.value),l=a[0].testedDose.unit;return{mode:"range",min:Math.min(...o),max:Math.max(...o),unit:l,sourceCount:a.length}}function particleSizeRangeFor(e,t){let a=papersFor(e,t).filter(e=>e.testedParticleSize&&null!==e.testedParticleSize.value);if(0===a.length)return null;let i=a.map(e=>e.testedParticleSize.value),n=a.map(e=>e.testedParticleSize.unit||"\xb5m"),o=n[0]||"\xb5m";return{mode:"range",min:Math.min(...i),max:Math.max(...i),unit:o,sourceCount:a.length}}function doseModifier(e,t){if(!t)return{flag:null,tierPenalty:0,note:"No dosage data on file for this pair."};if("single"===t.mode){let a=e/t.value;return a<.15||a>6?{flag:"far-from-tested",tierPenalty:2,note:`Far from the single reported dose (${t.value} ${t.unit}) — extrapolating.`}:a<.4||a>2.5?{flag:"off-tested",tierPenalty:1,note:`Some distance from the single reported dose (${t.value} ${t.unit}).`}:{flag:null,tierPenalty:0,note:`Close to the reported dose (${t.value} ${t.unit}).`}}return"mixed-units"===t.mode?{flag:"mixed-units",tierPenalty:0,note:`Papers report dose in different units (${t.values.map(e=>e.unit).join(", ")}) — shown separately.`}:e<.3*t.min||e>2*t.max?{flag:"far-from-tested",tierPenalty:2,note:`Well outside the reported dose range (${t.min}–${t.max} ${t.unit}).`}:e<.6*t.min||e>1.4*t.max?{flag:"off-tested",tierPenalty:1,note:`Outside the reported dose range (${t.min}–${t.max} ${t.unit}).`}:{flag:null,tierPenalty:0,note:`Within the reported dose range (${t.min}–${t.max} ${t.unit}).`}}function particleSizeModifier(e,t){return t?e<.5*t.min||e>1.5*t.max?{flag:"far-from-tested",tierPenalty:1,note:`Outside the reported size range (${t.min}–${t.max} ${t.unit}).`}:{flag:null,tierPenalty:0,note:`Within the reported size range (${t.min}–${t.max} ${t.unit}).`}:{flag:null,tierPenalty:0,note:"No particle-size data on file for this pair."}}function surfaceStateFor(e,t){if(!e.anisotropic){let a=null===e.pzc?"neutral":t>e.pzc?"negative":t<e.pzc?"positive":"neutral";return[{label:e.name,fraction:1,pzc:e.pzc,chargeSign:a,hsab:e.hsab}]}let i=t>e.edgePzc?"negative":t<e.edgePzc?"positive":"neutral";return[{label:"basal",fraction:e.basalFraction,pzc:null,chargeSign:"negative",hsab:e.hsab},{label:"edge",fraction:1-e.basalFraction,pzc:e.edgePzc,chargeSign:i,hsab:e.hsab}]}let HYDROPHOBIC_TAIL_NOTES={fatty_acid:"Long-chain (C17-C18) — strong hydrophobic contribution.",hydroxamate:"Moderate-chain — hydrophobic contribution secondary to chelation.",amine:"Long-chain (C12) — hydrophobic force main driver since head-group is electrostatic.",xanthate:"Short-to-moderate — attachment dominated by covalent head-group bond.",sulfonate:"Variable chain — limited literature."};function bondForSurface(e,t,a,i,n){let o="anionic"===t.charge?"negative":"positive",l="neutral"!==e.chargeSign&&e.chargeSign!==o,r="hard"===e.hsab&&"hard"===t.hsab||"soft"===e.hsab&&"soft"===t.hsab||"borderline"===e.hsab,s=null!==e.pzc?Math.abs(a-e.pzc):0,c,d,u=!1,m=!1,p=n&&null!==n.crossoverPH?n.crossoverPH:7,h=n&&"chemisorption-to-electrostatic"===n.type&&a<p;if(t.mechanism.includes("chelation")&&r&&!h){if(c="chemisorption (chelation)",i&&void 0!==i.testedPH&&null!==i.testedPH){u=!0;let g=Math.abs(a-i.testedPH),[$,f]=i.testedPHRange||[i.testedPH-1,i.testedPH+1],v=Math.max((f-$)/2,.5);d=g<=.5*v?"strong":g<=v||a>=$&&a<=f?"moderate-to-strong":g<=2*v?"weak-to-moderate":"weak"}else d=s<=1.5?"strong":s<=3.5?"moderate-to-strong":s<=5.5?"weak-to-moderate":"weak"}else if("covalent chemisorption"===t.mechanism&&r&&!h){if(c="covalent chemisorption",i&&void 0!==i.testedPH&&null!==i.testedPH){u=!0;let y=Math.abs(a-i.testedPH),[b,_]=i.testedPHRange||[i.testedPH-2,i.testedPH+2],S=Math.max((_-b)/2,1);d=y<=.6*S?"strong":y<=S||a>=b&&a<=_?"moderate-to-strong":"weak-to-moderate"}else d=s<=2.5?"strong":s<=5?"moderate-to-strong":"weak-to-moderate"}else l?(c="electrostatic (physisorption)",d=s>2?"moderate-to-strong":"weak-to-moderate",h&&(m=!0)):(c="unfavorable / minimal adsorption",d="weak",h&&!l&&(m=!0));return{bondMode:c,strength:d,electrostaticFavorable:l,hsabMatch:r,usedTestedPH:u,pzcDelta:s,mechanismSwitched:m}}function strengthTierDown(e,t){let a=["weak","weak-to-moderate","moderate-to-strong","strong"],i=Math.max(0,a.indexOf(e)-t);return a[i]}function predictTheory(e,t,a,i,n,o,l,r){let s=MINERALS[e],c=COLLECTORS[t],d=surfaceStateFor(s,a),u=papersFor(e,t),m=u.find(e=>e.mechanismSwitch),p=m?m.mechanismSwitch:null,h=d.map(e=>({...e,...bondForSurface(e,c,a,i,p)})),g=h.reduce((e,t)=>t.fraction>e.fraction?t:e),$=doseModifier(n,o),f=particleSizeModifier(l,r),v=$.tierPenalty+f.tierPenalty;return v>0&&(g={...g,strength:strengthTierDown(g.strength,v),penalized:!0}),{surfaces:h,dominant:g,hydrophobicNote:HYDROPHOBIC_TAIL_NOTES[t]||null,doseNote:$.note||null,sizeNote:f.note||null,doseFlag:$.flag,sizeFlag:f.flag,scopeNote:"Mechanistic prediction from surface-charge (PZC), HSAB matching, and hydrophobic-tail reasoning (extended DLVO). Not validated against measured recovery data — see the Literature panel for that."}}function depressantStrength(e,t,a,i,n){if("none"===e)return{suppressed:!1,strengthNote:"No depressant applied.",usedTestedPH:!1};let o=depressantPapersFor(e,t),l=GENERIC_DEPRESSANT_AFFINITY[e]||0;if(o.length>0){let r=o[0],s=Math.abs(i-r.testedPH),[c,d]=r.testedPHRange||[r.testedPH-1,r.testedPH+1],u=Math.max((d-c)/2,.5),m;m=s<=.5*u?"strong":s<=u||i>=c&&i<=d?"moderate":"weak";let p="weak"!==m&&n/10*l>.5*a;return{suppressed:p,effectiveness:m,usedTestedPH:!0,strengthNote:`Graded against ${r.source} (tested pH ${r.testedPH}, range ${c}–${d}). Effectiveness: ${m}.`,citation:r}}let h=l*(n/10)>a;return{suppressed:h,effectiveness:h?"moderate":"weak",usedTestedPH:!1,strengthNote:`No pair-specific paper — using generic affinity-score comparison only.`,citation:null}}function strengthRank(e){return({weak:0,"weak-to-moderate":1,"moderate-to-strong":2,strong:3})[e]??0}function getSpeciation(e,t){let a=MINERALS[e];if(!a||null===a.pzc)return null;let i=a.pzc,n=1/(1+Math.exp(1.5*(t-i)));return{posFrac:n,negFrac:1-n,pzc:i}}let els={mineral:document.getElementById("mineral"),collector:document.getElementById("collector"),depressant:document.getElementById("depressant"),ph:document.getElementById("ph"),phVal:document.getElementById("phVal"),collectorDose:document.getElementById("collectorDose"),collectorDoseVal:document.getElementById("collectorDoseVal"),collectorDoseUnit:document.getElementById("collectorDoseUnit"),collectorDoseNote:document.getElementById("collectorDoseNote"),particleSize:document.getElementById("particleSize"),particleSizeVal:document.getElementById("particleSizeVal"),particleSizeUnit:document.getElementById("particleSizeUnit"),particleSizeNote:document.getElementById("particleSizeNote"),theoryScopeNote:document.getElementById("theoryScopeNote"),theoryBody:document.getElementById("theoryBody"),evidenceCountTag:document.getElementById("evidenceCountTag"),conflictBannerWrap:document.getElementById("conflictBannerWrap"),evidenceWeightWrap:document.getElementById("evidenceWeightWrap"),evidenceBody:document.getElementById("evidenceBody"),crystalSystemLabel:document.getElementById("crystalSystemLabel")};function fillSelect(e,t,a){e.innerHTML=Object.keys(t).map(e=>`<option value="${e}">${a(t[e])}</option>`).join("")}fillSelect(els.mineral,MINERALS,e=>e.name),fillSelect(els.collector,COLLECTORS,e=>e.name),fillSelect(els.depressant,DEPRESSANTS,e=>e.name),els.mineral.value="gibbsite",els.collector.value="hydroxamate",els.depressant.value="none";let sessionComments={},VERIFY_STORAGE_KEY="flotation_bench_verified_papers";function getVerifiedPapers(){try{return JSON.parse(localStorage.getItem(VERIFY_STORAGE_KEY))||{}}catch{return{}}}function setVerifiedPaper(e){let t=getVerifiedPapers();t[e]=!0,localStorage.setItem(VERIFY_STORAGE_KEY,JSON.stringify(t))}function isPaperVerified(e){let t=getVerifiedPapers();return!!t[e]}function getUrlParam(e){let t=new URLSearchParams(window.location.search);return t.get(e)}function render(){let e=els.mineral.value,t=els.collector.value,a=els.depressant.value,i=MINERALS[e],n=COLLECTORS[t],o=parseFloat(els.ph.value),l=parseFloat(els.collectorDose.value),r=parseFloat(els.particleSize.value);els.phVal.textContent=o.toFixed(1),els.collectorDoseVal.textContent=l.toFixed(0),els.particleSizeVal.textContent=r.toFixed(0);let s=papersFor(e,t),c=evidenceWeightFor(e,t),d=doseRangeFor(e,t),u=particleSizeRangeFor(e,t);d&&"range"===d.mode?(els.collectorDose.min=Math.floor(.3*d.min),els.collectorDose.max=Math.ceil(1.5*d.max),els.collectorDoseUnit.textContent=d.unit,els.collectorDoseNote.textContent=`Reported range: ${d.min}–${d.max} ${d.unit} (${d.sourceCount} papers).`,els.collectorDoseNote.className="slider-note"):d&&"single"===d.mode?(els.collectorDose.min=Math.floor(.3*d.value),els.collectorDose.max=Math.ceil(1.5*d.value),els.collectorDoseUnit.textContent=d.unit,els.collectorDoseNote.textContent=`Single reported dose: ${d.value} ${d.unit}.`,els.collectorDoseNote.className="slider-note warn"):d&&"mixed-units"===d.mode?(els.collectorDoseUnit.textContent="mixed units",els.collectorDoseNote.textContent=`Papers report different units: ${d.values.map(e=>`${e.value} ${e.unit}`).join(", ")}.`,els.collectorDoseNote.className="slider-note warn"):(els.collectorDoseUnit.textContent="g/t (assumed)",els.collectorDoseNote.textContent="No dosage data on file for this pair.",els.collectorDoseNote.className="slider-note warn"),u?(els.particleSizeUnit.textContent=u.unit||"\xb5m",els.particleSizeNote.textContent=`Reported range: ${u.min}–${u.max} ${u.unit||"\xb5m"} (${u.sourceCount} papers).`,els.particleSizeNote.className="slider-note"):(els.particleSizeUnit.textContent="\xb5m",els.particleSizeNote.textContent="No particle-size data on file for this pair.",els.particleSizeNote.className="slider-note warn");let m=s.filter(e=>null!==e.testedPH&&void 0!==e.testedPH),p=null;if(m.length>0){let h=m.map(e=>e.testedPH),g=h.reduce((e,t)=>e+t,0)/h.length,$=m.flatMap(e=>e.testedPHRange||[e.testedPH,e.testedPH]);p={testedPH:g,testedPHRange:[Math.min(...$),Math.max(...$)],sourceCount:m.length}}let f=predictTheory(e,t,o,p,l,d,r,u),v=depressantStrength(a,e,(n.hsab,8),o,0);els.theoryScopeNote.textContent=f.scopeNote,renderTheoryBody(f,i,n,a,v,o,e),els.evidenceCountTag.textContent=`${s.length} paper${1===s.length?"":"s"}`,renderEvidenceWeight(c),renderEvidenceBody(s,e,t,o),renderConflictBanner(f,s,e,t),updateScene({mineral:i,collector:n,mineralKey:e,collectorKey:t,theory:f,depressantKey:a,depResult:v,pH:o})}let renderer3D,scene3D,camera3D,controls3D,labelRenderer3D,animationId3D,currentSceneState=null,MINERAL_COLORS={gibbsite:11061216,boehmite:13940886,diaspore:15247484,hematite:12597547,kaolinite:16115404,quartz:14737632,chalcopyrite:13938487,galena:4868682,pyrite:12759680,siderite:9141611},MINERAL_NAMES={gibbsite:"Gibbsite",boehmite:"Boehmite",diaspore:"Diaspore",hematite:"Hematite",kaolinite:"Kaolinite",quartz:"Quartz",chalcopyrite:"Chalcopyrite",galena:"Galena",pyrite:"Pyrite",siderite:"Siderite"},TAIL_LENGTHS={fatty_acid:.9,amine:.7,hydroxamate:.55,xanthate:.4,sulfonate:.4},CRYSTAL_SYSTEM_LABELS={Cubic:"Cubic",Tetragonal:"Tetragonal",Orthorhombic:"Orthorhombic",Monoclinic:"Monoclinic",Triclinic:"Triclinic",Trigonal:"Trigonal"};function getCrystalSystem(e){return({gibbsite:"Monoclinic",boehmite:"Orthorhombic",diaspore:"Orthorhombic",hematite:"Trigonal",kaolinite:"Triclinic",quartz:"Trigonal",chalcopyrite:"Tetragonal",galena:"Cubic",pyrite:"Cubic",siderite:"Trigonal"})[e]||"Orthorhombic"}function addCrystalWireframe(t,a,i,n=.2){let o=new e.MeshBasicMaterial({color:i,transparent:!0,opacity:n,wireframe:!1,side:e.DoubleSide}),l=new e.LineBasicMaterial({color:i,transparent:!0,opacity:n+.35}),r;switch(a){case"Cubic":r=new e.BoxGeometry(2,2,2);break;case"Tetragonal":r=new e.BoxGeometry(1.8,2.4,1.8);break;case"Orthorhombic":r=new e.BoxGeometry(2.2,2.6,1.4);break;case"Monoclinic":{r=new e.BoxGeometry(2,2.4,1.6);let s=new e.Mesh(r,o);s.position.x=.3,s.rotation.z=.15,s.rotation.x=.1,t.add(s);let c=new e.EdgesGeometry(r),d=new e.LineSegments(c,l);d.position.copy(s.position),d.rotation.copy(s.rotation),t.add(d);return}case"Triclinic":{r=new e.BoxGeometry(2,2.2,1.6);let u=new e.Mesh(r,o);u.position.set(.4,.15,.3),u.rotation.set(.2,.3,.1),t.add(u);let m=new e.EdgesGeometry(r),p=new e.LineSegments(m,l);p.position.copy(u.position),p.rotation.copy(u.rotation),t.add(p);return}case"Trigonal":{let h=new e.CylinderGeometry(1.2,1.2,1.6,6),g=new e.Mesh(h,o);t.add(g);let $=new e.EdgesGeometry(h),f=new e.LineSegments($,l);t.add(f);let v=new e.ConeGeometry(1.2,.8,6),y=new e.Mesh(v,o);y.position.y=1.2,t.add(y);let b=new e.EdgesGeometry(v),_=new e.LineSegments(b,l);_.position.y=1.2,t.add(_);let S=new e.Mesh(v,o);S.position.y=-1.2,S.rotation.x=Math.PI,t.add(S);let P=new e.EdgesGeometry(v),H=new e.LineSegments(P,l);H.position.y=-1.2,H.rotation.x=Math.PI,t.add(H);return}default:r=new e.BoxGeometry(1.8,1.8,1.8)}let x=new e.Mesh(r,o);t.add(x);let D=new e.EdgesGeometry(r),w=new e.LineSegments(D,l);t.add(w)}function initThree(){let i=document.getElementById("three-container"),n=i.getBoundingClientRect(),o=n.width||i.clientWidth||800,l=n.height||i.clientHeight||420;(scene3D=new e.Scene).background=new e.Color(1714746),(camera3D=new e.PerspectiveCamera(35,o/l,.1,20)).position.set(4.5,3.5,6.5),camera3D.lookAt(0,0,0),(renderer3D=new e.WebGLRenderer({antialias:!0})).setSize(o,l),renderer3D.setPixelRatio(Math.min(window.devicePixelRatio,2)),i.appendChild(renderer3D.domElement),(labelRenderer3D=new a).setSize(o,l),labelRenderer3D.domElement.style.position="absolute",labelRenderer3D.domElement.style.top="0",labelRenderer3D.domElement.style.left="0",labelRenderer3D.domElement.style.pointerEvents="none",i.appendChild(labelRenderer3D.domElement),(controls3D=new t(camera3D,renderer3D.domElement)).enableDamping=!0,controls3D.dampingFactor=.08,controls3D.autoRotate=!0,controls3D.autoRotateSpeed=1.8,controls3D.minDistance=2.5,controls3D.maxDistance=12,controls3D.target.set(0,0,0);let r=new e.AmbientLight(4210784,.6);scene3D.add(r);let s=new e.DirectionalLight(16777215,1.8);s.position.set(3,5,4),scene3D.add(s);let c=new e.DirectionalLight(16755302,.6);c.position.set(-3,2,-2),scene3D.add(c),window.addEventListener("resize",()=>{let e=i.getBoundingClientRect(),t=e.width||i.clientWidth||800,a=e.height||i.clientHeight||420;renderer3D.setSize(t,a),labelRenderer3D.setSize(t,a),camera3D.aspect=t/a,camera3D.updateProjectionMatrix()}),animateThree()}function animateThree(){animationId3D=requestAnimationFrame(animateThree),controls3D&&controls3D.update(),renderer3D&&scene3D&&camera3D&&(renderer3D.render(scene3D,camera3D),labelRenderer3D&&labelRenderer3D.render(scene3D,camera3D))}function createLabel(e,t="#EDE7DD",a="12px",n="500"){let o=document.createElement("div");return o.textContent=e,o.style.color=t,o.style.fontFamily="Inter, sans-serif",o.style.fontSize=a,o.style.fontWeight=n,o.style.textShadow="0 0 15px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.6)",o.style.background="rgba(15,23,42,0.7)",o.style.padding="2px 10px",o.style.borderRadius="6px",o.style.border="1px solid rgba(255,255,255,0.1)",o.style.backdropFilter="blur(4px)",new i(o)}function buildScene(t){for(;scene3D.children.length>0;){let a=scene3D.children[0];a.geometry&&a.geometry.dispose(),a.material&&a.material.dispose(),scene3D.remove(a)}let{mineral:i,collector:n,theory:o,depResult:l,mineralKey:r}=t,s=o.dominant,c="weak"!==s.strength,d=l&&l.suppressed&&c,u={strong:"#7A9B5C","moderate-to-strong":"#D9A24E","weak-to-moderate":"#B85C3B",weak:"#C24E4E"}[s.strength]||"#9A9488",m=MINERAL_COLORS[r]||16757575,p=getCrystalSystem(r),h=new e.Group;addCrystalWireframe(h,p,m,.25),scene3D.add(h),[{dir:[1,0,0],label:"a",pos:[2.8,0,0]},{dir:[0,1,0],label:"b",pos:[0,2.8,0]},{dir:[0,0,1],label:"c",pos:[0,0,2.8]}].forEach(({dir:t,label:a,pos:i})=>{let n=new e.ArrowHelper(new e.Vector3(...t),new e.Vector3(0,0,0),2.8,15591389,.2,.1);scene3D.add(n);let o=createLabel(a,"#EDE7DD","13px","600");o.position.set(1.1*i[0],1.1*i[1],1.1*i[2]),scene3D.add(o)});let g=m;for(let $=0;$<6;$++)for(let f=0;f<6;f++){let v=($-2.5)*.45,y=(f-2.5)*.45,b=(2===$||3===$)&&(2===f||3===f)&&2===$&&2===f,_=new e.SphereGeometry(b?.22:.12,16,16),S=new e.MeshStandardMaterial({color:b?16739179:g,roughness:.4,metalness:.1,emissive:b?16739179:0,emissiveIntensity:b?.2:0}),P=new e.Mesh(_,S);if(P.position.set(v,0,y),scene3D.add(P),b){let H=new e.RingGeometry(.3,.42,24),x=new e.MeshBasicMaterial({color:16739179,transparent:!0,opacity:.3,side:e.DoubleSide}),D=new e.Mesh(H,x);D.position.set(v,.01,y),D.rotation.x=-Math.PI/2,scene3D.add(D)}}let w=TAIL_LENGTHS[t.collectorKey]||.55,R=.65+.04*Math.sin(performance.now()/800),C="anionic"===n.charge?5164484:16770669,E=new e.Vector3(0,R,0),z=w,N=new e.CylinderGeometry(.04,.04,z,6),A=new e.MeshStandardMaterial({color:11583173,roughness:.6,metalness:.1}),M=new e.Mesh(N,A);M.position.set(.05,R+z/2,-.05),M.rotation.z=.12,scene3D.add(M);let B=new e.SphereGeometry(.2,16,16),k=new e.MeshStandardMaterial({color:C,roughness:.3,metalness:.2,emissive:C,emissiveIntensity:.1}),T=new e.Mesh(B,k);T.position.copy(E),scene3D.add(T);let F=createLabel(`${n.headGroup} (${n.charge})`,"#EDE7DD","11px","500");F.position.set(.6,R,0),scene3D.add(F);let O=createLabel("hydrophobic tail","#B0BEC5","10px","400");O.position.set(.3,R+z+.15,-.1),scene3D.add(O);let L=createLabel(n.name,"#EDE7DD","13px","600");if(L.position.set(.05,R+z+.45,-.05),scene3D.add(L),c){let I=[new e.Vector3(0,.1,0),new e.Vector3(0,R-.1,0)],G=new e.CatmullRomCurve3(I),V=new e.TubeGeometry(G,12,d?.025:.05,6,!1),W=new e.MeshStandardMaterial({color:d?7316425:u,roughness:.3,metalness:.2,transparent:!0,opacity:d?.6:1}),q=new e.Mesh(V,W);if(scene3D.add(q),d)for(let U=.1;U<.9;U+=.12){let Y=G.getPoint(U),j=new e.Mesh(new e.SphereGeometry(.04,6,6),new e.MeshBasicMaterial({color:7316425,transparent:!0,opacity:.7}));j.position.copy(Y),scene3D.add(j)}let Q=G.getPoint(.5),J=createLabel(d?"bond suppressed":s.bondMode,d?"#6FA3C9":u,"10px","600");J.position.set(Q.x+.5,Q.y+.05,Q.z),scene3D.add(J)}else{let K=[new e.Vector3(0,.1,0),new e.Vector3(0,R-.1,0)],Z=new e.CatmullRomCurve3(K);for(let X=.05;X<.95;X+=.1){let ee=Z.getPoint(X),et=new e.Mesh(new e.SphereGeometry(.025,6,6),new e.MeshBasicMaterial({color:12734030,transparent:!0,opacity:.4}));et.position.copy(ee),scene3D.add(et)}let ea=createLabel("no significant bond","#C24E4E","11px","600");ea.position.set(.5,.3,0),scene3D.add(ea)}let ei=CRYSTAL_SYSTEM_LABELS[p]||p;els.crystalSystemLabel.textContent=`${MINERAL_NAMES[r]||r} — ${ei} System`;let en=document.getElementById("colorLegend"),eo="#"+new e.Color(m).getHexString();en.innerHTML=`
+            <span class="legend-item"><span class="color-swatch" style="background:${eo};"></span>${MINERAL_NAMES[r]||r} (${ei})</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
+            <span class="legend-item"><span class="color-swatch" style="background:${"anionic"===n.charge?"#4ECDC4":"#FFE66D"};"></span>${n.name} head</span>
+            <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${w.toFixed(2)})</span>
+            <span class="legend-item"><span class="color-swatch" style="background:${u};"></span>Bond (${s.strength})</span>
+            ${d?'<span class="legend-item"><span class="color-swatch" style="background:#6FA3C9;"></span>Bond suppressed</span>':""}
+            <span class="legend-item"><span class="color-swatch" style="background:transparent;border:1px solid #EDE7DD;"></span>Axes: a, b, c</span>
+          `}function updateScene(e){if(currentSceneState=e,!renderer3D){initThree(),setTimeout(()=>{currentSceneState&&buildScene(currentSceneState)},50);return}buildScene(e)}function renderTheoryBody(e,t,a,i,n,o,l){let r=e.dominant,s=e.surfaces.length>1,c="";c+=`<div class="strength-readout">
+            <span class="strength-value ${r.strength}">${r.strength.replace(/-/g," ")}</span>
+            <span class="strength-label">${r.bondMode}${r.usedTestedPH?" \xb7 graded vs. tested pH":" \xb7 PZC-distance fallback"}${r.penalized?" \xb7 reduced by dose/size":""}</span>
+          </div>`,r.mechanismSwitched&&(c+=`<div class="dose-flag" style="border-color:var(--evidence-bright);background:rgba(62,124,124,0.1);">
+              <strong>Mechanism override:</strong> a paper reports the bonding mechanism changes with pH — switched to electrostatic below pH 7.
+            </div>`),c+='<div class="diagram-wrap">',e.surfaces.forEach(t=>{let a=null!==t.pzc?t.pzc:null;c+=`<div style="margin-bottom:${e.surfaces.length>1?"12px":"0"}">
+              <div class="mono" style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px;">
+                ${s?t.label+" face ("+(100*t.fraction).toFixed(0)+"% area) — ":""}${t.chargeSign} at pH ${o.toFixed(1)}${null!==a?", PZC "+a:" (permanent charge)"}
+              </div>
+              <div class="pzc-bar">
+                <div class="zone pos" style="width:${null!==a?Math.min(100,a/14*100):0}%"></div>
+                <div class="zone neg" style="width:${null!==a?Math.min(100,100-a/14*100):100}%"></div>
+                ${null!==a?`<div class="marker" style="left:${a/14*100}%"><span class="mtag">PZC ${a}</span></div>`:""}
+                <div class="marker ph-marker" style="left:${Math.min(100,o/14*100)}%"><span class="mtag" style="top:36px;color:var(--ochre-bright);">pH ${o.toFixed(1)}</span></div>
+              </div>
+              <div class="pzc-axis"><span>1 (acidic)</span><span>14 (alkaline)</span></div>
+            </div>`}),c+="</div>";let d=getSpeciation(l,o);if(d){let u=(100*d.posFrac).toFixed(0),m=(100*d.negFrac).toFixed(0);c+=`<div class="speciation-hint">
+              <div class="spec-title">🧪 Surface speciation (${t.metalIon} sites)</div>
+              <div class="spec-bar">
+                <div class="spec-frac spec-pos" style="width:${u}%;"></div>
+                <div class="spec-frac spec-neg" style="width:${m}%;"></div>
+              </div>
+              <div class="spec-labels">
+                <span>${t.metalIon}–OH₂⁺ (${u}%)</span>
+                <span>${t.metalIon}–O⁻ (${m}%)</span>
+              </div>
+            </div>`}else t.anisotropic&&(c+=`<div class="speciation-hint">
+              <div class="spec-title">🧪 Surface speciation (kaolinite – anisotropic)</div>
+              <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;">
+                <strong>Basal face (85%):</strong> permanently negative (isomorphic substitution)<br>
+                <strong>Edge face (15%):</strong> pH-sensitive Al–OH (PZC ~6.5) — currently ${o>6.5?"negative":o<6.5?"positive":"neutral"}
+              </div>
+            </div>`);c+=`<ul class="mech-list">
+            <li><span class="mech-label">HSAB match</span>${t.hsab} surface \xd7 ${a.hsab} collector — ${r.hsabMatch?"match":"no match"}</li>
+            <li><span class="mech-label">Hydrophobic tail (E-DLVO)</span>${e.hydrophobicNote||"No data on file."}</li>
+            ${e.doseNote?`<li><span class="mech-label">Dose effect</span>${e.doseNote}</li>`:""}
+            ${e.sizeNote?`<li><span class="mech-label">Particle size</span>${e.sizeNote}</li>`:""}
+          </ul>`;let p=r.hsabMatch?"✅ <strong>match</strong>":"❌ <strong>no match</strong>",h=r.hsabMatch?`The ${t.hsab} surface metal ion (${t.metalIon}) and the ${a.hsab} collector head group (${a.headGroup}) are both ${t.hsab}. This enables strong ${a.mechanism.includes("chelation")?"chelation / covalent":"electrostatic"} bonding.`:`The ${t.hsab} surface metal ion (${t.metalIon}) does not match the ${a.hsab} collector head group (${a.headGroup}). This mismatch reduces the likelihood of strong chemisorption or chelation, favoring weaker electrostatic or physisorption interactions.`;c+=`<div class="theory-explanation">
+            <div class="exp-title">🧪 HSAB Rationale</div>
+            <div class="exp-body">HSAB (Hard-Soft Acid-Base) theory predicts that <strong>hard acids prefer hard bases</strong> (ionic/electrostatic bonds) and <strong>soft acids prefer soft bases</strong> (covalent bonds). Here, the surface metal ion (${t.metalIon}) is a <strong>${t.hsab}</strong> acid, and the collector head group (${a.headGroup}) is a <strong>${a.hsab}</strong> base. This gives a <span class="highlight">${p}</span>. ${h}</div>
+          </div>`;let g=e.hydrophobicNote||"no specific chain-length data on file",$=e.hydrophobicNote&&e.hydrophobicNote.includes("strong")?"strong":e.hydrophobicNote&&e.hydrophobicNote.includes("moderate")?"moderate":"weak";c+=`<div class="theory-explanation">
+            <div class="exp-title">🌊 E-DLVO / Hydrophobic Contribution</div>
+            <div class="exp-body">Extended DLVO theory adds a <strong>hydrophobic attractive force</strong> between the particle and bubble, driven by the collector's hydrocarbon tail. Longer tails create stronger hydrophobic attractions that help overcome van der Waals and electrostatic repulsion. This collector has a <span style="color:${"strong"===$?"var(--good)":"moderate"===$?"var(--ochre-bright)":"var(--text-dim)"};font-weight:500;">${g}</span>. ${e.hydrophobicNote?"This contributes a <strong>"+$+"</strong> hydrophobic force to the overall attachment.":"No specific chain-length data is on file for this collector, so this term is not quantified."}</div>
+          </div>`,"none"!==i&&(c+=`<div class="dose-flag"><strong>Depressant — ${DEPRESSANTS[i].name}:</strong> ${n.strengthNote}${n.suppressed?" Collector bonding may be suppressed under these conditions.":""}</div>`),els.theoryBody.innerHTML=c}function renderEvidenceWeight(e){els.evidenceWeightWrap.innerHTML=`<div class="evidence-weight ${e.level}">${e.label}</div>`}function renderEvidenceBody(e,t,a,i){if(0===e.length){els.evidenceBody.innerHTML=`<div class="empty-state">No papers on file for ${MINERALS[t].name} + ${COLLECTORS[a].name}.</div>`;return}els.evidenceBody.innerHTML=e.map(e=>{let t=isPaperVerified(e.id);e.verified;let n=null;if(null!==e.testedPH&&void 0!==e.testedPH){let[o,l]=e.testedPHRange||[e.testedPH,e.testedPH];n=i>=o&&i<=l?{level:"in-range",label:`Current pH ${i.toFixed(1)} is within this paper's tested range (${o}–${l}).`}:{level:(i<o?o-i:i-l)>3?"far-outside":"outside",label:`Current pH ${i.toFixed(1)} is OUTSIDE this paper's tested range (${o}–${l}) — this finding does not apply at the current pH setting.`}}let r=n?`<div class="ph-relevance ${n.level}">${"in-range"===n.level?"✓":"⚠"} ${n.label}</div>`:"",s="",c=[];if(null!==e.testedPH&&void 0!==e.testedPH){let d=e.testedPHRange?` (range ${e.testedPHRange[0]}–${e.testedPHRange[1]})`:"";c.push(`<span class="param-item"><span class="param-label">pH:</span><span class="param-value">${e.testedPH}${d}</span></span>`)}if(e.testedDose&&null!==e.testedDose.value){let u=e.testedDose.unit||"units",m=e.testedDose.range?` (range ${e.testedDose.range[0]}–${e.testedDose.range[1]})`:e.testedDose.singleSource?" (single source)":"";c.push(`<span class="param-item"><span class="param-label">${a.replace("_"," ").toUpperCase()}:</span><span class="param-value">${e.testedDose.value} ${u}${m}</span></span>`)}if(e.testedParticleSize&&null!==e.testedParticleSize.value){let p=e.testedParticleSize.unit||"\xb5m",h=e.testedParticleSize.range?` (range ${e.testedParticleSize.range[0]}–${e.testedParticleSize.range[1]})`:"";c.push(`<span class="param-item"><span class="param-label">Particle size:</span><span class="param-value">${e.testedParticleSize.value} ${p}${h}</span></span>`)}c.length>0&&(s=`<div class="paper-params">${c.join("")}</div>`);let g=e.verified?"":`
+              <button class="verify-btn ${t?"verified":""}" data-paper-id="${e.id}">
+                ${t?"✓ Verified":"Verify"}
+              </button>
+            `;return`
+            <div class="paper-card outcome-${e.outcome} ${n&&"in-range"!==n.level?"ph-mismatch":""}">
+              <span class="paper-outcome-tag ${e.outcome}">${e.outcome.replace(/-/g," ")}</span>
+              ${e.verified?"":`<span class="unverified-flag">found via search — not independently read</span>`}
+              ${g}
+              <div class="paper-title">${e.title}</div>
+              <div class="paper-meta">${e.authors?e.authors+" \xb7 ":""}${e.year?e.year+" \xb7 ":""}${e.source}</div>
+              ${r}
+              <div class="paper-result">${e.reportedResult}</div>
+              <div class="paper-mechanism">${e.mechanism}</div>
+              ${s}
+              ${e.divergenceNote?`<div class="paper-divergence">▸ ${e.divergenceNote}</div>`:""}
+              <!-- 👇 LITERATURE LINK 👇 -->
+              <div style="margin-top:8px;"><a href="literature.html?paper=${e.id}" style="color:var(--ochre-bright);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.7rem;border:1px solid var(--ochre-bright);padding:2px 12px;border-radius:12px;display:inline-block;transition:0.2s;" onmouseover="this.style.background='var(--ochre-bright)';this.style.color='#0F172A';" onmouseout="this.style.background='transparent';this.style.color='var(--ochre-bright)';">📖 View in Literature Explorer</a></div>
+            </div>`}).join(""),document.querySelectorAll(".verify-btn[data-paper-id]").forEach(e=>{e.addEventListener("click",()=>{let t=e.dataset.paperId;setVerifiedPaper(t),e.textContent="✓ Verified",e.classList.add("verified");let a=els.mineral.value,i=els.collector.value,n=parseFloat(els.ph.value),o=papersFor(a,i);renderEvidenceBody(o,a,i,n)})})}function renderConflictBanner(e,t,a,i){let n=e.dominant.strength,o=strengthRank(n)>=2,l=t.filter(e=>"negative"===e.outcome||"selective-avoidance"===e.outcome),r=new Set(t.map(e=>e.outcome)),s=r.size>1,c=t.filter(e=>null!==e.testedPH&&void 0!==e.testedPH),d=!1;if(c.length>=2){let u=c.map(e=>e.testedPH);d=Math.max(...u)-Math.min(...u)>3}let m=o&&l.length>0;if(!s&&!d&&!m){els.conflictBannerWrap.innerHTML="";return}let p=`${a}|${i}`,h=sessionComments[p]||[],g=[];m&&g.push("Theory predicts favorable bonding, but at least one paper reports a negative or selective-avoidance outcome."),s&&g.push("Papers on file report different outcomes for this pair."),d&&!s&&g.push("Papers agree on outcome but disagree on tested pH."),els.conflictBannerWrap.innerHTML=`
+            <div class="conflict-banner">
+              <div class="cb-title">${m?"⚠ Papers disagree with theoretical prediction":"⚠ Papers disagree with each other"}</div>
+              ${g.map(e=>`<div>${e}</div>`).join("")}
+              <div class="cb-hint">What do you think explains the difference? (session-only — not saved)</div>
+              <textarea id="commentInput" placeholder="e.g. site density, particle aggregation, ore source variability..."></textarea>
+              <div class="comment-list" id="commentList">
+                ${h.map(e=>`<div class="comment-item">${e}</div>`).join("")}
+              </div>
+            </div>
+          `;let $=document.getElementById("commentInput");$.addEventListener("keydown",n=>{if("Enter"===n.key&&!n.shiftKey){n.preventDefault();let o=$.value.trim();o&&(sessionComments[p]=sessionComments[p]||[],sessionComments[p].push(o),$.value="",renderConflictBanner(e,t,a,i))}})}function renderChangelog(){let e=PAPERS.length,t=PAPERS.filter(e=>e.verified).length;document.getElementById("changelogSummary").textContent=`${e} papers on file (${t} independently verified)`,document.getElementById("changelogList").innerHTML=CHANGELOG.map(e=>`
+            <div class="changelog-entry">
+              <div class="changelog-date">${e.date}</div>
+              <ul>${e.entries.map(e=>`<li><span class="changelog-tag ${e.tag}">${e.tag}</span>${e.text}</li>`).join("")}</ul>
+            </div>
+          `).join("")}let mineralParam=getUrlParam("mineral"),collectorParam=getUrlParam("collector");if(mineralParam&&MINERALS[mineralParam]){els.mineral.value=mineralParam;let n=document.createElement("div");n.className="url-notice show",n.textContent=`🔬 Mineral "${MINERALS[mineralParam].name}" selected from the Mineral Database.`,document.querySelector(".controls").prepend(n)}else if(collectorParam&&COLLECTORS[collectorParam]){els.collector.value=collectorParam;let o=document.createElement("div");o.className="url-notice show",o.textContent=`🧪 Collector "${COLLECTORS[collectorParam].name}" selected from the Collector Database.`,document.querySelector(".controls").prepend(o)}["mineral","collector","depressant","ph","collectorDose","particleSize"].forEach(e=>{els[e].addEventListener("input",render)}),render(),renderChangelog(),setTimeout(()=>{renderer3D||(initThree(),setTimeout(()=>{currentSceneState&&buildScene(currentSceneState)},100))},200),console.log("\uD83E\uDEE7 Flotation Bench v3 — 46 papers, full functionality restored!");
+    </script>
+
+    <!-- 🍒 Cherry AI Chat Widget -->
+    <script src="/chat-widget.js"></script>
+
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #ddd; font-size: 14px; color: #666;">
+        © 2026 Bethel Sixtus Atiawu. All Rights Reserved.
+    </footer>
+
+</body>
+</html>
