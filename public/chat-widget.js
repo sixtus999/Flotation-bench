@@ -320,7 +320,7 @@
     const typingEl = showTyping();
 
     try {
-        const response = await fetch(CONFIG.apiUrl + '?t=' + Date.now(), {
+        const response = await fetch('https://flotation-bench-api.onrender.com/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
