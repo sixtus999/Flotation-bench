@@ -320,7 +320,7 @@
     const typingEl = showTyping();
 
     try {
-      const response = await fetch(CONFIG.apiUrl, {
+        const response = await fetch(CONFIG.apiUrl + '?t=' + Date.now(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
