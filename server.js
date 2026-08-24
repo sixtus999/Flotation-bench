@@ -57,11 +57,12 @@ app.use(cors({
 
 // Rate Limiting: Max 50 requests per 15 minutes per IP
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 15 * 60 * 1000,
     max: 50,
-    message: 'Too many requests from this IP, please try again later.'
+    message: 'Too many requests from this IP, please try again.'
 });
-app.use('/api/', limiter);
+
+app.use('/api/', limiter);  // ✅ MOVED OUTSIDE
 
 // ============================================
 // REGULAR MIDDLEWARE
