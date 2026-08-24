@@ -8,7 +8,7 @@
 
   // ---------- CONFIG ----------
   const CONFIG = {
-    apiUrl: '/api/chat',
+      apiUrl: 'https://flotation-bench-api.onrender.com/api/chat',
     botName: 'Cherry 🍒',
     botEmoji: '🍒',
     colors: {

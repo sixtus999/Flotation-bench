@@ -51,7 +51,8 @@ app.use(cors({
     origin: [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
-        'https://calm-daffodil-765d96.netlify.app'
+        // Add your Netlify URL here later (e.g., 'https://your-site.netlify.app')
+        // Add your custom domain here later (e.g., 'https://flotationbench.com')
     ]
 }));
 
