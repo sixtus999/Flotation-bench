@@ -8,7 +8,7 @@
 
   // ---------- CONFIG ----------
   const CONFIG = {
-    apiUrl: '/api/chat',
+      apiUrl: 'https://flotation-bench-api.onrender.com/api/chat/',
     botName: 'Cherry 🍒',
     botEmoji: '🍒',
     colors: {
@@ -320,7 +320,7 @@
     const typingEl = showTyping();
 
     try {
-      const response = await fetch(CONFIG.apiUrl, {
+        const response = await fetch('https://flotation-bench-api.onrender.com/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
