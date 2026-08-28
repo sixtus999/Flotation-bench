@@ -807,7 +807,8 @@
     </div>
 
     <!-- ====== DATA ====== -->
-    <script>// ================================================================
+    <script>
+        // ================================================================
         // DATA: COLLECTORS, MINERALS, COMPATIBILITY
         // ================================================================
 
@@ -966,23 +967,23 @@
                 card.className = "collector-card";
                 card.style.setProperty("--cat-color", c.charge === "anionic" ? "#4ECDC4" : c.charge === "cationic" ? "#FFE66D" : "#94A3B8");
                 card.innerHTML = `
-                    <div class="card-top">
-                        <span class="card-icon">${c.icon}</span>
-                        <span class="charge-badge ${chargeClass}">${c.charge}</span>
-                    </div>
-                    <div class="card-name">${c.name}</div>
-                    <div class="card-formula">${c.formula}</div>
-                    <div class="card-func-group">${c.functionalGroup}</div>
-                    <div class="card-desc">${c.description}</div>
-                    <div class="card-meta">
-                        <span><span class="label">Mechanism</span> ${c.mechanism}</span>
-                        <span><span class="label">pH</span> ${c.typicalPH}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                        <span class="paper-badge-small">📄 ${c.papersCount} papers</span>
-                        <button class="btn-more" data-collector="${key}">More Info</button>
-                    </div>
-                `;
+                        <div class="card-top">
+                            <span class="card-icon">${c.icon}</span>
+                            <span class="charge-badge ${chargeClass}">${c.charge}</span>
+                        </div>
+                        <div class="card-name">${c.name}</div>
+                        <div class="card-formula">${c.formula}</div>
+                        <div class="card-func-group">${c.functionalGroup}</div>
+                        <div class="card-desc">${c.description}</div>
+                        <div class="card-meta">
+                            <span><span class="label">Mechanism</span> ${c.mechanism}</span>
+                            <span><span class="label">pH</span> ${c.typicalPH}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <span class="paper-badge-small">📄 ${c.papersCount} papers</span>
+                            <button class="btn-more" data-collector="${key}">More Info</button>
+                        </div>
+                    `;
                 const btn = card.querySelector(".btn-more");
                 btn.addEventListener("click", () => openModal(key));
                 grid.appendChild(card);
@@ -1036,13 +1037,13 @@
             // Chemical Grid
             const chemGrid = document.getElementById("chemicalGrid");
             chemGrid.innerHTML = `
-                <div class="data-item"><span class="label">Formula</span><span class="value">${c.formula}</span></div>
-                <div class="data-item"><span class="label">Charge</span><span class="value">${c.charge}</span></div>
-                <div class="data-item"><span class="label">Functional Group</span><span class="value func-group">${c.functionalGroup}</span></div>
-                <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${c.hsab}</span></div>
-                <div class="data-item"><span class="label">Bonding Mechanism</span><span class="value">${c.mechanism}</span></div>
-                <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
-            `;
+                    <div class="data-item"><span class="label">Formula</span><span class="value">${c.formula}</span></div>
+                    <div class="data-item"><span class="label">Charge</span><span class="value">${c.charge}</span></div>
+                    <div class="data-item"><span class="label">Functional Group</span><span class="value func-group">${c.functionalGroup}</span></div>
+                    <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${c.hsab}</span></div>
+                    <div class="data-item"><span class="label">Bonding Mechanism</span><span class="value">${c.mechanism}</span></div>
+                    <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
+                `;
 
             // Applications Grid
             const appGrid = document.getElementById("applicationsGrid");
@@ -1050,13 +1051,13 @@
                 `<a href="minerals.html?mineral=${m.toLowerCase()}" class="mineral-tag">${m}</a>`
             ).join("");
             appGrid.innerHTML = `
-                <div class="data-item" style="grid-column: 1 / -1;">
-                    <span class="label">Targeted Minerals</span>
-                    <div class="target-minerals-list">${mineralTags || "—"}</div>
-                </div>
-                <div class="data-item"><span class="label">Primary Mechanism</span><span class="value">${c.mechanism}</span></div>
-                <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
-            `;
+                    <div class="data-item" style="grid-column: 1 / -1;">
+                        <span class="label">Targeted Minerals</span>
+                        <div class="target-minerals-list">${mineralTags || "—"}</div>
+                    </div>
+                    <div class="data-item"><span class="label">Primary Mechanism</span><span class="value">${c.mechanism}</span></div>
+                    <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
+                `;
             document.getElementById("industrialTextContent").textContent = c.industrialUse;
 
             renderLiteratureTab(c);
@@ -1076,6 +1077,7 @@
             const mineral = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
             hint.textContent = `→ ${mineral} (${cycleIndex % currentTargetedMinerals.length + 1}/${currentTargetedMinerals.length})`;
             link.style.opacity = "1";
+            // ===== FIX: Include both mineral AND collector =====
             link.onclick = () => {
                 const m = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
                 window.location.href = `index.html?mineral=${m.toLowerCase()}&collector=${currentCollectorKey}`;
@@ -1098,18 +1100,18 @@
             let html = `<p style="color:var(--text-secondary);margin-bottom:12px;">${paperIds.length} papers on file for ${c.name}.</p>`;
             c.targetedMinerals.forEach(m => {
                 html += `
-                    <div class="lit-paper-card">
-                        <div class="lit-title">📄 ${m} + ${c.name}</div>
-                        <div class="lit-meta">${c.papersCount} papers available • see Flotation Bench for details</div>
-                        <div class="lit-minerals">${c.mechanism} • pH ${c.typicalPH}</div>
-                    </div>
-                `;
+                        <div class="lit-paper-card">
+                            <div class="lit-title">📄 ${m} + ${c.name}</div>
+                            <div class="lit-meta">${c.papersCount} papers available • see Flotation Bench for details</div>
+                            <div class="lit-minerals">${c.mechanism} • pH ${c.typicalPH}</div>
+                        </div>
+                    `;
             });
             html += `<div style="margin-top:12px;color:var(--text-dim);font-size:0.85rem;text-align:center;">
-                <a href="index.html?collector=${c.id}" style="color:var(--ochre-bright);text-decoration:none;">
-                    🔗 Open Flotation Bench with ${c.name} pre‑selected
-                </a>
-            </div>`;
+                    <a href="index.html?collector=${c.id}" style="color:var(--ochre-bright);text-decoration:none;">
+                        🔗 Open Flotation Bench with ${c.name} pre‑selected
+                    </a>
+                </div>`;
             container.innerHTML = html;
         }
 
@@ -1135,14 +1137,10 @@
         // EVENT LISTENERS
         // ================================================================
 
-        document.getElementById("benchLinkCollector").addEventListener("click", function(e) {
-            e.preventDefault();
-            if (currentTargetedMinerals.length === 0) return;
-            const m = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
-            window.location.href = `index.html?mineral=${m.toLowerCase()}&collector=${currentCollectorKey}`;
-        });
+        // ===== FIX: The benchLinkCollector now uses the updated onclick from updateBenchLink =====
+        // No need for a separate event listener – the onclick is set in updateBenchLink
 
-        document.getElementById("pairHint").addEventListener("click", function(e) {
+        document.getElementById("pairHint").addEventListener("click", function (e) {
             e.stopPropagation();
             if (currentTargetedMinerals.length === 0) return;
             cycleIndex = (cycleIndex + 1) % currentTargetedMinerals.length;
@@ -1173,7 +1171,8 @@
             setTimeout(() => openModal(collectorParam), 300);
         }
 
-        console.log("🧪 Collector Database — expanded with Dithiophosphate, Kerosene, and new minerals!");</script>
+        console.log("🧪 Collector Database — Test in Flotation Bench now passes both mineral AND collector!");
+    </script>
 
     <!-- 🍒 Cherry AI Chat Widget -->
     <script src="/chat-widget.js?v=2"></script>
