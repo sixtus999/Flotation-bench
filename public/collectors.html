@@ -1078,7 +1078,8 @@
             hint.textContent = `→ ${mineral} (${cycleIndex % currentTargetedMinerals.length + 1}/${currentTargetedMinerals.length})`;
             link.style.opacity = "1";
             // ===== FIX: Include both mineral AND collector =====
-            link.onclick = () => {
+            link.onclick = function (e) {
+                e.preventDefault();
                 const m = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
                 window.location.href = `index.html?mineral=${m.toLowerCase()}&collector=${currentCollectorKey}`;
             };
@@ -1137,8 +1138,8 @@
         // EVENT LISTENERS
         // ================================================================
 
-        // ===== FIX: The benchLinkCollector now uses the updated onclick from updateBenchLink =====
-        // No need for a separate event listener – the onclick is set in updateBenchLink
+        // ===== FIX: Removed duplicate event listener for benchLinkCollector =====
+        // The onclick is now set inside updateBenchLink() and handles both mineral + collector.
 
         document.getElementById("pairHint").addEventListener("click", function (e) {
             e.stopPropagation();
