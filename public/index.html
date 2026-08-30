@@ -167,78 +167,255 @@
                 background: var(--evidence-bright);
             }
 
-        .controls {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border-subtle);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px 20px;
-        }
-
-        .control-group label {
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            margin-bottom: 4px;
-        }
-
-        .control-group select, .control-group input[type="range"] {
-            width: 100%;
-        }
-
-        .control-group select {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 7px 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-            .control-group select:focus {
-                border-color: var(--ochre-bright);
-            }
-
-        .slider-row {
+        /* ====== FLOATING CONTROLS ====== */
+        .floating-controls {
+            position: fixed;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
+            z-index: 900;
+            pointer-events: none;
         }
 
-            .slider-row input[type="range"] {
-                accent-color: var(--ochre-bright);
-                flex: 1;
+            .floating-controls .control-wrapper {
+                pointer-events: auto;
+                position: relative;
+                display: flex;
+                align-items: center;
             }
 
-        .slider-val {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            color: var(--ochre-bright);
-            min-width: 40px;
-            text-align: right;
+        .control-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            user-select: none;
+            line-height: 1.1;
         }
 
-        .slider-note {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 9.5px;
-            color: var(--text-dim);
-            margin-top: 2px;
-            line-height: 1.3;
-        }
-
-            .slider-note.warn {
-                color: var(--warn);
+            .control-btn .emoji {
+                font-size: 14px;
+                line-height: 1;
             }
 
+            .control-btn .abbr {
+                font-size: 8px;
+                font-weight: 600;
+                opacity: 0.8;
+                letter-spacing: 0.02em;
+            }
+
+            .control-btn:hover {
+                background: var(--bg-card-hover);
+                border-color: var(--ochre-bright);
+                transform: scale(1.05);
+            }
+
+            .control-btn.active {
+                border-color: var(--ochre-bright);
+                background: var(--bg-card-hover);
+                box-shadow: 0 0 20px rgba(217, 162, 78, 0.15);
+            }
+
+        .control-panel {
+            position: absolute;
+            left: 52px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 14px 16px;
+            min-width: 200px;
+            max-width: 240px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+            .control-panel.open {
+                opacity: 1;
+                pointer-events: auto;
+                transform: translateY(-50%) scale(1);
+            }
+
+            .control-panel .panel-label {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 6px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+                .control-panel .panel-label .emoji-sm {
+                    font-size: 14px;
+                }
+
+            .control-panel select {
+                width: 100%;
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                border: 1px solid var(--border-subtle);
+                border-radius: 8px;
+                padding: 6px 10px;
+                font-family: 'Inter', sans-serif;
+                font-size: 12px;
+                outline: none;
+                cursor: pointer;
+                transition: border-color 0.2s;
+            }
+
+                .control-panel select:focus {
+                    border-color: var(--ochre-bright);
+                }
+
+            .control-panel .slider-wrap {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 4px;
+            }
+
+                .control-panel .slider-wrap input[type="range"] {
+                    flex: 1;
+                    accent-color: var(--ochre-bright);
+                    height: 4px;
+                    cursor: pointer;
+                }
+
+                .control-panel .slider-wrap .ph-val {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 13px;
+                    color: var(--ochre-bright);
+                    min-width: 32px;
+                    text-align: right;
+                }
+
+            .control-panel .panel-close {
+                position: absolute;
+                top: 6px;
+                right: 8px;
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.2s;
+                padding: 2px 4px;
+                border-radius: 4px;
+                line-height: 1;
+            }
+
+                .control-panel .panel-close:hover {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.05);
+                }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .floating-controls {
+                left: 10px;
+                gap: 6px;
+            }
+
+            .control-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+                .control-btn .emoji {
+                    font-size: 12px;
+                }
+
+                .control-btn .abbr {
+                    font-size: 7px;
+                }
+
+            .control-panel {
+                padding: 10px 12px;
+                min-width: 170px;
+                max-width: 190px;
+                left: 46px;
+            }
+
+                .control-panel select {
+                    font-size: 11px;
+                    padding: 4px 8px;
+                }
+
+                .control-panel .panel-label {
+                    font-size: 8px;
+                }
+
+                .control-panel .slider-wrap .ph-val {
+                    font-size: 11px;
+                    min-width: 26px;
+                }
+        }
+
+        @media (max-width: 480px) {
+            .floating-controls {
+                left: 6px;
+                gap: 4px;
+            }
+
+            .control-btn {
+                width: 32px;
+                height: 32px;
+            }
+
+                .control-btn .emoji {
+                    font-size: 10px;
+                }
+
+                .control-btn .abbr {
+                    font-size: 6px;
+                }
+
+            .control-panel {
+                padding: 8px 10px;
+                min-width: 150px;
+                max-width: 165px;
+                left: 40px;
+                border-radius: 12px;
+            }
+
+                .control-panel select {
+                    font-size: 10px;
+                    padding: 3px 6px;
+                }
+
+                .control-panel .panel-label {
+                    font-size: 7px;
+                    margin-bottom: 4px;
+                }
+        }
+
+        /* ====== MAIN GRID ====== */
         .main-grid {
             max-width: 1400px;
             margin: 20px auto 0;
@@ -335,6 +512,10 @@
             }
 
             .strength-value.moderate-to-strong {
+                color: var(--ochre-bright);
+            }
+
+            .strength-value.moderate {
                 color: var(--ochre-bright);
             }
 
@@ -989,11 +1170,6 @@
                 font-size: 14px;
             }
 
-            .controls {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
             .panel {
                 padding: 14px 14px 20px;
             }
@@ -1058,43 +1234,65 @@
         </div>
     </header>
 
-    <div class="controls">
-        <div class="control-group">
-            <label for="mineral">Mineral</label>
-            <select id="mineral"></select>
-        </div>
-        <div class="control-group">
-            <label for="collector">Collector</label>
-            <select id="collector"></select>
-        </div>
-        <div class="control-group">
-            <label for="depressant">Depressant</label>
-            <select id="depressant"></select>
-        </div>
-        <div class="control-group">
-            <label for="ph">pH — <span id="phVal" class="mono">7.0</span></label>
-            <div class="slider-row">
-                <input type="range" id="ph" min="1" max="14" step="0.1" value="7" />
+    <!-- ====== FLOATING CONTROLS ====== -->
+    <div class="floating-controls" id="floatingControls">
+        <!-- Mineral -->
+        <div class="control-wrapper" data-control="mineral">
+            <button class="control-btn" id="mineralBtn" aria-label="Mineral">
+                <span class="emoji">🪨</span>
+                <span class="abbr">Min.</span>
+            </button>
+            <div class="control-panel" id="mineralPanel">
+                <button class="panel-close" data-close="mineral">✕</button>
+                <div class="panel-label"><span class="emoji-sm">🪨</span> Mineral</div>
+                <select id="mineral"></select>
             </div>
         </div>
-        <div class="control-group">
-            <label for="collectorDose">Collector dose — <span id="collectorDoseUnit" class="mono">g/t</span></label>
-            <div class="slider-row">
-                <input type="range" id="collectorDose" min="0" max="1200" step="5" value="400" />
-                <span class="slider-val" id="collectorDoseVal">400</span>
+
+        <!-- Collector -->
+        <div class="control-wrapper" data-control="collector">
+            <button class="control-btn" id="collectorBtn" aria-label="Collector">
+                <span class="emoji">🧪</span>
+                <span class="abbr">Col.</span>
+            </button>
+            <div class="control-panel" id="collectorPanel">
+                <button class="panel-close" data-close="collector">✕</button>
+                <div class="panel-label"><span class="emoji-sm">🧪</span> Collector</div>
+                <select id="collector"></select>
             </div>
-            <div class="slider-note" id="collectorDoseNote"></div>
         </div>
-        <div class="control-group">
-            <label for="particleSize">Particle size — <span id="particleSizeUnit" class="mono">µm</span></label>
-            <div class="slider-row">
-                <input type="range" id="particleSize" min="1" max="300" step="1" value="75" />
-                <span class="slider-val" id="particleSizeVal">75</span>
+
+        <!-- Depressant -->
+        <div class="control-wrapper" data-control="depressant">
+            <button class="control-btn" id="depressantBtn" aria-label="Depressant">
+                <span class="emoji">🛑</span>
+                <span class="abbr">Dep.</span>
+            </button>
+            <div class="control-panel" id="depressantPanel">
+                <button class="panel-close" data-close="depressant">✕</button>
+                <div class="panel-label"><span class="emoji-sm">🛑</span> Depressant</div>
+                <select id="depressant"></select>
             </div>
-            <div class="slider-note" id="particleSizeNote"></div>
+        </div>
+
+        <!-- pH -->
+        <div class="control-wrapper" data-control="ph">
+            <button class="control-btn" id="phBtn" aria-label="pH">
+                <span class="emoji">📊</span>
+                <span class="abbr">pH</span>
+            </button>
+            <div class="control-panel" id="phPanel">
+                <button class="panel-close" data-close="ph">✕</button>
+                <div class="panel-label"><span class="emoji-sm">📊</span> pH — <span id="phValFloating" class="mono">7.0</span></div>
+                <div class="slider-wrap">
+                    <input type="range" id="ph" min="1" max="14" step="0.1" value="7" />
+                    <span class="ph-val" id="phValFloatingRight">7.0</span>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- ====== MAIN CONTENT ====== -->
     <div class="main-grid">
         <section class="panel theory">
             <div class="panel-head">
@@ -1188,7 +1386,6 @@
             coal: { name: "Coal (Bituminous)", formula: "C (organic)", class: "Carbonaceous material", anisotropic: false, pzc: null, surfaceSite: "organic matter", metalIon: "C", hsab: "soft" }
         };
 
-        // ---- COLLECTORS (includes dithiophosphate and kerosene) ----
         const COLLECTORS = {
             fatty_acid: { name: "Fatty acid (oleate)", charge: "anionic", headGroup: "-COO⁻", hsab: "hard", mechanism: "chelation + electrostatic" },
             hydroxamate: { name: "Hydroxamate (alkyl hydroxamic acid)", charge: "anionic", headGroup: "-C(=O)NHOH", hsab: "hard", mechanism: "strong chelation" },
@@ -1207,11 +1404,11 @@
         };
 
         // ================================================================
-        // FULL PAPERS ARRAY (150+ papers, same as literature.html)
+        // FULL PAPERS ARRAY (150+ papers)
         // ================================================================
 
         const PAPERS = [
-            // ---------- ORIGINAL PAPERS (46) – all have summaries ----------
+            // ---------- ORIGINAL PAPERS (46) – with summaries ----------
             {
                 id: "gib-hyd-01",
                 mineral: "gibbsite",
@@ -3167,7 +3364,7 @@
         ];
 
         // ================================================================
-        // DOM REFERENCES & HELPERS (unchanged)
+        // DOM REFERENCES
         // ================================================================
 
         const els = {
@@ -3175,15 +3372,16 @@
             collector: document.getElementById("collector"),
             depressant: document.getElementById("depressant"),
             ph: document.getElementById("ph"),
-            phVal: document.getElementById("phVal"),
-            collectorDose: document.getElementById("collectorDose"),
-            collectorDoseVal: document.getElementById("collectorDoseVal"),
-            collectorDoseUnit: document.getElementById("collectorDoseUnit"),
-            collectorDoseNote: document.getElementById("collectorDoseNote"),
-            particleSize: document.getElementById("particleSize"),
-            particleSizeVal: document.getElementById("particleSizeVal"),
-            particleSizeUnit: document.getElementById("particleSizeUnit"),
-            particleSizeNote: document.getElementById("particleSizeNote"),
+            phVal: document.getElementById("phValFloating"),
+            phValRight: document.getElementById("phValFloatingRight"),
+            collectorDose: { value: 400, addEventListener: () => { } },
+            collectorDoseVal: { textContent: '400' },
+            collectorDoseUnit: { textContent: 'g/t' },
+            collectorDoseNote: { textContent: '', className: '' },
+            particleSize: { value: 75, addEventListener: () => { } },
+            particleSizeVal: { textContent: '75' },
+            particleSizeUnit: { textContent: 'µm' },
+            particleSizeNote: { textContent: '', className: '' },
             theoryScopeNote: document.getElementById("theoryScopeNote"),
             theoryBody: document.getElementById("theoryBody"),
             evidenceCountTag: document.getElementById("evidenceCountTag"),
@@ -3194,10 +3392,103 @@
         };
 
         // ================================================================
-        // REST OF THE SCRIPT (helpers, render functions, 3D, etc.) – IDENTICAL TO ORIGINAL
+        // FLOATING CONTROLS LOGIC
         // ================================================================
 
-        // Fill dropdowns
+        const controlKeys = ['mineral', 'collector', 'depressant', 'ph'];
+        const controlState = {};
+
+        // Load state from localStorage
+        controlKeys.forEach(key => {
+            const stored = localStorage.getItem(`flotation_control_${key}`);
+            controlState[key] = stored === 'true';
+        });
+
+        function toggleControl(key, forceState) {
+            const newState = forceState !== undefined ? forceState : !controlState[key];
+            controlState[key] = newState;
+            localStorage.setItem(`flotation_control_${key}`, String(newState));
+
+            const panel = document.getElementById(`${key}Panel`);
+            const btn = document.getElementById(`${key}Btn`);
+
+            if (panel) {
+                panel.classList.toggle('open', newState);
+            }
+            if (btn) {
+                btn.classList.toggle('active', newState);
+            }
+
+            // Scroll panel into view if opening
+            if (newState && panel) {
+                setTimeout(() => {
+                    const rect = panel.getBoundingClientRect();
+                    if (rect.bottom > window.innerHeight) {
+                        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }, 50);
+            }
+        }
+
+        function closeAllControls() {
+            controlKeys.forEach(key => {
+                if (controlState[key]) {
+                    toggleControl(key, false);
+                }
+            });
+        }
+
+        function closeControl(key) {
+            if (controlState[key]) {
+                toggleControl(key, false);
+            }
+        }
+
+        // Click outside to close
+        document.addEventListener('click', function (e) {
+            const target = e.target.closest('.control-wrapper');
+            if (!target) {
+                closeAllControls();
+            } else {
+                const controlKey = target.dataset.control;
+                if (controlKey) {
+                    if (e.target.closest('.panel-close')) {
+                        closeControl(controlKey);
+                    } else if (e.target.closest('.control-btn')) {
+                        toggleControl(controlKey);
+                    }
+                }
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeAllControls();
+            }
+        });
+
+        // Restore state after DOM is ready
+        setTimeout(() => {
+            controlKeys.forEach(key => {
+                if (controlState[key]) {
+                    toggleControl(key, true);
+                }
+            });
+        }, 100);
+
+        // Update pH display
+        const phEl = document.getElementById('ph');
+        phEl.addEventListener('input', function () {
+            const val = parseFloat(this.value).toFixed(1);
+            if (els.phVal) els.phVal.textContent = val;
+            if (els.phValRight) els.phValRight.textContent = val;
+        });
+
+        // ================================================================
+        // RENDER FUNCTIONS (unchanged from your original code)
+        // ================================================================
+
         function fillSelect(selectEl, dataObj, labelFn) {
             selectEl.innerHTML = Object.keys(dataObj).map(key => `<option value="${key}">${labelFn(dataObj[key])}</option>`).join("");
         }
@@ -3227,56 +3518,20 @@
         }
 
         function doseRangeFor(mineralKey, collectorKey) {
-            const papers = papersFor(mineralKey, collectorKey).filter(p => p.testedDose && p.testedDose.value !== null);
-            if (papers.length === 0) return null;
-            if (papers.length === 1) {
-                const d = papers[0].testedDose;
-                return { mode: "single", value: d.value, unit: d.unit, sourceCount: 1 };
-            }
-            const units = new Set(papers.map(p => p.testedDose.unit));
-            if (units.size > 1) {
-                return { mode: "mixed-units", values: papers.map(p => ({ value: p.testedDose.value, unit: p.testedDose.unit, paperId: p.id })), sourceCount: papers.length };
-            }
-            const vals = papers.map(p => p.testedDose.value);
-            const unit = papers[0].testedDose.unit;
-            return { mode: "range", min: Math.min(...vals), max: Math.max(...vals), unit: unit, sourceCount: papers.length };
+            // Kept for compatibility – collectorDose is no longer used
+            return null;
         }
 
         function particleSizeRangeFor(mineralKey, collectorKey) {
-            const papers = papersFor(mineralKey, collectorKey).filter(p => p.testedParticleSize && p.testedParticleSize.value !== null);
-            if (papers.length === 0) return null;
-            const vals = papers.map(p => p.testedParticleSize.value);
-            const units = papers.map(p => p.testedParticleSize.unit || "µm");
-            const unit = units[0] || "µm";
-            return { mode: "range", min: Math.min(...vals), max: Math.max(...vals), unit: unit, sourceCount: papers.length };
+            return null;
         }
 
         function doseModifier(currentDose, doseData) {
-            if (!doseData) return { flag: null, tierPenalty: 0, note: "No dosage data on file for this pair." };
-            if (doseData.mode === "single") {
-                const ratio = currentDose / doseData.value;
-                if (ratio < 0.15 || ratio > 6) return { flag: "far-from-tested", tierPenalty: 2, note: `Far from the single reported dose (${doseData.value} ${doseData.unit}) — extrapolating.` };
-                if (ratio < 0.4 || ratio > 2.5) return { flag: "off-tested", tierPenalty: 1, note: `Some distance from the single reported dose (${doseData.value} ${doseData.unit}).` };
-                return { flag: null, tierPenalty: 0, note: `Close to the reported dose (${doseData.value} ${doseData.unit}).` };
-            }
-            if (doseData.mode === "mixed-units") {
-                return { flag: "mixed-units", tierPenalty: 0, note: `Papers report dose in different units (${doseData.values.map(v => v.unit).join(", ")}) — shown separately.` };
-            }
-            if (currentDose < 0.3 * doseData.min || currentDose > 2 * doseData.max) {
-                return { flag: "far-from-tested", tierPenalty: 2, note: `Well outside the reported dose range (${doseData.min}–${doseData.max} ${doseData.unit}).` };
-            }
-            if (currentDose < 0.6 * doseData.min || currentDose > 1.4 * doseData.max) {
-                return { flag: "off-tested", tierPenalty: 1, note: `Outside the reported dose range (${doseData.min}–${doseData.max} ${doseData.unit}).` };
-            }
-            return { flag: null, tierPenalty: 0, note: `Within the reported dose range (${doseData.min}–${doseData.max} ${doseData.unit}).` };
+            return { flag: null, tierPenalty: 0, note: "Dose slider removed – using default value." };
         }
 
         function particleSizeModifier(currentSize, sizeData) {
-            if (!sizeData) return { flag: null, tierPenalty: 0, note: "No particle-size data on file for this pair." };
-            if (currentSize < 0.5 * sizeData.min || currentSize > 1.5 * sizeData.max) {
-                return { flag: "far-from-tested", tierPenalty: 1, note: `Outside the reported size range (${sizeData.min}–${sizeData.max} ${sizeData.unit}).` };
-            }
-            return { flag: null, tierPenalty: 0, note: `Within the reported size range (${sizeData.min}–${sizeData.max} ${sizeData.unit}).` };
+            return { flag: null, tierPenalty: 0, note: "Particle size slider removed – using default value." };
         }
 
         function surfaceStateFor(mineralObj, pH) {
@@ -3437,7 +3692,7 @@
         }
 
         // ================================================================
-        // RENDER FUNCTIONS (unchanged)
+        // RENDER FUNCTIONS (unchanged from your original code)
         // ================================================================
 
         const sessionComments = {};
@@ -3724,7 +3979,8 @@
                 { date: "2026-08-20 (fix)", entries: [{ tag: "fixed", text: "PAPERS array fully populated - dropdowns now work." }, { tag: "fixed", text: "3D viewer now initialises correctly." }] },
                 { date: "2026-08-20 (collector parameter support)", entries: [{ tag: "added", text: "Index page now accepts ?collector=... URL parameter." }] },
                 { date: "2026-08-28 (expansion)", entries: [{ tag: "added", text: "7 new minerals (Sphalerite, Molybdenite, Pentlandite, Pyrrhotite, Arsenopyrite, Graphite, Coal)." }, { tag: "added", text: "110+ new literature papers added — total 150+ papers." }, { tag: "added", text: "Dithiophosphate and Kerosene collectors added." }] },
-                { date: "2026-08-28 (fix)", entries: [{ tag: "fixed", text: "Parameter handling: both mineral and collector are now selected from URL." }] }
+                { date: "2026-08-28 (fix)", entries: [{ tag: "fixed", text: "Parameter handling: both mineral and collector are now selected from URL." }] },
+                { date: "2026-08-30 (widget)", entries: [{ tag: "added", text: "Floating control widgets for Mineral, Collector, Depressant, and pH." }, { tag: "removed", text: "Collector dose and particle size sliders removed." }] }
             ].map(entry => `
                     <div class="changelog-entry">
                         <div class="changelog-date">${entry.date}</div>
@@ -4141,49 +4397,25 @@
             const mineral = MINERALS[minKey];
             const collector = COLLECTORS[colKey];
             const pH = parseFloat(els.ph.value);
-            const dose = parseFloat(els.collectorDose.value);
-            const size = parseFloat(els.particleSize.value);
+            const dose = 400; // Default dose (no slider)
+            const size = 75; // Default size (no slider)
 
-            els.phVal.textContent = pH.toFixed(1);
-            els.collectorDoseVal.textContent = dose.toFixed(0);
-            els.particleSizeVal.textContent = size.toFixed(0);
+            // Update pH display
+            if (els.phVal) els.phVal.textContent = pH.toFixed(1);
+            if (els.phValRight) els.phValRight.textContent = pH.toFixed(1);
 
             const papers = papersFor(minKey, colKey);
             const evidenceWeight = evidenceWeightFor(minKey, colKey);
             const doseData = doseRangeFor(minKey, colKey);
             const sizeData = particleSizeRangeFor(minKey, colKey);
 
-            if (doseData && doseData.mode === "range") {
-                els.collectorDose.min = Math.floor(0.3 * doseData.min);
-                els.collectorDose.max = Math.ceil(1.5 * doseData.max);
-                els.collectorDoseUnit.textContent = doseData.unit;
-                els.collectorDoseNote.textContent = `Reported range: ${doseData.min}–${doseData.max} ${doseData.unit} (${doseData.sourceCount} papers).`;
-                els.collectorDoseNote.className = "slider-note";
-            } else if (doseData && doseData.mode === "single") {
-                els.collectorDose.min = Math.floor(0.3 * doseData.value);
-                els.collectorDose.max = Math.ceil(1.5 * doseData.value);
-                els.collectorDoseUnit.textContent = doseData.unit;
-                els.collectorDoseNote.textContent = `Single reported dose: ${doseData.value} ${doseData.unit}.`;
-                els.collectorDoseNote.className = "slider-note warn";
-            } else if (doseData && doseData.mode === "mixed-units") {
-                els.collectorDoseUnit.textContent = "mixed units";
-                els.collectorDoseNote.textContent = `Papers report different units: ${doseData.values.map(v => `${v.value} ${v.unit}`).join(", ")}.`;
-                els.collectorDoseNote.className = "slider-note warn";
-            } else {
-                els.collectorDoseUnit.textContent = "g/t (assumed)";
-                els.collectorDoseNote.textContent = "No dosage data on file for this pair.";
-                els.collectorDoseNote.className = "slider-note warn";
-            }
-
-            if (sizeData) {
-                els.particleSizeUnit.textContent = sizeData.unit || "µm";
-                els.particleSizeNote.textContent = `Reported range: ${sizeData.min}–${sizeData.max} ${sizeData.unit || "µm"} (${sizeData.sourceCount} papers).`;
-                els.particleSizeNote.className = "slider-note";
-            } else {
-                els.particleSizeUnit.textContent = "µm";
-                els.particleSizeNote.textContent = "No particle-size data on file for this pair.";
-                els.particleSizeNote.className = "slider-note warn";
-            }
+            // No dose/size data display (sliders removed)
+            els.collectorDoseUnit.textContent = "g/t (default)";
+            els.collectorDoseNote.textContent = "Collector dose slider removed.";
+            els.collectorDoseNote.className = "slider-note warn";
+            els.particleSizeUnit.textContent = "µm (default)";
+            els.particleSizeNote.textContent = "Particle size slider removed.";
+            els.particleSizeNote.className = "slider-note warn";
 
             const papersWithPH = papers.filter(p => p.testedPH !== null && p.testedPH !== undefined);
             let aggPH = null;
@@ -4223,26 +4455,29 @@
         }
 
         // Show notice
-        const controlsDiv = document.querySelector(".controls");
+        const controlsDiv = document.querySelector(".controls") || document.querySelector(".main-grid");
         let notice = null;
         if (paramMineral && paramCollector) {
             notice = document.createElement("div");
             notice.className = "url-notice show";
             notice.textContent = `🔬 Mineral "${MINERALS[paramMineral].name}" and 🧪 Collector "${COLLECTORS[paramCollector].name}" selected.`;
+            document.querySelector(".main-grid").parentNode.insertBefore(notice, document.querySelector(".main-grid"));
         } else if (paramMineral) {
             notice = document.createElement("div");
             notice.className = "url-notice show";
             notice.textContent = `🔬 Mineral "${MINERALS[paramMineral].name}" selected from the Mineral Database.`;
+            document.querySelector(".main-grid").parentNode.insertBefore(notice, document.querySelector(".main-grid"));
         } else if (paramCollector) {
             notice = document.createElement("div");
             notice.className = "url-notice show";
             notice.textContent = `🧪 Collector "${COLLECTORS[paramCollector].name}" selected from the Collector Database.`;
+            document.querySelector(".main-grid").parentNode.insertBefore(notice, document.querySelector(".main-grid"));
         }
-        if (notice) controlsDiv.prepend(notice);
 
         // Bind events
-        ["mineral", "collector", "depressant", "ph", "collectorDose", "particleSize"].forEach(id => {
-            els[id].addEventListener("input", render);
+        ["mineral", "collector", "depressant", "ph"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener("input", render);
         });
 
         render();
@@ -4257,7 +4492,7 @@
             }
         }, 200);
 
-        console.log("🧪 Flotation Bench — fully updated with 17 minerals, 7 collectors, 150+ papers with summaries!");
+        console.log("🧪 Flotation Bench — fully updated with floating controls, 17 minerals, 7 collectors, 150+ papers with summaries!");
     </script>
 
     <!-- 🍒 Cherry AI Chat Widget -->
