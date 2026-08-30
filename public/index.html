@@ -3570,6 +3570,7 @@
 
             let bondMode, strength, usedTestedPH = false;
 
+            // ---- CHELATION ----
             if (collector.mechanism.includes("chelation") && hsabMatch && !isAcidicSwitch) {
                 bondMode = "chemisorption (chelation)";
                 if (paper && paper.testedPH !== undefined && paper.testedPH !== null) {
@@ -3587,7 +3588,10 @@
                     else if (pzcDelta <= 5.5) strength = "weak-to-moderate";
                     else strength = "weak";
                 }
-            } else if (collector.mechanism === "covalent chemisorption" && hsabMatch && !isAcidicSwitch) {
+            }
+
+            // ---- COVALENT CHEMISORPTION ----
+            else if (collector.mechanism === "covalent chemisorption" && hsabMatch && !isAcidicSwitch) {
                 bondMode = "covalent chemisorption";
                 if (paper && paper.testedPH !== undefined && paper.testedPH !== null) {
                     usedTestedPH = true;
@@ -3602,16 +3606,50 @@
                     else if (pzcDelta <= 5) strength = "moderate-to-strong";
                     else strength = "weak-to-moderate";
                 }
-            } else if (collector.mechanism === "hydrophobic attraction") {
+            }
+
+            // ===== FIXED: HYDROPHOBIC ATTRACTION =====
+            else if (collector.mechanism === "hydrophobic attraction") {
                 bondMode = "hydrophobic attraction (no chemical bond)";
-                strength = "moderate-to-strong";
-                if (surface.label === "basal" && surface.chargeSign === "negative") strength = "strong";
-                if (collector.name === "Kerosene/Diesel") strength = "strong";
-            } else if (electrostaticFavorable) {
+
+                // Base strength based on surface characteristics
+                if (surface.label === "basal" && surface.chargeSign === "negative") {
+                    strength = "moderate-to-strong";
+                } else if (collector.name === "Kerosene/Diesel") {
+                    strength = "moderate";
+                } else {
+                    strength = "weak-to-moderate";
+                }
+
+                // Adjust for extreme pH
+                if (pH < 3 || pH > 11) {
+                    strength = strengthTierDown(strength, 1);
+                }
+
+                // Polar surfaces reduce effectiveness
+                if (surface.chargeSign === "positive" || surface.chargeSign === "negative") {
+                    if (strength === "moderate-to-strong") strength = "moderate";
+                    else if (strength === "moderate") strength = "weak-to-moderate";
+                }
+
+                // CRITICAL: Hydrophobic attraction is NEVER as strong as chemisorption
+                if (strength === "strong") strength = "moderate-to-strong";
+
+                // For gibbsite specifically, it should be weak-to-moderate
+                if (surface.pzc !== null && surface.pzc >= 8 && surface.hsab === "hard") {
+                    strength = "weak-to-moderate";
+                }
+            }
+
+            // ---- ELECTROSTATIC ----
+            else if (electrostaticFavorable) {
                 bondMode = "electrostatic (physisorption)";
                 strength = (pzcDelta > 2) ? "moderate-to-strong" : "weak-to-moderate";
                 if (isAcidicSwitch) mechanismSwitched = true;
-            } else {
+            }
+
+            // ---- UNFAVORABLE / FALLBACK ----
+            else {
                 bondMode = "unfavorable / minimal adsorption";
                 strength = "weak";
                 if (isAcidicSwitch && !electrostaticFavorable) mechanismSwitched = true;
@@ -3717,31 +3755,31 @@
             let html = "";
 
             html += `<div class="strength-readout">
-                    <span class="strength-value ${dominant.strength}">${dominant.strength.replace(/-/g, " ")}</span>
-                    <span class="strength-label">${dominant.bondMode}${dominant.usedTestedPH ? " · graded vs. tested pH" : " · PZC-distance fallback"}${dominant.penalized ? " · reduced by dose/size" : ""}</span>
-                </div>`;
+                        <span class="strength-value ${dominant.strength}">${dominant.strength.replace(/-/g, " ")}</span>
+                        <span class="strength-label">${dominant.bondMode}${dominant.usedTestedPH ? " · graded vs. tested pH" : " · PZC-distance fallback"}${dominant.penalized ? " · reduced by dose/size" : ""}</span>
+                    </div>`;
 
             if (dominant.mechanismSwitched) {
                 html += `<div class="dose-flag" style="border-color:var(--evidence-bright);background:rgba(62,124,124,0.1);">
-                        <strong>Mechanism override:</strong> a paper reports the bonding mechanism changes with pH — switched to electrostatic below pH 7.
-                    </div>`;
+                            <strong>Mechanism override:</strong> a paper reports the bonding mechanism changes with pH — switched to electrostatic below pH 7.
+                        </div>`;
             }
 
             html += '<div class="diagram-wrap">';
             theory.surfaces.forEach(surf => {
                 const pzcVal = (surf.pzc !== null) ? surf.pzc : null;
                 html += `<div style="margin-bottom: ${theory.surfaces.length > 1 ? "12px" : "0"}">
-                        <div class="mono" style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px;">
-                            ${isAnisotropic ? surf.label + " face (" + (100 * surf.fraction).toFixed(0) + "% area) — " : ""}${surf.chargeSign} at pH ${pH.toFixed(1)}${pzcVal !== null ? ", PZC " + pzcVal : " (permanent charge)"}
-                        </div>
-                        <div class="pzc-bar">
-                            <div class="zone pos" style="width:${pzcVal !== null ? Math.min(100, pzcVal / 14 * 100) : 0}%"></div>
-                            <div class="zone neg" style="width:${pzcVal !== null ? Math.min(100, 100 - pzcVal / 14 * 100) : 100}%"></div>
-                            ${pzcVal !== null ? `<div class="marker" style="left:${pzcVal / 14 * 100}%"><span class="mtag">PZC ${pzcVal}</span></div>` : ""}
-                            <div class="marker ph-marker" style="left:${Math.min(100, pH / 14 * 100)}%"><span class="mtag" style="top:36px;color:var(--ochre-bright);">pH ${pH.toFixed(1)}</span></div>
-                        </div>
-                        <div class="pzc-axis"><span>1 (acidic)</span><span>14 (alkaline)</span></div>
-                    </div>`;
+                            <div class="mono" style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px;">
+                                ${isAnisotropic ? surf.label + " face (" + (100 * surf.fraction).toFixed(0) + "% area) — " : ""}${surf.chargeSign} at pH ${pH.toFixed(1)}${pzcVal !== null ? ", PZC " + pzcVal : " (permanent charge)"}
+                            </div>
+                            <div class="pzc-bar">
+                                <div class="zone pos" style="width:${pzcVal !== null ? Math.min(100, pzcVal / 14 * 100) : 0}%"></div>
+                                <div class="zone neg" style="width:${pzcVal !== null ? Math.min(100, 100 - pzcVal / 14 * 100) : 100}%"></div>
+                                ${pzcVal !== null ? `<div class="marker" style="left:${pzcVal / 14 * 100}%"><span class="mtag">PZC ${pzcVal}</span></div>` : ""}
+                                <div class="marker ph-marker" style="left:${Math.min(100, pH / 14 * 100)}%"><span class="mtag" style="top:36px;color:var(--ochre-bright);">pH ${pH.toFixed(1)}</span></div>
+                            </div>
+                            <div class="pzc-axis"><span>1 (acidic)</span><span>14 (alkaline)</span></div>
+                        </div>`;
             });
             html += "</div>";
 
@@ -3750,32 +3788,32 @@
                 const pos = (100 * spec.posFrac).toFixed(0);
                 const neg = (100 * spec.negFrac).toFixed(0);
                 html += `<div class="speciation-hint">
-                        <div class="spec-title">🧪 Surface speciation (${mineralObj.metalIon} sites)</div>
-                        <div class="spec-bar">
-                            <div class="spec-frac spec-pos" style="width:${pos}%;"></div>
-                            <div class="spec-frac spec-neg" style="width:${neg}%;"></div>
-                        </div>
-                        <div class="spec-labels">
-                            <span>${mineralObj.metalIon}–OH₂⁺ (${pos}%)</span>
-                            <span>${mineralObj.metalIon}–O⁻ (${neg}%)</span>
-                        </div>
-                    </div>`;
+                            <div class="spec-title">🧪 Surface speciation (${mineralObj.metalIon} sites)</div>
+                            <div class="spec-bar">
+                                <div class="spec-frac spec-pos" style="width:${pos}%;"></div>
+                                <div class="spec-frac spec-neg" style="width:${neg}%;"></div>
+                            </div>
+                            <div class="spec-labels">
+                                <span>${mineralObj.metalIon}–OH₂⁺ (${pos}%)</span>
+                                <span>${mineralObj.metalIon}–O⁻ (${neg}%)</span>
+                            </div>
+                        </div>`;
             } else if (mineralObj.anisotropic) {
                 html += `<div class="speciation-hint">
-                        <div class="spec-title">🧪 Surface speciation (anisotropic mineral)</div>
-                        <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;">
-                            <strong>Basal face (${(100 * (mineralObj.basalFraction || 0.85)).toFixed(0)}%):</strong> permanently negative (isomorphic substitution / hydrophobic)<br>
-                            <strong>Edge face (${(100 * (1 - (mineralObj.basalFraction || 0.85))).toFixed(0)}%):</strong> pH-sensitive — currently ${pH > (mineralObj.edgePzc || 3) ? "negative" : pH < (mineralObj.edgePzc || 3) ? "positive" : "neutral"} (PZC ~${mineralObj.edgePzc || 3})
-                        </div>
-                    </div>`;
+                            <div class="spec-title">🧪 Surface speciation (anisotropic mineral)</div>
+                            <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;">
+                                <strong>Basal face (${(100 * (mineralObj.basalFraction || 0.85)).toFixed(0)}%):</strong> permanently negative (isomorphic substitution / hydrophobic)<br>
+                                <strong>Edge face (${(100 * (1 - (mineralObj.basalFraction || 0.85))).toFixed(0)}%):</strong> pH-sensitive — currently ${pH > (mineralObj.edgePzc || 3) ? "negative" : pH < (mineralObj.edgePzc || 3) ? "positive" : "neutral"} (PZC ~${mineralObj.edgePzc || 3})
+                            </div>
+                        </div>`;
             }
 
             html += `<ul class="mech-list">
-                    <li><span class="mech-label">HSAB match</span>${mineralObj.hsab} surface × ${collectorObj.hsab} collector — ${dominant.hsabMatch ? "match" : "no match"}</li>
-                    <li><span class="mech-label">Hydrophobic tail (E-DLVO)</span>${theory.hydrophobicNote || "No data on file."}</li>
-                    ${theory.doseNote ? `<li><span class="mech-label">Dose effect</span>${theory.doseNote}</li>` : ""}
-                    ${theory.sizeNote ? `<li><span class="mech-label">Particle size</span>${theory.sizeNote}</li>` : ""}
-                </ul>`;
+                        <li><span class="mech-label">HSAB match</span>${mineralObj.hsab} surface × ${collectorObj.hsab} collector — ${dominant.hsabMatch ? "match" : "no match"}</li>
+                        <li><span class="mech-label">Hydrophobic tail (E-DLVO)</span>${theory.hydrophobicNote || "No data on file."}</li>
+                        ${theory.doseNote ? `<li><span class="mech-label">Dose effect</span>${theory.doseNote}</li>` : ""}
+                        ${theory.sizeNote ? `<li><span class="mech-label">Particle size</span>${theory.sizeNote}</li>` : ""}
+                    </ul>`;
 
             const matchText = dominant.hsabMatch ? "✅ <strong>match</strong>" : "❌ <strong>no match</strong>";
             let hsabExplanation;
@@ -3795,9 +3833,9 @@
                 hsabExplanation = `The ${mineralObj.hsab} surface metal ion (${mineralObj.metalIon}) does not match the ${collectorObj.hsab} collector head group (${collectorObj.headGroup}). This mismatch reduces the likelihood of strong chemisorption or chelation, favoring weaker electrostatic or physisorption interactions.`;
             }
             html += `<div class="theory-explanation">
-                    <div class="exp-title">🧪 HSAB Rationale</div>
-                    <div class="exp-body">HSAB (Hard-Soft Acid-Base) theory predicts that <strong>hard acids prefer hard bases</strong> (ionic/electrostatic bonds) and <strong>soft acids prefer soft bases</strong> (covalent bonds). Here, the surface metal ion (${mineralObj.metalIon}) is a <strong>${mineralObj.hsab}</strong> acid, and the collector head group (${collectorObj.headGroup}) is a <strong>${collectorObj.hsab}</strong> base. This gives a <span class="highlight">${matchText}</span>. ${hsabExplanation}</div>
-                </div>`;
+                        <div class="exp-title">🧪 HSAB Rationale</div>
+                        <div class="exp-body">HSAB (Hard-Soft Acid-Base) theory predicts that <strong>hard acids prefer hard bases</strong> (ionic/electrostatic bonds) and <strong>soft acids prefer soft bases</strong> (covalent bonds). Here, the surface metal ion (${mineralObj.metalIon}) is a <strong>${mineralObj.hsab}</strong> acid, and the collector head group (${collectorObj.headGroup}) is a <strong>${collectorObj.hsab}</strong> base. This gives a <span class="highlight">${matchText}</span>. ${hsabExplanation}</div>
+                    </div>`;
 
             const baseHydrophobicNote = theory.hydrophobicNote || "No specific chain-length data on file.";
 
@@ -3831,9 +3869,9 @@
             else strengthColor = "var(--conflict)";
 
             html += `<div class="theory-explanation">
-                    <div class="exp-title">🌊 E-DLVO / Hydrophobic Contribution</div>
-                    <div class="exp-body">Extended DLVO theory adds a <strong>hydrophobic attractive force</strong> between the particle and bubble, driven by the collector's hydrocarbon tail. Longer tails create stronger hydrophobic attractions that help overcome van der Waals and electrostatic repulsion. The collector's tail is described as: <span style="color:${strengthColor};font-weight:500;">${hydrophobicStrength}</span>. ${hydrophobicNote}</div>
-                </div>`;
+                        <div class="exp-title">🌊 E-DLVO / Hydrophobic Contribution</div>
+                        <div class="exp-body">Extended DLVO theory adds a <strong>hydrophobic attractive force</strong> between the particle and bubble, driven by the collector's hydrocarbon tail. Longer tails create stronger hydrophobic attractions that help overcome van der Waals and electrostatic repulsion. The collector's tail is described as: <span style="color:${strengthColor};font-weight:500;">${hydrophobicStrength}</span>. ${hydrophobicNote}</div>
+                    </div>`;
 
             if (depressantKey !== "none") {
                 html += `<div class="dose-flag"><strong>Depressant — ${DEPRESSANTS[depressantKey].name}:</strong> ${depressantResult.strengthNote}${depressantResult.suppressed ? " Collector bonding may be suppressed under these conditions." : ""}</div>`;
@@ -3888,20 +3926,20 @@
                     `<button class="verify-btn ${verified ? "verified" : ""}" data-paper-id="${p.id}">${verified ? "✓ Verified" : "Verify"}</button>`;
                 const unverifiedFlag = p.verified ? "" : `<span class="unverified-flag">found via search — not independently read</span>`;
                 return `
-                        <div class="paper-card outcome-${p.outcome} ${phRelevance && phRelevance.level !== "in-range" ? "ph-mismatch" : ""}">
-                            <span class="paper-outcome-tag ${p.outcome}">${p.outcome.replace(/-/g, " ")}</span>
-                            ${unverifiedFlag}
-                            ${verifyBtn}
-                            <div class="paper-title">${p.title}</div>
-                            <div class="paper-meta">${p.authors ? p.authors + " · " : ""}${p.year ? p.year + " · " : ""}${p.source}</div>
-                            ${phHtml}
-                            <div class="paper-result">${p.reportedResult}</div>
-                            <div class="paper-mechanism">${p.mechanism}</div>
-                            ${paramsHtml}
-                            ${p.divergenceNote ? `<div class="paper-divergence">▸ ${p.divergenceNote}</div>` : ""}
-                            <div style="margin-top:8px;"><a href="literature.html?paper=${p.id}" style="color:var(--ochre-bright);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.7rem;border:1px solid var(--ochre-bright);padding:2px 12px;border-radius:12px;display:inline-block;transition:0.2s;" onmouseover="this.style.background='var(--ochre-bright)';this.style.color='#0F172A';" onmouseout="this.style.background='transparent';this.style.color='var(--ochre-bright)';">📖 View in Literature Explorer</a></div>
-                        </div>
-                    `;
+                            <div class="paper-card outcome-${p.outcome} ${phRelevance && phRelevance.level !== "in-range" ? "ph-mismatch" : ""}">
+                                <span class="paper-outcome-tag ${p.outcome}">${p.outcome.replace(/-/g, " ")}</span>
+                                ${unverifiedFlag}
+                                ${verifyBtn}
+                                <div class="paper-title">${p.title}</div>
+                                <div class="paper-meta">${p.authors ? p.authors + " · " : ""}${p.year ? p.year + " · " : ""}${p.source}</div>
+                                ${phHtml}
+                                <div class="paper-result">${p.reportedResult}</div>
+                                <div class="paper-mechanism">${p.mechanism}</div>
+                                ${paramsHtml}
+                                ${p.divergenceNote ? `<div class="paper-divergence">▸ ${p.divergenceNote}</div>` : ""}
+                                <div style="margin-top:8px;"><a href="literature.html?paper=${p.id}" style="color:var(--ochre-bright);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.7rem;border:1px solid var(--ochre-bright);padding:2px 12px;border-radius:12px;display:inline-block;transition:0.2s;" onmouseover="this.style.background='var(--ochre-bright)';this.style.color='#0F172A';" onmouseout="this.style.background='transparent';this.style.color='var(--ochre-bright)';">📖 View in Literature Explorer</a></div>
+                            </div>
+                        `;
             }).join("");
 
             document.querySelectorAll(".verify-btn[data-paper-id]").forEach(btn => {
@@ -3945,16 +3983,16 @@
             if (phDisagreement && !hasConflict) messages.push("Papers agree on outcome but disagree on tested pH.");
 
             els.conflictBannerWrap.innerHTML = `
-                    <div class="conflict-banner">
-                        <div class="cb-title">${theoryConflict ? "⚠ Papers disagree with theoretical prediction" : "⚠ Papers disagree with each other"}</div>
-                        ${messages.map(m => `<div>${m}</div>`).join("")}
-                        <div class="cb-hint">What do you think explains the difference? (session-only — not saved)</div>
-                        <textarea id="commentInput" placeholder="e.g. site density, particle aggregation, ore source variability..."></textarea>
-                        <div class="comment-list" id="commentList">
-                            ${comments.map(c => `<div class="comment-item">${c}</div>`).join("")}
+                        <div class="conflict-banner">
+                            <div class="cb-title">${theoryConflict ? "⚠ Papers disagree with theoretical prediction" : "⚠ Papers disagree with each other"}</div>
+                            ${messages.map(m => `<div>${m}</div>`).join("")}
+                            <div class="cb-hint">What do you think explains the difference? (session-only — not saved)</div>
+                            <textarea id="commentInput" placeholder="e.g. site density, particle aggregation, ore source variability..."></textarea>
+                            <div class="comment-list" id="commentList">
+                                ${comments.map(c => `<div class="comment-item">${c}</div>`).join("")}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
             const input = document.getElementById("commentInput");
             input.addEventListener("keydown", function (e) {
@@ -3982,11 +4020,11 @@
                 { date: "2026-08-28 (fix)", entries: [{ tag: "fixed", text: "Parameter handling: both mineral and collector are now selected from URL." }] },
                 { date: "2026-08-30 (widget)", entries: [{ tag: "added", text: "Floating control widgets for Mineral, Collector, Depressant, and pH." }, { tag: "removed", text: "Collector dose and particle size sliders removed." }] }
             ].map(entry => `
-                    <div class="changelog-entry">
-                        <div class="changelog-date">${entry.date}</div>
-                        <ul>${entry.entries.map(e => `<li><span class="changelog-tag ${e.tag}">${e.tag}</span>${e.text}</li>`).join("")}</ul>
-                    </div>
-                `).join("");
+                        <div class="changelog-entry">
+                            <div class="changelog-date">${entry.date}</div>
+                            <ul>${entry.entries.map(e => `<li><span class="changelog-tag ${e.tag}">${e.tag}</span>${e.text}</li>`).join("")}</ul>
+                        </div>
+                    `).join("");
         }
 
         // ================================================================
@@ -4364,14 +4402,14 @@
             const legendEl = document.getElementById("colorLegend");
             const colorHex = "#" + new THREE.Color(mineralColor).getHexString();
             legendEl.innerHTML = `
-                    <span class="legend-item"><span class="color-swatch" style="background:${colorHex};"></span>${MINERAL_NAMES[mineralKey] || mineralKey} (${CRYSTAL_SYSTEM_LABELS[crystalSystem] || crystalSystem})</span>
-                    <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
-                    <span class="legend-item"><span class="color-swatch" style="background:${collector.charge === "anionic" ? "#4ECDC4" : collector.charge === "cationic" ? "#FFE66D" : "#94A3B8"};"></span>${collector.name} head</span>
-                    <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${tailLength.toFixed(2)})</span>
-                    <span class="legend-item"><span class="color-swatch" style="background:${bondColor};"></span>Bond (${dominant.strength})</span>
-                    ${suppressed ? '<span class="legend-item"><span class="color-swatch" style="background:#6FA3C9;"></span>Bond suppressed</span>' : ""}
-                    <span class="legend-item"><span class="color-swatch" style="background:transparent;border:1px solid #EDE7DD;"></span>Axes: a, b, c</span>
-                `;
+                        <span class="legend-item"><span class="color-swatch" style="background:${colorHex};"></span>${MINERAL_NAMES[mineralKey] || mineralKey} (${CRYSTAL_SYSTEM_LABELS[crystalSystem] || crystalSystem})</span>
+                        <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
+                        <span class="legend-item"><span class="color-swatch" style="background:${collector.charge === "anionic" ? "#4ECDC4" : collector.charge === "cationic" ? "#FFE66D" : "#94A3B8"};"></span>${collector.name} head</span>
+                        <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Hydrophobic tail (${tailLength.toFixed(2)})</span>
+                        <span class="legend-item"><span class="color-swatch" style="background:${bondColor};"></span>Bond (${dominant.strength})</span>
+                        ${suppressed ? '<span class="legend-item"><span class="color-swatch" style="background:#6FA3C9;"></span>Bond suppressed</span>' : ""}
+                        <span class="legend-item"><span class="color-swatch" style="background:transparent;border:1px solid #EDE7DD;"></span>Axes: a, b, c</span>
+                    `;
         }
 
         function updateScene(state) {
