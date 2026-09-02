@@ -756,7 +756,6 @@
         // ================================================================
         // FULL PAPERS DATABASE – PLACEHOLDER (replace with your own array)
         // ================================================================
-
         function bondForSurface(surface, collector, pH, paper, mechanismSwitch) {
             const collectorCharge = collector.charge === "anionic" ? "negative" : "positive";
             const electrostaticFavorable = (surface.chargeSign !== "neutral" && surface.chargeSign === collectorCharge);
@@ -858,6 +857,7 @@
 
             return { bondMode, strength, electrostaticFavorable, hsabMatch, usedTestedPH, pzcDelta, mechanismSwitched };
         }
+
         // ================================================================
         // APP LOGIC – UNCHANGED
         // ================================================================
