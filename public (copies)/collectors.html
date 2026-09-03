@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
+        /* --- GLOBAL STYLES (unchanged) --- */
         * {
             margin: 0;
             padding: 0;
@@ -50,7 +51,6 @@
             color: var(--text-primary);
         }
 
-        /* ====== NAVIGATION ====== */
         .navbar {
             max-width: 1280px;
             margin: 0 auto;
@@ -101,7 +101,6 @@
                     border-bottom-color: var(--color-active);
                 }
 
-        /* ====== HEADER ====== */
         .page-header {
             max-width: 1280px;
             margin: 32px auto 0;
@@ -138,7 +137,6 @@
                 line-height: 1.5;
             }
 
-        /* ====== COLLECTOR GRID ====== */
         .collector-grid {
             max-width: 1280px;
             margin: 0 auto;
@@ -288,7 +286,6 @@
             display: inline-block;
         }
 
-        /* ====== COMPATIBILITY MATRIX ====== */
         .matrix-section {
             max-width: 1280px;
             margin: 40px auto 0;
@@ -318,8 +315,7 @@
             min-width: 500px;
         }
 
-            .compat-table th,
-            .compat-table td {
+            .compat-table th, .compat-table td {
                 padding: 8px 12px;
                 text-align: left;
                 border-bottom: 1px solid var(--border-subtle);
@@ -353,7 +349,6 @@
                 color: var(--warn);
             }
 
-        /* ====== MODAL ====== */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -485,7 +480,6 @@
                 margin-left: 4px;
             }
 
-        /* ====== LITERATURE LINK (NEW) ====== */
         .literature-link-collector {
             margin-top: 14px;
             text-align: center;
@@ -508,7 +502,6 @@
                     color: #0F172A;
                 }
 
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 4px;
@@ -553,7 +546,6 @@
                 display: block;
             }
 
-        /* Data grids */
         .data-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -626,7 +618,6 @@
             font-size: 0.95rem;
         }
 
-        /* Literature tab inside modal */
         .lit-paper-card {
             background: var(--bg-primary);
             border: 1px solid var(--border-subtle);
@@ -653,7 +644,6 @@
                 margin-top: 4px;
             }
 
-        /* Responsive */
         @media (max-width: 600px) {
             body {
                 padding: 0 12px 32px;
@@ -758,6 +748,8 @@
                         <th>Amine</th>
                         <th>Xanthate</th>
                         <th>Sulfonate</th>
+                        <th>Dithiophosphate</th>
+                        <th>Kerosene</th>
                     </tr>
                 </thead>
                 <tbody id="compatBody"></tbody>
@@ -793,14 +785,13 @@
                 <div class="data-grid" id="chemicalGrid"></div>
             </div>
 
-            <!-- Tab 2: Applications (with Literature Link) -->
+            <!-- Tab 2: Applications -->
             <div id="tabApplications" class="tab-content">
                 <div class="data-grid" id="applicationsGrid"></div>
                 <div class="industrial-text" id="industrialText">
                     <strong>🏭 Industrial applications:</strong>
                     <span id="industrialTextContent">Loading...</span>
                 </div>
-                <!-- 👇 LITERATURE LINK ADDED HERE 👇 -->
                 <div class="literature-link-collector">
                     <a href="literature.html" id="literatureLink">📄 View all papers for this collector</a>
                 </div>
@@ -817,48 +808,372 @@
 
     <!-- ====== DATA ====== -->
     <script>
-        const COLLECTOR_DATA={hydroxamate:{id:"hydroxamate",name:"Hydroxamate",icon:"\uD83E\uDDEA",formula:"R–C(=O)NHOH",charge:"anionic",functionalGroup:"-C(=O)NHOH",hsab:"Hard base",mechanism:"Chelation",typicalPH:"7–10",targetedMinerals:["Boehmite","Gibbsite","Diaspore","Hematite","Siderite"],industrialUse:"Bauxite flotation (direct), iron ore beneficiation, selective against silicates.",description:"Strong chelating collector for hard metal ions (Al\xb3⁺, Fe\xb3⁺) via 5-membered ring complex. Provides excellent selectivity against kaolinite and quartz.",papersCount:12,paperIds:["gib-hyd-01","gib-hyd-02","gib-hyd-03","rev-gib-hyd-01","boe-hyd-01","dia-hyd-01","hem-hyd-01","sid-hyd-01"]},fatty_acid:{id:"fatty_acid",name:"Fatty Acid",icon:"\uD83E\uDDF4",formula:"R–COO⁻ (oleate)",charge:"anionic",functionalGroup:"-COO⁻",hsab:"Hard base",mechanism:"Chemisorption + electrostatic",typicalPH:"8–11",targetedMinerals:["Boehmite","Gibbsite","Hematite","Diaspore","Siderite"],industrialUse:"Oxide mineral flotation, iron ore beneficiation, phosphate flotation.",description:"Long-chain anionic surfactant (C17–C18). Chemisorbs onto metal hydroxide surfaces via carboxylate head group. Hydrophobic tail contributes strong E-DLVO attraction.",papersCount:8,paperIds:["gib-fa-01","gib-fa-02","boe-fa-01","boe-fa-02","dia-fa-01","hem-fa-01","hem-fa-02","sid-fa-01"]},amine:{id:"amine",name:"Amine",icon:"\uD83D\uDD2C",formula:"R–NH₃⁺ (DDA)",charge:"cationic",functionalGroup:"-NH₃⁺",hsab:"Lewis base",mechanism:"Electrostatic attraction",typicalPH:"6–10",targetedMinerals:["Quartz","Kaolinite"],industrialUse:"Reverse flotation of silicates (quartz, kaolinite) from bauxite, iron ore, and phosphate ores.",description:"Classic cationic collector for negatively-charged silicate surfaces. Works via pure electrostatic attraction on permanently charged basal faces (kaolinite) and pH-driven negative surfaces (quartz).",papersCount:11,paperIds:["gib-am-01","gib-am-02","gib-am-03","boe-am-01","dia-am-01","dia-am-02","kao-am-01","kao-am-02","kao-am-03","qtz-am-01","qtz-am-02","qtz-am-03","qtz-am-04"]},xanthate:{id:"xanthate",name:"Xanthate",icon:"⚡",formula:"R–OCS₂⁻",charge:"anionic",functionalGroup:"-OCS₂⁻",hsab:"Soft base",mechanism:"Covalent chemisorption",typicalPH:"7–11",targetedMinerals:["Chalcopyrite","Galena","Pyrite"],industrialUse:"Sulfide mineral flotation (copper, lead, zinc, pyrite).",description:"Classical sulfide collector. Forms covalent metal-xanthate surface species via soft-soft HSAB interaction. Electrochemically mediated; effective across a wide pH range.",papersCount:14,paperIds:["cpy-xan-01","cpy-xan-02","cpy-xan-03","cpy-xan-04","cpy-xan-05","rev-cpy-xan-01","gal-xan-01","gal-xan-02","gal-xan-03","pyr-xan-01","pyr-xan-02"]},sulfonate:{id:"sulfonate",name:"Sulfonate",icon:"\uD83E\uDDC2",formula:"R–SO₃⁻",charge:"anionic",functionalGroup:"-SO₃⁻",hsab:"Hard base",mechanism:"Surface complexation",typicalPH:"6–10",targetedMinerals:["Gibbsite"],industrialUse:"Limited industrial use; studied for oxide and silicate flotation.",description:"Weaker anionic collector. Acts primarily through electrostatic attraction and weak surface complexation. Limited literature compared to other collectors.",papersCount:1,paperIds:["gib-sul-01"]}},MINERALS_LIST=["Gibbsite","Boehmite","Diaspore","Hematite","Kaolinite","Quartz","Chalcopyrite","Galena","Pyrite","Siderite"],COLLECTOR_KEYS=["hydroxamate","fatty_acid","amine","xanthate","sulfonate"],COLLECTOR_LABELS=["Hydroxamate","Fatty Acid","Amine","Xanthate","Sulfonate"];function getCompatibility(e,a){let t=COLLECTOR_DATA[e];return t?t.targetedMinerals.includes(a)?"yes":"Kaolinite"===a&&"hydroxamate"===e||"Quartz"===a&&"fatty_acid"===e||"Hematite"===a&&"amine"===e?"avoid":"no":"no"}function renderCollectors(){let e=document.getElementById("collectorGrid");e.innerHTML="",COLLECTOR_KEYS.forEach(a=>{let t=COLLECTOR_DATA[a],n="anionic"===t.charge?"anionic":"cationic"===t.charge?"cationic":"non-ionic",i=document.createElement("div");i.className="collector-card",i.style.setProperty("--cat-color","anionic"===t.charge?"#4ECDC4":"cationic"===t.charge?"#FFE66D":"#94A3B8"),i.innerHTML=`
-              <div class="card-top">
-                <span class="card-icon">${t.icon}</span>
-                <span class="charge-badge ${n}">${t.charge}</span>
-              </div>
-              <div class="card-name">${t.name}</div>
-              <div class="card-formula">${t.formula}</div>
-              <div class="card-func-group">${t.functionalGroup}</div>
-              <div class="card-desc">${t.description}</div>
-              <div class="card-meta">
-                <span><span class="label">Mechanism</span> ${t.mechanism}</span>
-                <span><span class="label">pH</span> ${t.typicalPH}</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                <span class="paper-badge-small">📄 ${t.papersCount} papers</span>
-                <button class="btn-more" data-collector="${a}">More Info</button>
-              </div>
-            `;let l=i.querySelector(".btn-more");l.addEventListener("click",()=>openModal(a)),e.appendChild(i)})}function renderMatrix(){let e=document.getElementById("compatBody");e.innerHTML="",MINERALS_LIST.forEach(a=>{let t=document.createElement("tr"),n=`<td>${a}</td>`;COLLECTOR_KEYS.forEach(e=>{let t=getCompatibility(e,a),i,l;"yes"===t?(i="✅",l="compat-yes"):"avoid"===t?(i="⚠️",l="compat-avoid"):(i="❌",l="compat-no"),n+=`<td class="${l}">${i}</td>`}),t.innerHTML=n,e.appendChild(t)})}let currentCollectorKey=null,cycleIndex=0,currentTargetedMinerals=[];function openModal(e){let a=COLLECTOR_DATA[e];if(!a)return;currentCollectorKey=e,currentTargetedMinerals=a.targetedMinerals.slice(),cycleIndex=0,document.getElementById("modalIcon").textContent=a.icon,document.getElementById("modalName").textContent=a.name;let t="anionic"===a.charge?"anionic":"cationic"===a.charge?"cationic":"non-ionic";document.getElementById("modalChargeBadge").className=`modal-charge-badge ${t}`,document.getElementById("modalChargeBadge").textContent=a.charge,document.getElementById("modalPaperBadge").textContent=`📄 ${a.papersCount} papers`,document.getElementById("modalFormula").textContent=a.formula,document.getElementById("literatureLink").href=`literature.html?collector=${a.id}`,updateBenchLink();let n=document.getElementById("chemicalGrid");n.innerHTML=`
-            <div class="data-item"><span class="label">Formula</span><span class="value">${a.formula}</span></div>
-            <div class="data-item"><span class="label">Charge</span><span class="value">${a.charge}</span></div>
-            <div class="data-item"><span class="label">Functional Group</span><span class="value func-group">${a.functionalGroup}</span></div>
-            <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${a.hsab}</span></div>
-            <div class="data-item"><span class="label">Bonding Mechanism</span><span class="value">${a.mechanism}</span></div>
-            <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${a.typicalPH}</span></div>
-          `;let i=document.getElementById("applicationsGrid"),l=a.targetedMinerals.map(e=>`<a href="minerals.html?mineral=${e.toLowerCase()}" class="mineral-tag">${e}</a>`).join("");i.innerHTML=`
-            <div class="data-item" style="grid-column: 1 / -1;">
-              <span class="label">Targeted Minerals</span>
-              <div class="target-minerals-list">${l||"—"}</div>
-            </div>
-            <div class="data-item"><span class="label">Primary Mechanism</span><span class="value">${a.mechanism}</span></div>
-            <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${a.typicalPH}</span></div>
-          `,document.getElementById("industrialTextContent").textContent=a.industrialUse,renderLiteratureTab(a),switchTab("chemical"),document.getElementById("modalOverlay").classList.add("open"),document.body.style.overflow="hidden"}function updateBenchLink(){COLLECTOR_DATA[currentCollectorKey];let e=document.getElementById("benchLinkCollector"),a=document.getElementById("pairHint");if(0===currentTargetedMinerals.length){a.textContent="(no compatible minerals)",e.style.opacity="0.5";return}let t=currentTargetedMinerals[cycleIndex%currentTargetedMinerals.length];a.textContent=`→ ${t} (${cycleIndex%currentTargetedMinerals.length+1}/${currentTargetedMinerals.length})`,e.style.opacity="1",e.onclick=()=>{let e=currentTargetedMinerals[cycleIndex%currentTargetedMinerals.length];window.location.href=`index.html?mineral=${e.toLowerCase()}&collector=${currentCollectorKey}`}}function cycleMineral(){0!==currentTargetedMinerals.length&&(cycleIndex=(cycleIndex+1)%currentTargetedMinerals.length,updateBenchLink())}function renderLiteratureTab(e){let a=document.getElementById("literatureContent"),t=e.paperIds||[];if(0===t.length){a.innerHTML='<div class="empty-state">No papers on file for this collector.</div>';return}let n=`<p style="color:var(--text-secondary);margin-bottom:12px;">${t.length} papers on file for ${e.name}. These papers document flotation with:</p>`;e.targetedMinerals.forEach(a=>{n+=`
-              <div class="lit-paper-card">
-                <div class="lit-title">📄 ${a} + ${e.name}</div>
-                <div class="lit-meta">${e.papersCount} papers available • see Flotation Bench for details</div>
-                <div class="lit-minerals">${e.mechanism} • pH ${e.typicalPH}</div>
-              </div>
-            `}),n+=`<div style="margin-top:12px;color:var(--text-dim);font-size:0.85rem;text-align:center;">
-            <a href="index.html?collector=${e.id}" style="color:var(--ochre-bright);text-decoration:none;">
-              🔗 Open Flotation Bench with ${e.name} pre‑selected
-            </a>
-          </div>`,a.innerHTML=n}function closeModal(){document.getElementById("modalOverlay").classList.remove("open"),document.body.style.overflow=""}function switchTab(e){document.querySelectorAll(".tab-btn").forEach(a=>{a.classList.toggle("active",a.dataset.tab===e)}),document.getElementById("tabChemical").classList.toggle("active","chemical"===e),document.getElementById("tabApplications").classList.toggle("active","applications"===e),document.getElementById("tabLiterature").classList.toggle("active","literature"===e)}function getUrlParam(e){let a=new URLSearchParams(window.location.search);return a.get(e)}document.getElementById("benchLinkCollector").addEventListener("click",function(e){if(e.preventDefault(),0===currentTargetedMinerals.length)return;let a=currentTargetedMinerals[cycleIndex%currentTargetedMinerals.length];window.location.href=`index.html?mineral=${a.toLowerCase()}&collector=${currentCollectorKey}`}),document.getElementById("pairHint").addEventListener("click",function(e){e.stopPropagation(),0!==currentTargetedMinerals.length&&(cycleIndex=(cycleIndex+1)%currentTargetedMinerals.length,updateBenchLink())}),document.querySelectorAll(".tab-btn").forEach(e=>{e.addEventListener("click",()=>{switchTab(e.dataset.tab)})}),document.getElementById("modalCloseBtn").addEventListener("click",closeModal),document.getElementById("modalOverlay").addEventListener("click",e=>{e.target===e.currentTarget&&closeModal()}),document.addEventListener("keydown",e=>{"Escape"===e.key&&closeModal()}),renderCollectors(),renderMatrix();const collectorParam=getUrlParam("collector");collectorParam&&COLLECTOR_DATA[collectorParam]&&setTimeout(()=>{openModal(collectorParam)},300),console.log("\uD83E\uDEE7 Collector Database — literature link added to Applications tab.");    </script>
+        // ================================================================
+        // DATA: COLLECTORS, MINERALS, COMPATIBILITY
+        // ================================================================
+
+        const COLLECTOR_DATA = {
+            hydroxamate: {
+                id: "hydroxamate",
+                name: "Hydroxamate",
+                icon: "🧪",
+                formula: "R–C(=O)NHOH",
+                charge: "anionic",
+                functionalGroup: "-C(=O)NHOH",
+                hsab: "Hard base",
+                mechanism: "Chelation",
+                typicalPH: "7–10",
+                targetedMinerals: ["Boehmite", "Gibbsite", "Diaspore", "Hematite", "Siderite", "Arsenopyrite"],
+                industrialUse: "Bauxite flotation (direct), iron ore beneficiation, selective against silicates, and some sulfide (As) flotation.",
+                description: "Strong chelating collector for hard metal ions (Al³⁺, Fe³⁺) via 5-membered ring complex. Provides excellent selectivity against kaolinite and quartz.",
+                papersCount: 20,
+                paperIds: ["gib-hyd-01", "gib-hyd-02", "gib-hyd-03", "rev-gib-hyd-01", "boe-hyd-01", "dia-hyd-01", "hem-hyd-01", "sid-hyd-01", "ars-hyd-01", "ars-hyd-02"]
+            },
+            fatty_acid: {
+                id: "fatty_acid",
+                name: "Fatty Acid",
+                icon: "🧴",
+                formula: "R–COO⁻ (oleate)",
+                charge: "anionic",
+                functionalGroup: "-COO⁻",
+                hsab: "Hard base",
+                mechanism: "Chemisorption + electrostatic",
+                typicalPH: "8–11",
+                targetedMinerals: ["Boehmite", "Gibbsite", "Hematite", "Diaspore", "Siderite", "Sphalerite", "Pentlandite"],
+                industrialUse: "Oxide mineral flotation, iron ore beneficiation, phosphate flotation, and some sulfide (Zn, Ni) flotation.",
+                description: "Long-chain anionic surfactant (C17–C18). Chemisorbs onto metal hydroxide surfaces via carboxylate head group. Hydrophobic tail contributes strong E-DLVO attraction.",
+                papersCount: 18,
+                paperIds: ["gib-fa-01", "gib-fa-02", "boe-fa-01", "boe-fa-02", "dia-fa-01", "hem-fa-01", "hem-fa-02", "sid-fa-01", "sph-fa-01", "sph-fa-02", "pen-fa-01"]
+            },
+            amine: {
+                id: "amine",
+                name: "Amine",
+                icon: "🔬",
+                formula: "R–NH₃⁺ (DDA)",
+                charge: "cationic",
+                functionalGroup: "-NH₃⁺",
+                hsab: "Lewis base",
+                mechanism: "Electrostatic attraction",
+                typicalPH: "6–10",
+                targetedMinerals: ["Quartz", "Kaolinite", "Sphalerite"],
+                industrialUse: "Reverse flotation of silicates (quartz, kaolinite) from bauxite, iron ore, and phosphate ores. Also used in Zn-Pb circuits.",
+                description: "Classic cationic collector for negatively-charged silicate surfaces. Works via pure electrostatic attraction on permanently charged basal faces (kaolinite) and pH-driven negative surfaces (quartz).",
+                papersCount: 16,
+                paperIds: ["gib-am-01", "gib-am-02", "gib-am-03", "boe-am-01", "dia-am-01", "dia-am-02", "kao-am-01", "kao-am-02", "kao-am-03", "qtz-am-01", "qtz-am-02", "qtz-am-03", "qtz-am-04", "sph-am-01"]
+            },
+            xanthate: {
+                id: "xanthate",
+                name: "Xanthate",
+                icon: "⚡",
+                formula: "R–OCS₂⁻",
+                charge: "anionic",
+                functionalGroup: "-OCS₂⁻",
+                hsab: "Soft base",
+                mechanism: "Covalent chemisorption",
+                typicalPH: "7–11",
+                targetedMinerals: ["Chalcopyrite", "Galena", "Pyrite", "Sphalerite", "Pentlandite", "Pyrrhotite", "Arsenopyrite"],
+                industrialUse: "Sulfide mineral flotation (copper, lead, zinc, nickel, gold).",
+                description: "Classical sulfide collector. Forms covalent metal-xanthate surface species via soft-soft HSAB interaction. Electrochemically mediated; effective across a wide pH range.",
+                papersCount: 28,
+                paperIds: ["cpy-xan-01", "cpy-xan-02", "cpy-xan-03", "cpy-xan-04", "cpy-xan-05", "rev-cpy-xan-01", "gal-xan-01", "gal-xan-02", "gal-xan-03", "pyr-xan-01", "pyr-xan-02", "sph-xan-01", "sph-xan-02", "sph-xan-03", "sph-xan-04", "pen-xan-01", "pen-xan-02", "prr-xan-01", "prr-xan-02", "ars-xan-01", "ars-xan-02"]
+            },
+            sulfonate: {
+                id: "sulfonate",
+                name: "Sulfonate",
+                icon: "🧪",
+                formula: "R–SO₃⁻",
+                charge: "anionic",
+                functionalGroup: "-SO₃⁻",
+                hsab: "Hard base",
+                mechanism: "Surface complexation",
+                typicalPH: "6–10",
+                targetedMinerals: ["Gibbsite", "Coal"],
+                industrialUse: "Limited industrial use; studied for oxide and silicate flotation, and coal desulfurization.",
+                description: "Weaker anionic collector. Acts primarily through electrostatic attraction and weak surface complexation. Limited literature compared to other collectors.",
+                papersCount: 3,
+                paperIds: ["gib-sul-01", "cl-sul-01"]
+            },
+            dithiophosphate: {
+                id: "dithiophosphate",
+                name: "Dithiophosphate",
+                icon: "🛡️",
+                formula: "R–S₂P(OR)₂",
+                charge: "anionic",
+                functionalGroup: "-S₂P(OR)₂",
+                hsab: "Soft base",
+                mechanism: "Covalent chemisorption",
+                typicalPH: "6–10",
+                targetedMinerals: ["Chalcopyrite", "Galena", "Sphalerite", "Pentlandite", "Pyrrhotite", "Arsenopyrite"],
+                industrialUse: "Sulfide flotation (Cu, Pb, Zn, Ni, Au) where selectivity over pyrite is required.",
+                description: "Versatile sulfide collector offering good selectivity. Forms stable metal complexes with base metal sulfides. Often used in combination with xanthates.",
+                papersCount: 14,
+                paperIds: ["sph-dtp-01", "sph-dtp-02", "cpy-dtp-01", "gal-dtp-01", "pen-dtp-01", "prr-dtp-01", "ars-dtp-01"]
+            },
+            kerosene: {
+                id: "kerosene",
+                name: "Kerosene/Diesel",
+                icon: "🛢️",
+                formula: "C₁₂–C₁₅ alkanes",
+                charge: "non-ionic",
+                functionalGroup: "-CH₂-",
+                hsab: "Soft base",
+                mechanism: "Hydrophobic attraction",
+                typicalPH: "4–10",
+                targetedMinerals: ["Molybdenite", "Graphite", "Coal"],
+                industrialUse: "Flotation of naturally hydrophobic minerals (molybdenite, graphite, coal) and as an extender in oil flotation.",
+                description: "Non-ionic hydrocarbon oil. Acts by spreading over hydrophobic surfaces, enhancing bubble-particle attachment. Used where chemical collectors are unnecessary or undesirable.",
+                papersCount: 15,
+                paperIds: ["mol-ker-01", "mol-ker-02", "mol-ker-03", "grp-ker-01", "grp-ker-02", "cl-ker-01", "cl-ker-02"]
+            }
+        };
+
+        const MINERALS_LIST = [
+            "Gibbsite", "Boehmite", "Diaspore", "Hematite", "Kaolinite", "Quartz",
+            "Chalcopyrite", "Galena", "Pyrite", "Siderite",
+            "Sphalerite", "Molybdenite", "Pentlandite", "Pyrrhotite", "Arsenopyrite", "Graphite", "Coal"
+        ];
+
+        const COLLECTOR_KEYS = ["hydroxamate", "fatty_acid", "amine", "xanthate", "sulfonate", "dithiophosphate", "kerosene"];
+        const COLLECTOR_LABELS = ["Hydroxamate", "Fatty Acid", "Amine", "Xanthate", "Sulfonate", "Dithiophosphate", "Kerosene"];
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function getCompatibility(collectorKey, mineralName) {
+            const collector = COLLECTOR_DATA[collectorKey];
+            if (!collector) return "no";
+            if (collector.targetedMinerals.includes(mineralName)) return "yes";
+            // Some specific avoidances
+            if (mineralName === "Kaolinite" && collectorKey === "hydroxamate") return "avoid";
+            if (mineralName === "Quartz" && collectorKey === "fatty_acid") return "avoid";
+            if (mineralName === "Hematite" && collectorKey === "amine") return "avoid";
+            if (mineralName === "Pyrite" && collectorKey === "kerosene") return "avoid";
+            if (mineralName === "Graphite" && collectorKey === "xanthate") return "avoid";
+            return "no";
+        }
+
+        // ================================================================
+        // RENDER FUNCTIONS
+        // ================================================================
+
+        function renderCollectors() {
+            const grid = document.getElementById("collectorGrid");
+            grid.innerHTML = "";
+            COLLECTOR_KEYS.forEach(key => {
+                const c = COLLECTOR_DATA[key];
+                const chargeClass = c.charge === "anionic" ? "anionic" : c.charge === "cationic" ? "cationic" : "non-ionic";
+                const card = document.createElement("div");
+                card.className = "collector-card";
+                card.style.setProperty("--cat-color", c.charge === "anionic" ? "#4ECDC4" : c.charge === "cationic" ? "#FFE66D" : "#94A3B8");
+                card.innerHTML = `
+                        <div class="card-top">
+                            <span class="card-icon">${c.icon}</span>
+                            <span class="charge-badge ${chargeClass}">${c.charge}</span>
+                        </div>
+                        <div class="card-name">${c.name}</div>
+                        <div class="card-formula">${c.formula}</div>
+                        <div class="card-func-group">${c.functionalGroup}</div>
+                        <div class="card-desc">${c.description}</div>
+                        <div class="card-meta">
+                            <span><span class="label">Mechanism</span> ${c.mechanism}</span>
+                            <span><span class="label">pH</span> ${c.typicalPH}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <span class="paper-badge-small">📄 ${c.papersCount} papers</span>
+                            <button class="btn-more" data-collector="${key}">More Info</button>
+                        </div>
+                    `;
+                const btn = card.querySelector(".btn-more");
+                btn.addEventListener("click", () => openModal(key));
+                grid.appendChild(card);
+            });
+        }
+
+        function renderMatrix() {
+            const tbody = document.getElementById("compatBody");
+            tbody.innerHTML = "";
+            MINERALS_LIST.forEach(mineral => {
+                let row = `<td>${mineral}</td>`;
+                COLLECTOR_KEYS.forEach(key => {
+                    const result = getCompatibility(key, mineral);
+                    let symbol, cls;
+                    if (result === "yes") { symbol = "✅"; cls = "compat-yes"; }
+                    else if (result === "avoid") { symbol = "⚠️"; cls = "compat-avoid"; }
+                    else { symbol = "❌"; cls = "compat-no"; }
+                    row += `<td class="${cls}">${symbol}</td>`;
+                });
+                const tr = document.createElement("tr");
+                tr.innerHTML = row;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ================================================================
+        // MODAL LOGIC
+        // ================================================================
+
+        let currentCollectorKey = null;
+        let cycleIndex = 0;
+        let currentTargetedMinerals = [];
+
+        function openModal(key) {
+            const c = COLLECTOR_DATA[key];
+            if (!c) return;
+            currentCollectorKey = key;
+            currentTargetedMinerals = c.targetedMinerals.slice();
+            cycleIndex = 0;
+
+            document.getElementById("modalIcon").textContent = c.icon;
+            document.getElementById("modalName").textContent = c.name;
+            const chargeClass = c.charge === "anionic" ? "anionic" : c.charge === "cationic" ? "cationic" : "non-ionic";
+            document.getElementById("modalChargeBadge").className = `modal-charge-badge ${chargeClass}`;
+            document.getElementById("modalChargeBadge").textContent = c.charge;
+            document.getElementById("modalPaperBadge").textContent = `📄 ${c.papersCount} papers`;
+            document.getElementById("modalFormula").textContent = c.formula;
+            document.getElementById("literatureLink").href = `literature.html?collector=${c.id}`;
+            updateBenchLink();
+
+            // Chemical Grid
+            const chemGrid = document.getElementById("chemicalGrid");
+            chemGrid.innerHTML = `
+                    <div class="data-item"><span class="label">Formula</span><span class="value">${c.formula}</span></div>
+                    <div class="data-item"><span class="label">Charge</span><span class="value">${c.charge}</span></div>
+                    <div class="data-item"><span class="label">Functional Group</span><span class="value func-group">${c.functionalGroup}</span></div>
+                    <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${c.hsab}</span></div>
+                    <div class="data-item"><span class="label">Bonding Mechanism</span><span class="value">${c.mechanism}</span></div>
+                    <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
+                `;
+
+            // Applications Grid
+            const appGrid = document.getElementById("applicationsGrid");
+            const mineralTags = c.targetedMinerals.map(m =>
+                `<a href="minerals.html?mineral=${m.toLowerCase()}" class="mineral-tag">${m}</a>`
+            ).join("");
+            appGrid.innerHTML = `
+                    <div class="data-item" style="grid-column: 1 / -1;">
+                        <span class="label">Targeted Minerals</span>
+                        <div class="target-minerals-list">${mineralTags || "—"}</div>
+                    </div>
+                    <div class="data-item"><span class="label">Primary Mechanism</span><span class="value">${c.mechanism}</span></div>
+                    <div class="data-item"><span class="label">Typical pH Range</span><span class="value">${c.typicalPH}</span></div>
+                `;
+            document.getElementById("industrialTextContent").textContent = c.industrialUse;
+
+            renderLiteratureTab(c);
+            switchTab("chemical");
+            document.getElementById("modalOverlay").classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function updateBenchLink() {
+            const link = document.getElementById("benchLinkCollector");
+            const hint = document.getElementById("pairHint");
+            if (currentTargetedMinerals.length === 0) {
+                hint.textContent = "(no compatible minerals)";
+                link.style.opacity = "0.5";
+                return;
+            }
+            const mineral = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
+            hint.textContent = `→ ${mineral} (${cycleIndex % currentTargetedMinerals.length + 1}/${currentTargetedMinerals.length})`;
+            link.style.opacity = "1";
+            // ===== FIX: Include both mineral AND collector =====
+            link.onclick = function (e) {
+                e.preventDefault();
+                const m = currentTargetedMinerals[cycleIndex % currentTargetedMinerals.length];
+                window.location.href = `index.html?mineral=${m.toLowerCase()}&collector=${currentCollectorKey}`;
+            };
+        }
+
+        function cycleMineral() {
+            if (currentTargetedMinerals.length === 0) return;
+            cycleIndex = (cycleIndex + 1) % currentTargetedMinerals.length;
+            updateBenchLink();
+        }
+
+        function renderLiteratureTab(c) {
+            const container = document.getElementById("literatureContent");
+            const paperIds = c.paperIds || [];
+            if (paperIds.length === 0) {
+                container.innerHTML = '<div class="empty-state">No papers on file for this collector.</div>';
+                return;
+            }
+            let html = `<p style="color:var(--text-secondary);margin-bottom:12px;">${paperIds.length} papers on file for ${c.name}.</p>`;
+            c.targetedMinerals.forEach(m => {
+                html += `
+                        <div class="lit-paper-card">
+                            <div class="lit-title">📄 ${m} + ${c.name}</div>
+                            <div class="lit-meta">${c.papersCount} papers available • see Flotation Bench for details</div>
+                            <div class="lit-minerals">${c.mechanism} • pH ${c.typicalPH}</div>
+                        </div>
+                    `;
+            });
+            html += `<div style="margin-top:12px;color:var(--text-dim);font-size:0.85rem;text-align:center;">
+                    <a href="index.html?collector=${c.id}" style="color:var(--ochre-bright);text-decoration:none;">
+                        🔗 Open Flotation Bench with ${c.name} pre‑selected
+                    </a>
+                </div>`;
+            container.innerHTML = html;
+        }
+
+        function closeModal() {
+            document.getElementById("modalOverlay").classList.remove("open");
+            document.body.style.overflow = "";
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.tab === tab);
+            });
+            document.getElementById("tabChemical").classList.toggle("active", tab === "chemical");
+            document.getElementById("tabApplications").classList.toggle("active", tab === "applications");
+            document.getElementById("tabLiterature").classList.toggle("active", tab === "literature");
+        }
+
+        function getUrlParam(param) {
+            return new URLSearchParams(window.location.search).get(param);
+        }
+
+        // ================================================================
+        // EVENT LISTENERS
+        // ================================================================
+
+        // ===== FIX: Removed duplicate event listener for benchLinkCollector =====
+        // The onclick is now set inside updateBenchLink() and handles both mineral + collector.
+
+        document.getElementById("pairHint").addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (currentTargetedMinerals.length === 0) return;
+            cycleIndex = (cycleIndex + 1) % currentTargetedMinerals.length;
+            updateBenchLink();
+        });
+
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        });
+
+        document.getElementById("modalCloseBtn").addEventListener("click", closeModal);
+        document.getElementById("modalOverlay").addEventListener("click", e => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+        document.addEventListener("keydown", e => {
+            if (e.key === "Escape") closeModal();
+        });
+
+        // ================================================================
+        // INIT
+        // ================================================================
+
+        renderCollectors();
+        renderMatrix();
+
+        const collectorParam = getUrlParam("collector");
+        if (collectorParam && COLLECTOR_DATA[collectorParam]) {
+            setTimeout(() => openModal(collectorParam), 300);
+        }
+
+        console.log("🧪 Collector Database — Test in Flotation Bench now passes both mineral AND collector!");
+    </script>
 
     <!-- 🍒 Cherry AI Chat Widget -->
     <script src="/chat-widget.js?v=2"></script>

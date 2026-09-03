@@ -3493,7 +3493,6 @@
             });
 
             document.getElementById("totalPapers").textContent = PAPERS.length;
-            document.getElementById("verifiedPapers").textContent = PAPERS.filter(p => p.verified).length;
             document.getElementById("mineralCount").textContent = mineralSet.size;
             document.getElementById("collectorCount").textContent = collectorSet.size;
             document.getElementById("positiveCount").textContent = PAPERS.filter(p => p.outcome === "positive").length;
