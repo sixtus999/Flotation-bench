@@ -53,6 +53,107 @@
             color: var(--text-primary);
         }
 
+        /* ====== TOP CONTROLS (restored dropdown bar) ====== */
+        .top-controls {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 0 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 28px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+            .top-controls .control-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--bg-secondary);
+                padding: 4px 14px 4px 12px;
+                border-radius: 30px;
+                border: 1px solid var(--border-subtle);
+            }
+
+                .top-controls .control-group label {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.06em;
+                    color: var(--text-dim);
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+
+                .top-controls .control-group select {
+                    background: var(--bg-primary);
+                    color: var(--text-primary);
+                    border: 1px solid var(--border-subtle);
+                    border-radius: 20px;
+                    padding: 4px 12px 4px 10px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px;
+                    outline: none;
+                    cursor: pointer;
+                    transition: border-color 0.2s;
+                    min-width: 100px;
+                }
+
+                    .top-controls .control-group select:focus {
+                        border-color: var(--ochre-bright);
+                    }
+
+                .top-controls .control-group .slider-wrap {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+
+                    .top-controls .control-group .slider-wrap input[type="range"] {
+                        width: 90px;
+                        accent-color: var(--ochre-bright);
+                        height: 4px;
+                        cursor: pointer;
+                        background: var(--bg-primary);
+                    }
+
+                    .top-controls .control-group .slider-wrap .ph-val {
+                        font-family: 'JetBrains Mono', monospace;
+                        font-size: 13px;
+                        color: var(--ochre-bright);
+                        min-width: 32px;
+                        text-align: right;
+                    }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .top-controls {
+                gap: 10px;
+            }
+
+                .top-controls .control-group {
+                    padding: 4px 10px;
+                    flex-wrap: wrap;
+                }
+
+                    .top-controls .control-group select {
+                        min-width: 80px;
+                        font-size: 11px;
+                    }
+
+                    .top-controls .control-group .slider-wrap input[type="range"] {
+                        width: 70px;
+                    }
+        }
+
+        @media (max-width: 500px) {
+            .top-controls .control-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
         .navbar {
             max-width: 1400px;
             margin: 0 auto;
@@ -1224,6 +1325,41 @@
     </nav>
 
     <header>
+        <!-- ====== TOP CONTROLS (Dropdown bar) ====== -->
+        <div class="top-controls">
+            <!-- Mineral -->
+            <div class="control-group">
+                <label>🪨 Mineral</label>
+                <select id="mineral">
+                    <!-- populated by JavaScript -->
+                </select>
+            </div>
+
+            <!-- Collector -->
+            <div class="control-group">
+                <label>🧪 Collector</label>
+                <select id="collector">
+                    <!-- populated by JavaScript -->
+                </select>
+            </div>
+
+            <!-- Depressant -->
+            <div class="control-group">
+                <label>🛑 Depressant</label>
+                <select id="depressant">
+                    <!-- populated by JavaScript -->
+                </select>
+            </div>
+
+            <!-- pH -->
+            <div class="control-group">
+                <label>📊 pH</label>
+                <div class="slider-wrap">
+                    <input type="range" id="ph" min="1" max="14" step="0.1" value="7" />
+                    <span class="ph-val" id="phValFloating">7.0</span>
+                </div>
+            </div>
+        </div>
         <div>
             <h1>🧪 Reagent Bonding Explorer</h1>
             <div class="sub">Theory vs. Literature — flotation &amp; surface chemistry</div>
