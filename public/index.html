@@ -4268,12 +4268,13 @@
         };
 
         // ================================================================
-        // FLOATING CONTROLS LOGIC
+        // FLOATING CONTROLS TOGGLE LOGIC
         // ================================================================
 
         const controlKeys = ['mineral', 'collector', 'depressant', 'ph'];
         const controlState = {};
 
+        // Load saved state from localStorage
         controlKeys.forEach(key => {
             const stored = localStorage.getItem(`flotation_control_${key}`);
             controlState[key] = stored === 'true';
@@ -4293,15 +4294,6 @@
             if (btn) {
                 btn.classList.toggle('active', newState);
             }
-
-            if (newState && panel) {
-                setTimeout(() => {
-                    const rect = panel.getBoundingClientRect();
-                    if (rect.bottom > window.innerHeight) {
-                        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                }, 50);
-            }
         }
 
         function closeAllControls() {
@@ -4312,12 +4304,7 @@
             });
         }
 
-        function closeControl(key) {
-            if (controlState[key]) {
-                toggleControl(key, false);
-            }
-        }
-
+        // Click outside to close all panels
         document.addEventListener('click', function (e) {
             const target = e.target.closest('.control-wrapper');
             if (!target) {
@@ -4325,21 +4312,26 @@
             } else {
                 const controlKey = target.dataset.control;
                 if (controlKey) {
+                    // If clicking the close button
                     if (e.target.closest('.panel-close')) {
-                        closeControl(controlKey);
-                    } else if (e.target.closest('.control-btn')) {
+                        toggleControl(controlKey, false);
+                    }
+                    // If clicking the control button
+                    else if (e.target.closest('.control-btn')) {
                         toggleControl(controlKey);
                     }
                 }
             }
         });
 
+        // Close panels with ESC key
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeAllControls();
             }
         });
 
+        // Restore any previously open panels
         setTimeout(() => {
             controlKeys.forEach(key => {
                 if (controlState[key]) {
