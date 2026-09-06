@@ -5364,9 +5364,20 @@
             mainGrid.parentNode.insertBefore(notice, mainGrid);
         }
 
-        ["mineral", "collector", "depressant", "ph"].forEach(id => {
+        ["mineral", "collector", "depressant"].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.addEventListener("input", render);
+        });
+
+        const phMainEl = document.getElementById("ph");
+        const phFloatEl = document.getElementById("phFloating");
+        if (phMainEl) phMainEl.addEventListener("input", () => {
+            if (phFloatEl) phFloatEl.value = phMainEl.value;
+            render();
+        });
+        if (phFloatEl) phFloatEl.addEventListener("input", () => {
+            if (phMainEl) phMainEl.value = phFloatEl.value;
+            render();
         });
 
         render();
