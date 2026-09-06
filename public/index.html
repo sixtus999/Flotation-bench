@@ -1419,7 +1419,7 @@
             </button>
             <div class="control-panel" id="phPanel">
                 <button class="panel-close" data-close="ph">✕</button>
-                <div class="panel-label"><span class="emoji-sm">📊</span> pH — <span id="phValFloating" class="mono">7.0</span></div>
+                <div class="panel-label"><span class="emoji-sm">📊</span> pH — <span id="phValFloatingHeading" class="mono">7.0</span></div>
                 <div class="slider-wrap">
                     <input type="range" id="phFloating" min="1" max="14" step="0.1" value="7" />
                     <span class="ph-val" id="phValFloatingRight">7.0</span>
@@ -4255,6 +4255,7 @@
             phFloating: document.getElementById("phFloating"),
             phVal: document.getElementById("phValFloating"),
             phValRight: document.getElementById("phValFloatingRight"),
+            phValHeading: document.getElementById("phValFloatingHeading"),
             collectorDose: { value: 400, addEventListener: () => { } },
             collectorDoseVal: { textContent: '400' },
             collectorDoseUnit: { textContent: 'g/t' },
@@ -4350,6 +4351,7 @@
             const val = parseFloat(this.value).toFixed(1);
             if (els.phVal) els.phVal.textContent = val;
             if (els.phValRight) els.phValRight.textContent = val;
+            if (els.phValHeading) els.phValHeading.textContent = val;
         });
 
         // ================================================================
@@ -5297,6 +5299,7 @@
 
             if (els.phVal) els.phVal.textContent = pH.toFixed(1);
             if (els.phValRight) els.phValRight.textContent = pH.toFixed(1);
+            if (els.phValHeading) els.phValHeading.textContent = pH.toFixed(1);
 
             const papers = papersFor(minKey, colKey);
             const evidenceWeight = evidenceWeightFor(minKey, colKey);
