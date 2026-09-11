@@ -4842,50 +4842,7 @@
             }
 
             // Inside renderTheoryBody, after the mech-list, add:
-            // ===== Reasoning chain (why this tier?) =====
-            const dominantLabel = (theory.surfaces.length > 1)
-                ? dominant.label + " face"
-                : mineralObj.name + " surface";
-            const dominantFraction = (100 * dominant.fraction).toFixed(0);
-            const otherFaces = theory.surfaces.filter(s => s !== dominant);
-            const reasoningBullets = (dominant.reasoning && dominant.reasoning.length > 0)
-                ? dominant.reasoning
-                : ["No specific reasoning attached. Tier came from the default branch behaviour."];
-
-            const renderedBullets = reasoningBullets.map(r => {
-                const isPaperGraded = r.indexOf("Reference: ") === 0;
-                if (isPaperGraded) {
-                    return `<li style="list-style:none;margin-left:-18px;margin-bottom:8px;padding:8px 10px;background:rgba(217,162,78,0.06);border-left:2px solid var(--ochre-bright);border-radius:4px;font-size:11.5px;line-height:1.6;color:var(--text-secondary);">
-                        <span style="color:var(--ochre-bright);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.04em;display:block;margin-bottom:2px;">&#x1F4D6; PAPER-GRADED</span>
-                        ${r}
-                    </li>`;
-                }
-                return <li>${r}</li>;
-            }).join("");
-
-            html += `<div class="theory-explanation">
-                <div class="exp-title">&#x1F9E0; Why this tier? &mdash; <span style="color:var(--ochre-bright);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.02em;">${dominant.strength}</span></div>
-                <div class="exp-body">
-                    <div style="margin-bottom:8px;font-size:11.5px;color:var(--text-secondary);line-height:1.5;">
-                        Decided from the <strong style="color:var(--text-primary);">${dominantLabel}</strong>
-                        (${dominantFraction}% of surface area). Bonding mode: <strong style="color:var(--text-primary);">${dominant.bondMode}</strong>.
-                    </div>
-                    <ul style="margin:0;padding-left:18px;font-size:12px;line-height:1.65;color:var(--text-secondary);">
-                        ${renderedBullets}
-                    </ul>
-                    ${otherFaces.length > 0 ? `
-                        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--border-subtle);font-size:11.5px;color:var(--text-dim);line-height:1.5;">
-                            <strong style="color:var(--text-secondary);">Other faces:</strong>
-                            ${otherFaces.map(s => `${s.label} (${(100 * s.fraction).toFixed(0)}%) &rarr; ${s.strength}`).join(" &middot; ")}
-                        </div>
-                    ` : ""}
-                    ${dominant.penalized ? `
-                        <div style="margin-top:6px;font-size:11.5px;color:var(--warn);">
-                            &#x26A0; Final tier was reduced by dose/size modifiers.
-                        </div>
-                    ` : ""}
-                </div>
-            </div>`;
+            
             const relevanceText = dominant.hsabRelevance || "Low";
             let relevanceColor = "var(--text-dim)";
             if (relevanceText.includes("High")) relevanceColor = "var(--good)";
