@@ -1,0 +1,1187 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mineral Database – FlotationBench</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-card: #273548;
+            --bg-card-hover: #334155;
+            --text-primary: #EDF2F7;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --border-subtle: #334155;
+            --color-aluminum: #D35400;
+            --color-silicate: #D4A373;
+            --color-ore: #8E4A49;
+            --color-carbon: #6B8E6B;
+            --color-active: #D35400;
+            --ochre-bright: #D9A24E;
+            --good: #7A9B5C;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0 24px 48px;
+        }
+
+        .navbar {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px 0 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .logo span {
+                color: var(--color-active);
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+            .nav-links a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.95rem;
+                padding-bottom: 6px;
+                border-bottom: 2px solid transparent;
+                transition: 0.2s ease;
+            }
+
+                .nav-links a:hover {
+                    color: #fff;
+                }
+
+                .nav-links a.active {
+                    color: #fff;
+                    border-bottom-color: var(--color-active);
+                }
+
+        .container {
+            max-width: 1280px;
+            margin: 32px auto 0;
+        }
+
+        .page-header {
+            margin-bottom: 36px;
+        }
+
+            .page-header h1 {
+                font-size: 2.2rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 4px;
+            }
+
+            .page-header .subtitle {
+                font-size: 1.1rem;
+                font-weight: 400;
+                color: var(--text-secondary);
+                margin-top: 2px;
+                letter-spacing: 0.2px;
+            }
+
+                .page-header .subtitle strong {
+                    color: #f1f5f9;
+                    font-weight: 500;
+                }
+
+            .page-header .description {
+                color: var(--text-muted);
+                margin-top: 6px;
+                font-size: 1.05rem;
+                max-width: 680px;
+                line-height: 1.5;
+            }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 28px;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px 18px 18px;
+            border-left: 6px solid var(--cat-color, #fff);
+            box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .category-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 18px 35px -10px rgba(0, 0, 0, 0.8);
+            }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: #fff;
+        }
+
+            .category-header .cat-icon {
+                font-size: 1.8rem;
+            }
+
+        .mineral-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mineral-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            transition: background 0.2s ease;
+            cursor: default;
+        }
+
+            .mineral-item:hover {
+                background: var(--bg-card-hover);
+            }
+
+        .mineral-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mineral-icon {
+            font-size: 1.8rem;
+            width: 36px;
+            text-align: center;
+            transition: transform 0.25s ease;
+        }
+
+        .mineral-item:hover .mineral-icon {
+            transform: scale(1.15) rotate(-4deg);
+        }
+
+        .mineral-name {
+            font-weight: 500;
+            font-size: 1.05rem;
+            color: #f1f5f9;
+        }
+
+        .btn-more {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+            .btn-more:hover {
+                background: var(--color-active);
+                border-color: var(--color-active);
+                color: #fff;
+            }
+
+        /* ----- MODAL ----- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 16, 0.85);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            max-width: 860px;
+            width: 100%;
+            max-height: 92vh;
+            border-radius: 24px;
+            padding: 32px 34px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .modal-close:hover {
+                color: #fff;
+                transform: rotate(90deg);
+            }
+
+        .modal-mineral-name {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+            .modal-mineral-name .big-icon {
+                font-size: 2.6rem;
+            }
+
+        .modal-formula {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .paper-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: rgba(122, 155, 92, 0.15);
+            color: var(--good);
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--good);
+        }
+
+        .bench-link {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: rgba(217, 162, 78, 0.15);
+            color: var(--ochre-bright);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--ochre-bright);
+            text-decoration: none;
+            transition: 0.2s;
+            margin-left: 8px;
+        }
+
+            .bench-link:hover {
+                background: var(--ochre-bright);
+                color: #0F172A;
+            }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #0F172A;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            min-width: 100px;
+        }
+
+            .tab-btn.active {
+                background: var(--color-active);
+                color: #fff;
+                box-shadow: 0 4px 12px rgba(211, 84, 0, 0.3);
+            }
+
+            .tab-btn:hover:not(.active) {
+                color: #fff;
+            }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        /* Data grids */
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+        }
+
+        .data-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .data-item .label {
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: var(--text-muted);
+                font-weight: 600;
+            }
+
+            .data-item .value {
+                font-size: 1rem;
+                font-weight: 500;
+                color: #f1f5f9;
+                margin-top: 2px;
+            }
+
+                .data-item .value.lattice {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 0.9rem;
+                }
+
+        .industrial-text {
+            background: rgba(211, 84, 0, 0.08);
+            border-left: 3px solid var(--color-active);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-top: 16px;
+            color: #d4dce8;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+            .industrial-text strong {
+                color: #fff;
+            }
+
+        /* ====== LITERATURE LINK ====== */
+        .literature-link {
+            margin-top: 14px;
+            text-align: center;
+        }
+
+            .literature-link a {
+                color: var(--ochre-bright);
+                text-decoration: none;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                border: 1px solid var(--ochre-bright);
+                padding: 6px 18px;
+                border-radius: 20px;
+                display: inline-block;
+                transition: 0.2s;
+            }
+
+                .literature-link a:hover {
+                    background: var(--ochre-bright);
+                    color: #0F172A;
+                }
+
+        /* Crystal Structure Tab */
+        .crystal-header {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+            .crystal-header .system-name {
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #fff;
+            }
+
+            .crystal-header .cleavage-info {
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+            }
+
+            .crystal-header .cleavage-toggle {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                cursor: pointer;
+                user-select: none;
+            }
+
+                .crystal-header .cleavage-toggle input[type="checkbox"] {
+                    accent-color: var(--color-active);
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                }
+
+        #crystal-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 16px;
+            background: #0A0F1A;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            position: relative;
+        }
+
+            #crystal-container canvas {
+                display: block;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+        .crystal-hint {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+        }
+
+            .color-legend .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10px;
+                color: var(--text-secondary);
+            }
+
+            .color-legend .color-swatch {
+                width: 16px;
+                height: 16px;
+                border-radius: 4px;
+                flex-shrink: 0;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+        @media (max-width: 600px) {
+            .data-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .nav-links {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .modal-box {
+                padding: 24px 16px;
+            }
+
+            .page-header h1 {
+                font-size: 1.6rem;
+                flex-wrap: wrap;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #crystal-container {
+                height: 280px;
+            }
+
+            .tab-btn {
+                font-size: 0.7rem;
+                min-width: 70px;
+                padding: 8px 0;
+            }
+
+            .modal-mineral-name {
+                font-size: 1.5rem;
+            }
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .modal-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-box::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav class="navbar">
+        <div class="logo">🫧 Flotation<span>Bench</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="minerals.html" class="active">Mineral</a></li>
+            <li><a href="collectors.html">Collector</a></li>
+            <li><a href="literature.html">Literature</a></li>
+        </ul>
+    </nav>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <div class="container">
+        <div class="page-header">
+            <h1>🪨 Mineral Database</h1>
+            <div class="subtitle"><strong>flotation &amp; surface chemistry</strong></div>
+            <div class="description">Explore crystal systems, lattice parameters, PZC, collector selection, and industrial relevance.</div>
+        </div>
+        <div id="categoryGrid" class="category-grid"></div>
+    </div>
+
+    <!-- ====== MODAL ====== -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" id="modalCloseBtn">✕</button>
+
+            <div class="modal-mineral-name">
+                <span class="big-icon" id="modalIcon">🧊</span>
+                <span id="modalName">Mineral</span>
+                <span class="paper-badge" id="paperBadge">📄 0 papers</span>
+                <a href="#" class="bench-link" id="benchLink">🔬 Test in Flotation Bench</a>
+            </div>
+            <div class="modal-formula" id="modalFormula">Formula</div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="physical">🔬 Physical Properties</button>
+                <button class="tab-btn" data-tab="process">⚙️ Process Parameters</button>
+                <button class="tab-btn" data-tab="crystal">🔮 Crystal Structure</button>
+            </div>
+
+            <!-- Tab 1: Physical -->
+            <div id="tabPhysical" class="tab-content active">
+                <div class="data-grid" id="physicalGrid"></div>
+            </div>
+
+            <!-- Tab 2: Process (with Literature Link) -->
+            <div id="tabProcess" class="tab-content">
+                <div class="data-grid" id="processGrid"></div>
+                <div class="industrial-text" id="industrialRelevance">
+                    <strong>🏭 Industrial relevance:</strong>
+                    <span id="industrialText">Loading...</span>
+                </div>
+                <!-- LITERATURE LINK -->
+                <div class="literature-link">
+                    <a href="literature.html" id="literatureLink">📄 View all papers for this mineral</a>
+                </div>
+            </div>
+
+            <!-- Tab 3: Crystal Structure -->
+            <div id="tabCrystal" class="tab-content">
+                <div class="crystal-header">
+                    <div>
+                        <div class="system-name" id="crystalSystemName">System</div>
+                        <div class="cleavage-info" id="crystalCleavageInfo">Cleavage: —</div>
+                    </div>
+                    <label class="cleavage-toggle">
+                        <input type="checkbox" id="showCleavage" checked /> Show cleavage plane
+                    </label>
+                </div>
+                <div id="crystal-container"></div>
+                <div class="crystal-hint">🖱️ Drag to rotate · Scroll to zoom · Auto‑rotates</div>
+                <div class="color-legend" id="colorLegend">
+                    <span class="legend-item"><span class="color-swatch" style="background:#FFB347;"></span>Surface site</span>
+                    <span class="legend-item"><span class="color-swatch" style="background:#FF6B6B;"></span>Active bonding site</span>
+                    <span class="legend-item"><span class="color-swatch" style="background:#B0BEC5;"></span>Cleavage plane (translucent)</span>
+                    <span class="legend-item"><span class="color-swatch" style="background:transparent;border:1px solid #EDE7DD;"></span>Axes: a, b, c</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== THREE.JS ====== -->
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+          }
+        }
+    </script>
+
+    <script type="module">import * as e from "three";
+        import { OrbitControls as a } from "three/addons/controls/OrbitControls.js";
+        import { CSS2DRenderer as t, CSS2DObject as n } from "three/addons/renderers/CSS2DRenderer.js";
+
+        // ================================================================
+        // MINERAL DATA – ORIGINAL + NEW MINERALS
+        // ================================================================
+
+        let minerals = [
+            // --- Existing minerals ---
+            { id: "boehmite", name: "Boehmite", icon: "🧪", formula: "Al(OH)₃", pzc: "≈9", hsab: "Hard acid", collectors: "Hydroxamate, Fatty acid, Amine", mechanism: "Chelation", crystalSystem: "Orthorhombic", cleavage: "Perfect {010}", habit: "Lamellae (flat plates)", density: "~3.0 g/cm³", mohs: "3.5", lattice: { a: "3.69", b: "12.22", c: "2.87", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "010", papersCount: 4, industrial: "Major ore in karst bauxites. Processed via reverse flotation to remove silicates. Temperature-sensitive; requires high caustic soda digestion.", category: "Aluminum-Bearing Minerals", categoryColor: "#D35400", catIcon: "🏗️" },
+            { id: "gibbsite", name: "Gibbsite", icon: "💎", formula: "Al(OH)₃", pzc: "≈10", hsab: "Hard acid", collectors: "Hydroxamate, Fatty acid, Amine", mechanism: "Chemisorption", crystalSystem: "Monoclinic", cleavage: "Perfect {001}", habit: "Platy / foliated", density: "~2.4 g/cm³", mohs: "2.5", lattice: { a: "8.67", b: "5.06", c: "9.72", alpha: "90°", beta: "94.5°", gamma: "90°" }, cleavagePlane: "001", papersCount: 10, industrial: "Predominant in weathered bauxites. Often floated at higher pH. Soft and easily ground, but slimes interfere with settling.", category: "Aluminum-Bearing Minerals", categoryColor: "#D35400", catIcon: "🏗️" },
+            { id: "diaspore", name: "Diaspore", icon: "🔶", formula: "AlO(OH)", pzc: "≈8", hsab: "Hard acid", collectors: "Hydroxamate, Amine", mechanism: "Surface complexation", crystalSystem: "Orthorhombic", cleavage: "Perfect {010}, {110}", habit: "Acicular (needle-like)", density: "~3.3 g/cm³", mohs: "6.5", lattice: { a: "4.40", b: "9.43", c: "2.84", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "010", papersCount: 4, industrial: "Common in diasporic bauxite (China). Floated at pH 9–11 to separate from silicates. Harder than gibbsite, requiring more energy to grind.", category: "Aluminum-Bearing Minerals", categoryColor: "#D35400", catIcon: "🏗️" },
+            { id: "kaolinite", name: "Kaolinite", icon: "🧴", formula: "Al₂Si₂O₅(OH)₄", pzc: "≈4 (edge)", hsab: "Hard acid", collectors: "Amine, Hydroxamate", mechanism: "Electrostatic attraction", crystalSystem: "Triclinic", cleavage: "Perfect {001}", habit: "Stacked sheets (platy)", density: "~2.6 g/cm³", mohs: "2.0", lattice: { a: "5.15", b: "8.94", c: "7.41", alpha: "91.9°", beta: "104.8°", gamma: "89.8°" }, cleavagePlane: "001", papersCount: 7, industrial: "Primary gangue in bauxite. Removed via reverse flotation using amines. Strongly slimy; increases viscosity and consumes reagents.", category: "Silicate Minerals", categoryColor: "#D4A373", catIcon: "🧪" },
+            { id: "quartz", name: "Quartz", icon: "🔮", formula: "SiO₂", pzc: "≈2", hsab: "Hard acid", collectors: "Amine", mechanism: "Electrostatic attraction", crystalSystem: "Trigonal", cleavage: "None (conchoidal fracture)", habit: "Hexagonal prisms with pyramidal ends", density: "~2.65 g/cm³", mohs: "7.0", lattice: { a: "4.91", b: "4.91", c: "5.41", alpha: "90°", beta: "90°", gamma: "120°" }, cleavagePlane: null, papersCount: 5, industrial: "Common impurity in iron ore and bauxite. Easily floated with amine at pH 6–11. Used as a standard reference mineral for electrostatic studies.", category: "Silicate Minerals", categoryColor: "#D4A373", catIcon: "🧪" },
+            { id: "hematite", name: "Hematite", icon: "🔴", formula: "Fe₂O₃", pzc: "≈8", hsab: "Hard acid", collectors: "Hydroxamate, Fatty acid", mechanism: "Chelation", crystalSystem: "Trigonal", cleavage: "None (uneven fracture)", habit: "Rhombohedral / massive", density: "~5.3 g/cm³", mohs: "5.5", lattice: { a: "5.04", b: "5.04", c: "13.74", alpha: "90°", beta: "90°", gamma: "120°" }, cleavagePlane: null, papersCount: 4, industrial: "Major iron ore. In bauxite, it is a heavy impurity. Separated using WHIMS or floated with hydroxamate in oxidized ore circuits.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+            { id: "galena", name: "Galena", icon: "🧪", formula: "PbS", pzc: "≈6", hsab: "Soft acid", collectors: "Xanthate", mechanism: "Chemisorption", crystalSystem: "Cubic", cleavage: "Perfect {100} (cubic)", habit: "Perfect cubes", density: "~7.6 g/cm³", mohs: "2.5", lattice: { a: "5.94", b: "5.94", c: "5.94", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "100", papersCount: 3, industrial: "Primary lead sulfide. Floats rapidly with xanthates at alkaline pH. Often depressed with dichromate or sulfite in selective circuits.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+            { id: "chalcopyrite", name: "Chalcopyrite", icon: "🧪", formula: "CuFeS₂", pzc: "≈5", hsab: "Soft acid", collectors: "Xanthate", mechanism: "Chemisorption", crystalSystem: "Tetragonal", cleavage: "Indistinct {011}", habit: "Scalenohedral / brassy masses", density: "~4.2 g/cm³", mohs: "3.5", lattice: { a: "5.28", b: "5.28", c: "10.42", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "011", papersCount: 6, industrial: "Major copper source. Floats with xanthate. In selective flotation, depressed with lime to separate from pyrite while copper remains floated.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+            { id: "pyrite", name: "Pyrite", icon: "🧪", formula: "FeS₂", pzc: "≈4", hsab: "Soft acid", collectors: "Xanthate", mechanism: "Covalent chemisorption", crystalSystem: "Cubic", cleavage: "Poor {100}", habit: "Cubic / pyritohedral", density: "~5.0 g/cm³", mohs: "6.0", lattice: { a: "5.42", b: "5.42", c: "5.42", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "100", papersCount: 2, industrial: "Common sulfide gangue mineral. Often floated with xanthate but can be depressed with lime in selective flotation circuits. Also a source of acid mine drainage.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+            { id: "siderite", name: "Siderite", icon: "🟫", formula: "FeCO₃", pzc: "≈6", hsab: "Hard acid", collectors: "Fatty acid, Hydroxamate", mechanism: "Chelation", crystalSystem: "Trigonal", cleavage: "Perfect {1011}", habit: "Rhombohedral", density: "~3.8 g/cm³", mohs: "4.0", lattice: { a: "4.69", b: "4.69", c: "15.38", alpha: "90°", beta: "90°", gamma: "120°" }, cleavagePlane: "101", papersCount: 2, industrial: "Iron carbonate mineral, found in some iron ores. Floated with fatty acids at pH 7–9; sensitive to depressants like sodium silicate.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+
+            // ================================================================
+            // NEW MINERALS
+            // ================================================================
+
+            // Sphalerite – Zinc sulfide
+            { id: "sphalerite", name: "Sphalerite", icon: "🟡", formula: "ZnS", pzc: "≈4.5", hsab: "Soft acid", collectors: "Xanthate, Dithiophosphate, Amine, Fatty acid", mechanism: "Cu-activated chemisorption", crystalSystem: "Cubic", cleavage: "Perfect {110}", habit: "Tetrahedral/dodecahedral", density: "~4.0 g/cm³", mohs: "3.5", lattice: { a: "5.41", b: "5.41", c: "5.41", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "110", papersCount: 10, industrial: "Primary zinc sulfide. Floated with xanthate after Cu activation; selective against pyrite and galena using lime and cyanide.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+
+            // Molybdenite – Molybdenum sulfide
+            { id: "molybdenite", name: "Molybdenite", icon: "🪩", formula: "MoS₂", pzc: "≈2 (edge)", hsab: "Soft acid", collectors: "Kerosene/Diesel, Fatty acid", mechanism: "Hydrophobic attraction", crystalSystem: "Hexagonal", cleavage: "Perfect {001}", habit: "Hexagonal plates, lamellar", density: "~4.7 g/cm³", mohs: "1.0", lattice: { a: "3.16", b: "3.16", c: "12.29", alpha: "90°", beta: "90°", gamma: "120°" }, cleavagePlane: "001", papersCount: 8, industrial: "Molybdenum sulfide. Naturally hydrophobic; floated with oil collectors (diesel, kerosene). Selective flotation from Cu sulfides using Nokes reagent.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+
+            // Pentlandite – Nickel sulfide
+            { id: "pentlandite", name: "Pentlandite", icon: "🪙", formula: "(Ni,Fe)₉S₈", pzc: "≈5", hsab: "Soft acid", collectors: "Xanthate, Dithiophosphate, Fatty acid", mechanism: "Covalent chemisorption", crystalSystem: "Cubic", cleavage: "Poor {111}", habit: "Granular, massive", density: "~4.6 g/cm³", mohs: "3.5", lattice: { a: "10.10", b: "10.10", c: "10.10", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: "111", papersCount: 6, industrial: "Primary nickel sulfide. Floated with xanthate in Cu-Ni-PGM ores; pyrrhotite depressed with lime. Often floated in Ni-Cu circuits.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+
+            // Pyrrhotite – Iron sulfide
+            { id: "pyrrhotite", name: "Pyrrhotite", icon: "🔶", formula: "Fe₁₋ₓS", pzc: "≈4", hsab: "Soft acid", collectors: "Xanthate, Dithiophosphate", mechanism: "Covalent chemisorption + dixanthogen", crystalSystem: "Monoclinic", cleavage: "None", habit: "Massive, granular", density: "~4.6 g/cm³", mohs: "4.0", lattice: { a: "5.96", b: "10.20", c: "6.80", alpha: "90°", beta: "90°", gamma: "90°" }, cleavagePlane: null, papersCount: 5, industrial: "Common sulfide gangue in Ni and Cu ores. Floated with xanthate but depressed with lime at pH > 10.5 for selective separation.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+
+            // Arsenopyrite – Arsenic sulfide
+            { id: "arsenopyrite", name: "Arsenopyrite", icon: "⚪", formula: "FeAsS", pzc: "≈5", hsab: "Soft acid", collectors: "Xanthate, Hydroxamate, Dithiophosphate", mechanism: "Covalent chemisorption + chelation", crystalSystem: "Monoclinic", cleavage: "Good {101}", habit: "Prismatic, massive", density: "~6.0 g/cm³", mohs: "5.5", lattice: { a: "5.74", b: "5.67", c: "5.78", alpha: "90°", beta: "112.2°", gamma: "90°" }, cleavagePlane: "101", papersCount: 8, industrial: "Major gold-bearing sulfide. Floated with xanthate but sensitive to lime and oxidants. Often depressed in selective flotation of Cu-Pb-Zn ores.", category: "Ore Minerals", categoryColor: "#8E4A49", catIcon: "⚒️" },
+
+            // Graphite – Carbon
+            { id: "graphite", name: "Graphite", icon: "⬛", formula: "C", pzc: "≈3 (edge)", hsab: "Soft acid", collectors: "Kerosene, Diesel, Frother", mechanism: "Hydrophobic attraction", crystalSystem: "Hexagonal", cleavage: "Perfect {001}", habit: "Hexagonal plates, flakes", density: "~2.2 g/cm³", mohs: "1.0", lattice: { a: "2.46", b: "2.46", c: "6.71", alpha: "90°", beta: "90°", gamma: "120°" }, cleavagePlane: "001", papersCount: 6, industrial: "Carbonaceous value mineral. Naturally hydrophobic; floated with oil collectors and frothers. Gangue depressed with CMC or silicates.", category: "Carbonaceous Minerals", categoryColor: "#6B8E6B", catIcon: "🪨" },
+
+            // Coal (Bituminous)
+            { id: "coal", name: "Coal (Bituminous)", icon: "🪨", formula: "C (organic)", pzc: "≈4", hsab: "Soft acid", collectors: "Kerosene, Diesel, Sulfonate", mechanism: "Hydrophobic attraction + electrostatic", crystalSystem: "Amorphous", cleavage: "None", habit: "Massive, banded", density: "~1.3 g/cm³", mohs: "2.0", lattice: { a: "—", b: "—", c: "—", alpha: "—", beta: "—", gamma: "—" }, cleavagePlane: null, papersCount: 5, industrial: "Energy resource. Floated with oily collectors; clay gangue depressed with CMC or sodium silicate. Reverse flotation used for high-ash coals.", category: "Carbonaceous Minerals", categoryColor: "#6B8E6B", catIcon: "🪨" }
+        ];
+
+        // ================================================================
+        // RENDER CATEGORIES (unchanged logic)
+        // ================================================================
+
+        function renderCategories() {
+            let grid = document.getElementById("categoryGrid");
+            grid.innerHTML = "";
+            let cats = {};
+            minerals.forEach(m => {
+                if (!cats[m.category]) cats[m.category] = [];
+                cats[m.category].push(m);
+            });
+            for (let [cat, list] of Object.entries(cats)) {
+                let color = list[0].categoryColor;
+                let icon = list[0].catIcon;
+                let card = document.createElement("div");
+                card.className = "category-card";
+                card.style.setProperty("--cat-color", color);
+                let header = document.createElement("div");
+                header.className = "category-header";
+                header.innerHTML = `<span class="cat-icon">${icon}</span> ${cat}`;
+                card.appendChild(header);
+                let mineralList = document.createElement("div");
+                mineralList.className = "mineral-list";
+                list.forEach(m => {
+                    let item = document.createElement("div");
+                    item.className = "mineral-item";
+                    let left = document.createElement("div");
+                    left.className = "mineral-left";
+                    left.innerHTML = `<span class="mineral-icon">${m.icon}</span><span class="mineral-name">${m.name}</span>`;
+                    let btn = document.createElement("button");
+                    btn.className = "btn-more";
+                    btn.textContent = "More Info";
+                    btn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        openModal(m.id);
+                    });
+                    item.appendChild(left);
+                    item.appendChild(btn);
+                    mineralList.appendChild(item);
+                });
+                card.appendChild(mineralList);
+                grid.appendChild(card);
+            }
+        }
+
+        // ================================================================
+        // MODAL LOGIC (unchanged)
+        // ================================================================
+
+        let currentMineralId = null;
+        let currentCleavageVisible = true;
+
+        function openModal(id) {
+            let mineral = minerals.find(m => m.id === id);
+            if (!mineral) return;
+            currentMineralId = id;
+
+            document.getElementById("modalIcon").textContent = mineral.icon;
+            document.getElementById("modalName").textContent = mineral.name;
+            document.getElementById("modalFormula").textContent = `Formula: ${mineral.formula}`;
+            document.getElementById("paperBadge").textContent = `📄 ${mineral.papersCount || 0} papers`;
+            document.getElementById("benchLink").href = `index.html?mineral=${mineral.id}`;
+            document.getElementById("literatureLink").href = `literature.html?mineral=${mineral.id}`;
+
+            // Physical grid
+            let physicalGrid = document.getElementById("physicalGrid");
+            let latticeStr = "";
+            if (mineral.lattice) {
+                let l = mineral.lattice;
+                latticeStr = `a = ${l.a} Å, b = ${l.b} Å, c = ${l.c} Å; α = ${l.alpha}, β = ${l.beta}, γ = ${l.gamma}`;
+            } else {
+                latticeStr = "—";
+            }
+            physicalGrid.innerHTML = `
+                <div class="data-item"><span class="label">Formula</span><span class="value">${mineral.formula}</span></div>
+                <div class="data-item"><span class="label">Density</span><span class="value">${mineral.density}</span></div>
+                <div class="data-item"><span class="label">Mohs Hardness</span><span class="value">${mineral.mohs}</span></div>
+                <div class="data-item"><span class="label">Point of Zero Charge (PZC)</span><span class="value">${mineral.pzc}</span></div>
+                <div class="data-item"><span class="label">HSAB Classification</span><span class="value">${mineral.hsab}</span></div>
+                <div class="data-item"><span class="label">Habit / Morphology</span><span class="value">${mineral.habit}</span></div>
+                <div class="data-item" style="grid-column: 1 / -1;"><span class="label">Lattice Parameters</span><span class="value lattice">${latticeStr}</span></div>
+            `;
+
+            // Process grid
+            let processGrid = document.getElementById("processGrid");
+            processGrid.innerHTML = `
+                <div class="data-item"><span class="label">Typical Collectors</span><span class="value">${mineral.collectors}</span></div>
+                <div class="data-item"><span class="label">Adsorption Mechanism</span><span class="value">${mineral.mechanism}</span></div>
+            `;
+            document.getElementById("industrialText").textContent = mineral.industrial;
+
+            // Crystal info
+            document.getElementById("crystalSystemName").textContent = `${mineral.crystalSystem} System`;
+            document.getElementById("crystalCleavageInfo").textContent = `Cleavage: ${mineral.cleavage}`;
+            currentCleavageVisible = true;
+            document.getElementById("showCleavage").checked = true;
+
+            switchTab("physical");
+            document.getElementById("modalOverlay").classList.add("open");
+            document.body.style.overflow = "hidden";
+            setTimeout(() => initCrystalViewer(mineral), 100);
+        }
+
+        function closeModal() {
+            document.getElementById("modalOverlay").classList.remove("open");
+            document.body.style.overflow = "";
+            disposeCrystalViewer();
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.tab === tab);
+            });
+            document.getElementById("tabPhysical").classList.toggle("active", tab === "physical");
+            document.getElementById("tabProcess").classList.toggle("active", tab === "process");
+            document.getElementById("tabCrystal").classList.toggle("active", tab === "crystal");
+            if (tab === "crystal" && currentMineralId) {
+                let mineral = minerals.find(m => m.id === currentMineralId);
+                if (mineral) setTimeout(() => initCrystalViewer(mineral), 50);
+            }
+        }
+
+        // ================================================================
+        // THREE.JS 3D VIEWER (unchanged logic, updated MINERAL_NAMES etc.)
+        // ================================================================
+
+        let renderer, scene, camera, controls, labelRenderer, animationId, currentViewerMineralId = null, cleavageMesh = null;
+
+        // --- Helper maps for new minerals ---
+        const MINERAL_NAMES = {
+            boehmite: "Boehmite", gibbsite: "Gibbsite", diaspore: "Diaspore",
+            hematite: "Hematite", kaolinite: "Kaolinite", quartz: "Quartz",
+            chalcopyrite: "Chalcopyrite", galena: "Galena", pyrite: "Pyrite", siderite: "Siderite",
+            sphalerite: "Sphalerite", molybdenite: "Molybdenite", pentlandite: "Pentlandite",
+            pyrrhotite: "Pyrrhotite", arsenopyrite: "Arsenopyrite", graphite: "Graphite", coal: "Coal"
+        };
+
+        const MINERAL_COLORS = {
+            gibbsite: 0xA8C8D0, boehmite: 0xD4B896, diaspore: 0xE8DCC8,
+            hematite: 0xC03030, kaolinite: 0xF0E8D8, quartz: 0xE0E0E0,
+            chalcopyrite: 0xD4A840, galena: 0x4A4A5A, pyrite: 0xC0B040, siderite: 0x8B7D6B,
+            sphalerite: 0xC8A84B, molybdenite: 0x4A5A7A, pentlandite: 0x9A8A6A,
+            pyrrhotite: 0x8A6A4A, arsenopyrite: 0x7A8A8A, graphite: 0x4A4A4A, coal: 0x2A2A2A
+        };
+
+        function getCrystalSystem(key) {
+            const map = {
+                gibbsite: "Monoclinic", boehmite: "Orthorhombic", diaspore: "Orthorhombic",
+                hematite: "Trigonal", kaolinite: "Triclinic", quartz: "Trigonal",
+                chalcopyrite: "Tetragonal", galena: "Cubic", pyrite: "Cubic", siderite: "Trigonal",
+                sphalerite: "Cubic", molybdenite: "Hexagonal", pentlandite: "Cubic",
+                pyrrhotite: "Monoclinic", arsenopyrite: "Monoclinic", graphite: "Hexagonal", coal: "Amorphous"
+            };
+            return map[key] || "Orthorhombic";
+        }
+
+        function getGeometryForSystem(system) {
+            let group = new e.Group();
+            let mat = new e.MeshPhongMaterial({ color: 0x8A6A4A, transparent: true, opacity: 0.25, shininess: 30, side: e.DoubleSide });
+            let lineMat = new e.LineBasicMaterial({ color: 0xE8DCC8, linewidth: 1 });
+            let mesh, edges;
+
+            switch (system) {
+                case "Cubic": default:
+                    mesh = new e.Mesh(new e.BoxGeometry(1.6, 1.6, 1.6), mat);
+                    edges = new e.LineSegments(new e.EdgesGeometry(mesh.geometry), lineMat);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                case "Tetragonal":
+                    mesh = new e.Mesh(new e.BoxGeometry(1.4, 2, 1.4), mat);
+                    edges = new e.LineSegments(new e.EdgesGeometry(mesh.geometry), lineMat);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                case "Orthorhombic":
+                    mesh = new e.Mesh(new e.BoxGeometry(1.8, 2.2, 1), mat);
+                    edges = new e.LineSegments(new e.EdgesGeometry(mesh.geometry), lineMat);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                case "Monoclinic":
+                    mesh = new e.Mesh(new e.BoxGeometry(1.6, 2, 1.2), mat);
+                    mesh.position.x = 0.2;
+                    mesh.rotation.z = 0.15;
+                    mesh.rotation.x = 0.1;
+                    edges = new e.LineSegments(new e.EdgesGeometry(mesh.geometry), lineMat);
+                    edges.position.copy(mesh.position);
+                    edges.rotation.copy(mesh.rotation);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                case "Triclinic":
+                    mesh = new e.Mesh(new e.BoxGeometry(1.6, 1.8, 1.2), mat);
+                    mesh.position.set(0.3, 0.1, 0.2);
+                    mesh.rotation.set(0.2, 0.3, 0.1);
+                    edges = new e.LineSegments(new e.EdgesGeometry(mesh.geometry), lineMat);
+                    edges.position.copy(mesh.position);
+                    edges.rotation.copy(mesh.rotation);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                case "Trigonal": {
+                    let cyl = new e.CylinderGeometry(1.2, 1.2, 1.6, 6);
+                    mesh = new e.Mesh(cyl, mat);
+                    edges = new e.LineSegments(new e.EdgesGeometry(cyl), lineMat);
+                    group.add(mesh);
+                    group.add(edges);
+                    let cone = new e.ConeGeometry(1.2, 0.8, 6);
+                    let top = new e.Mesh(cone, mat);
+                    top.position.y = 1.2;
+                    let topEdges = new e.LineSegments(new e.EdgesGeometry(cone), lineMat);
+                    topEdges.position.y = 1.2;
+                    group.add(top);
+                    group.add(topEdges);
+                    let bottom = new e.Mesh(cone, mat);
+                    bottom.position.y = -1.2;
+                    bottom.rotation.x = Math.PI;
+                    let bottomEdges = new e.LineSegments(new e.EdgesGeometry(cone), lineMat);
+                    bottomEdges.position.y = -1.2;
+                    bottomEdges.rotation.x = Math.PI;
+                    group.add(bottom);
+                    group.add(bottomEdges);
+                    break;
+                }
+                case "Hexagonal": {
+                    let hexCyl = new e.CylinderGeometry(1.2, 1.2, 2, 6);
+                    mesh = new e.Mesh(hexCyl, mat);
+                    edges = new e.LineSegments(new e.EdgesGeometry(hexCyl), lineMat);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                }
+                case "Amorphous": {
+                    let sphere = new e.SphereGeometry(1.4, 12, 12);
+                    mesh = new e.Mesh(sphere, mat);
+                    edges = new e.LineSegments(new e.EdgesGeometry(sphere), lineMat);
+                    group.add(mesh);
+                    group.add(edges);
+                    break;
+                }
+            }
+            let axes = new e.AxesHelper(2.2);
+            group.add(axes);
+            return group;
+        }
+
+        function getCleavagePlaneNormal(planeString) {
+            if (!planeString) return null;
+            let match = planeString.match(/(\d)(\d)(\d)/);
+            if (!match) return null;
+            let [h, k, l] = [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+            let norm = Math.sqrt(h * h + k * k + l * l);
+            if (norm === 0) return null;
+            return new e.Vector3(h / norm, k / norm, l / norm);
+        }
+
+        function createCleavagePlane(normal, size = 1.8) {
+            if (!normal) return null;
+            let plane = new e.PlaneGeometry(size, size);
+            let mat = new e.MeshBasicMaterial({ color: 0xB0BEC5, transparent: true, opacity: 0.25, side: e.DoubleSide, depthWrite: false });
+            let mesh = new e.Mesh(plane, mat);
+            let up = new e.Vector3(0, 1, 0);
+            let quat = new e.Quaternion().setFromUnitVectors(up, normal.clone().normalize());
+            mesh.quaternion.copy(quat);
+            return mesh;
+        }
+
+        function initCrystalViewer(mineral) {
+            let container = document.getElementById("crystal-container");
+            if (!container) return;
+            disposeCrystalViewer();
+
+            let rect = container.getBoundingClientRect();
+            let width = rect.width || container.clientWidth || 600;
+            let height = rect.height || container.clientHeight || 400;
+
+            scene = new e.Scene();
+            scene.background = new e.Color(0x1A2A3A);
+            camera = new e.PerspectiveCamera(40, width / height, 0.1, 20);
+            camera.position.set(3.5, 2.5, 4.5);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new e.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            labelRenderer = new t();
+            labelRenderer.setSize(width, height);
+            labelRenderer.domElement.style.position = "absolute";
+            labelRenderer.domElement.style.top = "0";
+            labelRenderer.domElement.style.left = "0";
+            labelRenderer.domElement.style.pointerEvents = "none";
+            container.appendChild(labelRenderer.domElement);
+
+            controls = new a(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.08;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 2.5;
+            controls.minDistance = 2.5;
+            controls.maxDistance = 10;
+            controls.target.set(0, 0, 0);
+
+            let ambient = new e.AmbientLight(0x404060, 0.6);
+            scene.add(ambient);
+            let dirLight = new e.DirectionalLight(0xFFFFFF, 1.8);
+            dirLight.position.set(2, 5, 3);
+            scene.add(dirLight);
+            let backLight = new e.DirectionalLight(0xFF9966, 0.6);
+            backLight.position.set(-3, 1, -2);
+            scene.add(backLight);
+
+            let crystalGroup = getGeometryForSystem(mineral.crystalSystem);
+            scene.add(crystalGroup);
+
+            // Axes labels
+            [
+                { text: "a", pos: [2.6, 0, 0] },
+                { text: "b", pos: [0, 2.6, 0] },
+                { text: "c", pos: [0, 0, 2.6] }
+            ].forEach(({ text, pos }) => {
+                let div = document.createElement("div");
+                div.textContent = text;
+                div.style.color = "#EDE7DD";
+                div.style.fontFamily = "Inter, sans-serif";
+                div.style.fontSize = "14px";
+                div.style.fontWeight = "600";
+                div.style.textShadow = "0 0 15px rgba(0,0,0,0.9)";
+                div.style.background = "rgba(15,23,42,0.6)";
+                div.style.padding = "2px 8px";
+                div.style.borderRadius = "4px";
+                div.style.border = "1px solid rgba(255,255,255,0.1)";
+                let label = new n(div);
+                label.position.set(pos[0], pos[1], pos[2]);
+                scene.add(label);
+            });
+
+            if (mineral.cleavagePlane) {
+                let normal = getCleavagePlaneNormal(mineral.cleavagePlane);
+                if (normal) {
+                    cleavageMesh = createCleavagePlane(normal, 1.8);
+                    cleavageMesh.visible = currentCleavageVisible;
+                    scene.add(cleavageMesh);
+                }
+            }
+
+            currentViewerMineralId = mineral.id;
+            animate();
+        }
+
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            if (controls) controls.update();
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+                if (labelRenderer) labelRenderer.render(scene, camera);
+            }
+        }
+
+        function disposeCrystalViewer() {
+            if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+            if (renderer) {
+                let container = document.getElementById("crystal-container");
+                if (renderer.domElement && renderer.domElement.parentNode === container) {
+                    container.removeChild(renderer.domElement);
+                }
+                if (labelRenderer && labelRenderer.domElement && labelRenderer.domElement.parentNode === container) {
+                    container.removeChild(labelRenderer.domElement);
+                }
+                renderer.dispose();
+                renderer = null;
+                labelRenderer = null;
+            }
+            scene = null;
+            camera = null;
+            controls = null;
+            cleavageMesh = null;
+            currentViewerMineralId = null;
+        }
+
+        // ================================================================
+        // EVENT LISTENERS & INIT
+        // ================================================================
+
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        });
+
+        document.getElementById("modalCloseBtn").addEventListener("click", closeModal);
+        document.getElementById("modalOverlay").addEventListener("click", e => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+        document.addEventListener("keydown", e => {
+            if (e.key === "Escape") closeModal();
+        });
+
+        document.getElementById("showCleavage").addEventListener("change", e => {
+            currentCleavageVisible = e.target.checked;
+            if (cleavageMesh) cleavageMesh.visible = currentCleavageVisible;
+        });
+
+        window.addEventListener("resize", () => {
+            if (renderer && currentViewerMineralId) {
+                let container = document.getElementById("crystal-container");
+                if (container) {
+                    let rect = container.getBoundingClientRect();
+                    let w = rect.width || container.clientWidth || 600;
+                    let h = rect.height || container.clientHeight || 400;
+                    renderer.setSize(w, h);
+                    if (labelRenderer) labelRenderer.setSize(w, h);
+                    if (camera) {
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                    }
+                }
+            }
+        });
+
+        // URL parameter handling
+        function getUrlParam(param) {
+            return new URLSearchParams(window.location.search).get(param);
+        }
+
+        renderCategories();
+
+        // Pre-open modal if URL parameter is present
+        let mineralParam = getUrlParam("mineral");
+        if (mineralParam) {
+            let found = minerals.find(m => m.id === mineralParam);
+            if (found) setTimeout(() => openModal(found.id), 300);
+        }
+
+        console.log("🪨 Mineral Database — expanded with 7 new minerals and literature links.");</script>
+
+    <!-- 🍒 Cherry AI Chat Widget -->
+    <script src="/chat-widget.js?v=2"></script>
+
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #ddd; font-size: 14px; color: #666;">
+        © 2026 Bethel Sixtus Atiawu. All Rights Reserved.
+    </footer>
+
+</body>
+</html>
