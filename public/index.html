@@ -4366,37 +4366,6 @@
 
         // S1 helper: grade strength from pH-PZC distance, handling null PZC safely.
         // tiers is an array of [threshold, tierName] in ascending threshold order.
-        function gradeFromPzcDelta(pzcDelta, tiers, contextLabel) {
-            if (pzcDelta === null) {
-                return {
-                    strength: "weak-to-moderate",
-                    reasoning: "No PZC value on file for this surface, so the pH-PZC distance term cannot be computed. Falling back to the conservative default tier weak-to-moderate (" + contextLabel + ")."
-                };
-            }
-            for (const pair of tiers) {
-                const threshold = pair[0];
-                const tier = pair[1];
-                if (pzcDelta <= threshold) {
-                    return {
-                        strength: tier,
-                        reasoning: "Surface PZC distance is " + pzcDelta.toFixed(2) + " pH units, which falls in the '" + tier + "' band (threshold " + threshold + ") (" + contextLabel + ")."
-                    };
-                }
-            }
-            return {
-                strength: "weak",
-                reasoning: "PZC distance " + pzcDelta.toFixed(2) + " is beyond all bands, so weak (" + contextLabel + ")."
-            };
-        }
-
-        function strengthTierDown(currentStrength, tiers) {
-            const order = ["weak", "weak-to-moderate", "moderate", "moderate-to-strong", "strong"];
-            const idx = Math.max(0, order.indexOf(currentStrength) - tiers);
-            return order[idx];
-        }
-
-        // S1 helper: grade strength from pH-PZC distance, handling null PZC safely.
-        // tiers is an array of [threshold, tierName] in ascending threshold order.
         function gradeFromPzcDelta(pzcDelta, tiers) {
             if (pzcDelta === null) {
                 return {
@@ -4421,8 +4390,7 @@
         }
 
         // Paper-graded helper: grades strength from the current pH's distance to the
-        // paper's tested pH, and produces a traceable reasoning string that names the
-        // reference, the range, the delta, and the band that was triggered.
+        // paper's tested pH, and produces a traceable reasoning string.
         //   bands: array of [multipleOfRange, tierName, bandDescription], ascending.
         //   halfRangeFloor: minimum half-range to use when the paper didn't specify one.
         function gradeFromPaperPH(pH, paper, halfRangeFloor, bands) {
@@ -4617,9 +4585,7 @@
                 reasoning: reasoning
             };
         }
-
-        // ================================================================
-        // REST OF THE SCRIPT (helpers, render functions, 3D viewer)
+ // REST OF THE SCRIPT (helpers, render functions, 3D viewer)
         // ================================================================
 
         function fillSelect(selectEl, dataObj, labelFn) {
