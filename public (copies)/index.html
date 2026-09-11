@@ -1507,20 +1507,20 @@
             gibbsite: { name: "Gibbsite", formula: "Al(OH)₃", class: "Aluminum hydroxide", anisotropic: false, pzc: 9, surfaceSite: "Al-OH", metalIon: "Al³⁺", hsab: "hard" },
             boehmite: { name: "Boehmite", formula: "γ-AlO(OH)", class: "Aluminum oxyhydroxide", anisotropic: false, pzc: 8.5, surfaceSite: "Al-OH", metalIon: "Al³⁺", hsab: "hard" },
             diaspore: { name: "Diaspore", formula: "α-AlO(OH)", class: "Aluminum oxyhydroxide", anisotropic: false, pzc: 7.3, surfaceSite: "Al-OH", metalIon: "Al³⁺", hsab: "hard" },
-            hematite: { name: "Hematite", formula: "Fe₂O₃", class: "Iron oxide", anisotropic: false, pzc: 6.7, surfaceSite: "Fe-OH", metalIon: "Fe³⁺", hsab: "borderline" },
+            hematite: { name: "Hematite", formula: "Fe₂O₃", class: "Iron oxide", anisotropic: false, pzc: 6.7, surfaceSite: "Fe-OH", metalIon: "Fe³⁺", hsab: "hard" },   // changed from borderline
             kaolinite: { name: "Kaolinite", formula: "Al₂Si₂O₅(OH)₄", class: "Clay gangue", anisotropic: true, pzc: null, surfaceSite: "basal + edge Al-OH", metalIon: "Al³⁺ / Si⁴⁺", hsab: "hard", basalFraction: 0.85, edgePzc: 6.5 },
             quartz: { name: "Quartz", formula: "SiO₂", class: "Silica gangue", anisotropic: false, pzc: 2, surfaceSite: "Si-OH", metalIon: "Si⁴⁺", hsab: "hard" },
             chalcopyrite: { name: "Chalcopyrite", formula: "CuFeS₂", class: "Copper sulfide", anisotropic: false, pzc: 4.2, surfaceSite: "Cu-S / Fe-S", metalIon: "Cu²⁺", hsab: "soft" },
             galena: { name: "Galena", formula: "PbS", class: "Lead sulfide", anisotropic: false, pzc: 5.5, surfaceSite: "Pb-S", metalIon: "Pb²⁺", hsab: "soft" },
-            pyrite: { name: "Pyrite", formula: "FeS₂", class: "Sulfide gangue", anisotropic: false, pzc: 4, surfaceSite: "Fe-S", metalIon: "Fe²⁺", hsab: "soft" },
-            siderite: { name: "Siderite", formula: "FeCO₃", class: "Iron carbonate", anisotropic: false, pzc: 6, surfaceSite: "Fe-OH", metalIon: "Fe²⁺", hsab: "hard" },
+            pyrite: { name: "Pyrite", formula: "FeS₂", class: "Sulfide gangue", anisotropic: false, pzc: 4, surfaceSite: "Fe-S", metalIon: "Fe²⁺", hsab: "soft" },   // Fe²⁺ borderline but sulfide ligand → soft
+            siderite: { name: "Siderite", formula: "FeCO₃", class: "Iron carbonate", anisotropic: false, pzc: 6, surfaceSite: "Fe-OH", metalIon: "Fe²⁺", hsab: "borderline" }, // Fe²⁺ borderline
             sphalerite: { name: "Sphalerite", formula: "ZnS", class: "Sulfide mineral", anisotropic: false, pzc: 4.5, surfaceSite: "Zn-S", metalIon: "Zn²⁺", hsab: "soft" },
             molybdenite: { name: "Molybdenite", formula: "MoS₂", class: "Sulfide mineral", anisotropic: true, pzc: null, surfaceSite: "basal + edge", metalIon: "Mo⁴⁺", hsab: "soft", basalFraction: 0.9, edgePzc: 2.5 },
             pentlandite: { name: "Pentlandite", formula: "(Ni,Fe)₉S₈", class: "Sulfide mineral", anisotropic: false, pzc: 5, surfaceSite: "Ni-S / Fe-S", metalIon: "Ni²⁺/Fe²⁺", hsab: "soft" },
             pyrrhotite: { name: "Pyrrhotite", formula: "Fe₁₋ₓS", class: "Sulfide mineral", anisotropic: false, pzc: 4, surfaceSite: "Fe-S", metalIon: "Fe²⁺", hsab: "soft" },
             arsenopyrite: { name: "Arsenopyrite", formula: "FeAsS", class: "Sulfide mineral", anisotropic: false, pzc: 5, surfaceSite: "Fe-As-S", metalIon: "Fe²⁺/As³⁺", hsab: "soft" },
-            graphite: { name: "Graphite", formula: "C", class: "Carbonaceous mineral", anisotropic: true, pzc: null, surfaceSite: "basal (hydrophobic)", metalIon: "C", hsab: "soft", basalFraction: 0.95, edgePzc: 3 },
-            coal: { name: "Coal (Bituminous)", formula: "C (organic)", class: "Carbonaceous material", anisotropic: false, pzc: null, surfaceSite: "organic matter", metalIon: "C", hsab: "soft" }
+            graphite: { name: "Graphite", formula: "C", class: "Carbonaceous mineral", anisotropic: true, pzc: null, surfaceSite: "basal (hydrophobic)", metalIon: "C", hsab: "not-applicable", basalFraction: 0.95, edgePzc: 3 },
+            coal: { name: "Coal (Bituminous)", formula: "C (organic)", class: "Carbonaceous material", anisotropic: false, pzc: null, surfaceSite: "organic matter", metalIon: "C", hsab: "not-applicable" }
         };
 
         const COLLECTORS = {
@@ -4364,40 +4364,98 @@
             return order[idx];
         }
 
-        function bondForSurface(surface, collector, pH, paper, mechanismSwitch) {
+        function bondForSurface(surface, collector, collectorKey, pH, paper, mechanismSwitch) {
             const collectorCharge = collector.charge === "anionic" ? "negative" : "positive";
             const electrostaticFavorable = (surface.chargeSign !== "neutral" && surface.chargeSign === collectorCharge);
-            const hsabMatch = (surface.hsab === "hard" && collector.hsab === "hard") ||
-                (surface.hsab === "soft" && collector.hsab === "soft") ||
-                (surface.hsab === "borderline");
             const pzcDelta = (surface.pzc !== null) ? Math.abs(pH - surface.pzc) : 0;
 
-            let mechanismSwitched = false;
+            // ----- HSAB relevance (not a simple match) -----
+            let hsabRelevance = "Low";
+            if (collector.mechanism === "electrostatic") {
+                hsabRelevance = "Not applicable (electrostatic-driven)";
+            } else if (surface.hsab === "not-applicable" || collector.hsab === "not-applicable") {
+                hsabRelevance = "Not applicable";
+            } else if (surface.hsab === "hard" && collector.hsab === "hard") {
+                hsabRelevance = "High";
+            } else if (surface.hsab === "soft" && collector.hsab === "soft") {
+                hsabRelevance = "High";
+            } else if (surface.hsab === "borderline") {
+                // borderline accepts both hard and soft, but moderately
+                if (collector.hsab === "hard" || collector.hsab === "soft") {
+                    hsabRelevance = "Moderate";
+                } else {
+                    hsabRelevance = "Low";
+                }
+            } else if (surface.hsab === "hard" && collector.hsab === "soft") {
+                hsabRelevance = "Low";
+            } else if (surface.hsab === "soft" && collector.hsab === "hard") {
+                hsabRelevance = "Low";
+            } else {
+                hsabRelevance = "Low";
+            }
+
+            // ----- Bond strength determination -----
+            let bondMode, strength = "weak", usedTestedPH = false, mechanismSwitched = false;
             const crossoverPH = (mechanismSwitch && mechanismSwitch.crossoverPH !== null) ? mechanismSwitch.crossoverPH : 7;
             const isAcidicSwitch = (mechanismSwitch && mechanismSwitch.type === "chemisorption-to-electrostatic" && pH < crossoverPH);
 
-            let bondMode, strength, usedTestedPH = false;
-
-            if (collector.mechanism.includes("chelation") && hsabMatch && !isAcidicSwitch) {
-                bondMode = "chemisorption (chelation)";
-                if (paper && paper.testedPH !== undefined && paper.testedPH !== null) {
-                    usedTestedPH = true;
-                    const pHdiff = Math.abs(pH - paper.testedPH);
-                    const [low, high] = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
-                    const range = Math.max((high - low) / 2, 0.5);
-                    if (pHdiff <= 0.5 * range) strength = "strong";
-                    else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "moderate-to-strong";
-                    else if (pHdiff <= 2 * range) strength = "weak-to-moderate";
-                    else strength = "weak";
+            // 1. Chelation branch (hydroxamate vs fatty acid vs others)
+            if (collector.mechanism.includes("chelation") && !isAcidicSwitch) {
+                if (collectorKey === "hydroxamate") {
+                    bondMode = "chemisorption (strong chelation)";
+                    if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
+                        usedTestedPH = true;
+                        const pHdiff = Math.abs(pH - paper.testedPH);
+                        const [low, high] = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
+                        const range = Math.max((high - low) / 2, 0.5);
+                        if (pHdiff <= 0.5 * range) strength = "strong";
+                        else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "moderate-to-strong";
+                        else if (pHdiff <= 2 * range) strength = "weak-to-moderate";
+                        else strength = "weak";
+                    } else {
+                        if (pzcDelta <= 1.0) strength = "strong";
+                        else if (pzcDelta <= 2.5) strength = "moderate-to-strong";
+                        else if (pzcDelta <= 4.0) strength = "weak-to-moderate";
+                        else strength = "weak";
+                    }
+                } else if (collectorKey === "fatty_acid") {
+                    bondMode = "chemisorption (weak chelation) + electrostatic";
+                    if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
+                        usedTestedPH = true;
+                        const pHdiff = Math.abs(pH - paper.testedPH);
+                        const [low, high] = paper.testedPHRange || [paper.testedPH - 1.5, paper.testedPH + 1.5];
+                        const range = Math.max((high - low) / 2, 0.8);
+                        if (pHdiff <= 0.5 * range) strength = "moderate-to-strong";
+                        else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "weak-to-moderate";
+                        else strength = "weak";
+                    } else {
+                        if (pzcDelta <= 1.5) strength = "moderate-to-strong";
+                        else if (pzcDelta <= 3.5) strength = "weak-to-moderate";
+                        else if (pzcDelta <= 5.0) strength = "weak";
+                        else strength = "weak";
+                    }
                 } else {
-                    if (pzcDelta <= 1.5) strength = "strong";
-                    else if (pzcDelta <= 3.5) strength = "moderate-to-strong";
-                    else if (pzcDelta <= 5.5) strength = "weak-to-moderate";
-                    else strength = "weak";
+                    // other chelators (e.g., hydroxamate not explicitly caught? but we have only those two)
+                    bondMode = "chemisorption (chelation)";
+                    if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
+                        usedTestedPH = true;
+                        const pHdiff = Math.abs(pH - paper.testedPH);
+                        const [low, high] = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
+                        const range = Math.max((high - low) / 2, 0.5);
+                        if (pHdiff <= 0.6 * range) strength = "moderate-to-strong";
+                        else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "weak-to-moderate";
+                        else strength = "weak";
+                    } else {
+                        if (pzcDelta <= 1.5) strength = "moderate-to-strong";
+                        else if (pzcDelta <= 3.5) strength = "weak-to-moderate";
+                        else strength = "weak";
+                    }
                 }
-            } else if (collector.mechanism === "covalent chemisorption" && hsabMatch && !isAcidicSwitch) {
+            }
+            // 2. Covalent chemisorption (xanthate, dithiophosphate)
+            else if (collector.mechanism === "covalent chemisorption" && !isAcidicSwitch) {
                 bondMode = "covalent chemisorption";
-                if (paper && paper.testedPH !== undefined && paper.testedPH !== null) {
+                if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
                     usedTestedPH = true;
                     const pHdiff = Math.abs(pH - paper.testedPH);
                     const [low, high] = paper.testedPHRange || [paper.testedPH - 2, paper.testedPH + 2];
@@ -4406,12 +4464,16 @@
                     else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "moderate-to-strong";
                     else strength = "weak-to-moderate";
                 } else {
-                    if (pzcDelta <= 2.5) strength = "strong";
-                    else if (pzcDelta <= 5) strength = "moderate-to-strong";
-                    else strength = "weak-to-moderate";
+                    if (pzcDelta <= 1.0) strength = "strong";
+                    else if (pzcDelta <= 2.5) strength = "moderate-to-strong";
+                    else if (pzcDelta <= 4.0) strength = "weak-to-moderate";
+                    else strength = "weak";
                 }
-            } else if (collector.mechanism === "hydrophobic attraction") {
+            }
+            // 3. Hydrophobic attraction (kerosene)
+            else if (collector.mechanism === "hydrophobic attraction") {
                 bondMode = "hydrophobic attraction (no chemical bond)";
+                // existing logic (keep as is)
                 if (surface.label === "basal" && surface.chargeSign === "negative") {
                     strength = "moderate-to-strong";
                 } else if (collector.name === "Kerosene/Diesel") {
@@ -4426,21 +4488,27 @@
                     if (strength === "moderate-to-strong") strength = "moderate";
                     else if (strength === "moderate") strength = "weak-to-moderate";
                 }
-                if (strength === "strong") strength = "moderate-to-strong";
                 if (surface.pzc !== null && surface.pzc >= 8 && surface.hsab === "hard") {
                     strength = "weak-to-moderate";
                 }
-            } else if (electrostaticFavorable) {
+            }
+            // 4. Electrostatic (amine, sulfonate) — bypass HSAB
+            else if (electrostaticFavorable) {
                 bondMode = "electrostatic (physisorption)";
-                strength = (pzcDelta > 2) ? "moderate-to-strong" : "weak-to-moderate";
+                strength = (pzcDelta > 2) ? "moderate" : "weak-to-moderate";
                 if (isAcidicSwitch) mechanismSwitched = true;
-            } else {
+            }
+            // 5. Fallback
+            else {
                 bondMode = "unfavorable / minimal adsorption";
                 strength = "weak";
                 if (isAcidicSwitch && !electrostaticFavorable) mechanismSwitched = true;
             }
 
-            return { bondMode, strength, electrostaticFavorable, hsabMatch, usedTestedPH, pzcDelta, mechanismSwitched };
+            // Apply dose/size penalties (existing logic)
+            // ... (keep your doseModifier and particleSizeModifier calls if any)
+
+            return { bondMode, strength, electrostaticFavorable, hsabRelevance, usedTestedPH, pzcDelta, mechanismSwitched };
         }
 
         // ================================================================
@@ -4503,14 +4571,15 @@
             return { flag: null, tierPenalty: 0, note: "Particle size slider removed – using default value." };
         }
 
-        function surfaceStateFor(mineralObj, pH) {
+        function surfaceStateFor(mineralObj, mineralKey, pH) {
             if (!mineralObj.anisotropic) {
                 let charge = (mineralObj.pzc === null) ? "neutral" : (pH > mineralObj.pzc ? "negative" : (pH < mineralObj.pzc ? "positive" : "neutral"));
                 return [{ label: mineralObj.name, fraction: 1, pzc: mineralObj.pzc, chargeSign: charge, hsab: mineralObj.hsab }];
             }
             const edgeCharge = (pH > mineralObj.edgePzc) ? "negative" : (pH < mineralObj.edgePzc ? "positive" : "neutral");
+            const basalHsab = (mineralKey === "graphite" || mineralKey === "molybdenite") ? "not-applicable" : mineralObj.hsab;
             return [
-                { label: "basal", fraction: mineralObj.basalFraction, pzc: null, chargeSign: "negative", hsab: mineralObj.hsab },
+                { label: "basal", fraction: mineralObj.basalFraction, pzc: null, chargeSign: "negative", hsab: basalHsab },
                 { label: "edge", fraction: 1 - mineralObj.basalFraction, pzc: mineralObj.edgePzc, chargeSign: edgeCharge, hsab: mineralObj.hsab }
             ];
         }
@@ -4528,14 +4597,14 @@
         function predictTheory(mineralKey, collectorKey, pH, aggregatedPH, dose, doseData, particleSize, sizeData) {
             const mineral = MINERALS[mineralKey];
             const collector = COLLECTORS[collectorKey] || { name: collectorKey, charge: "anionic", headGroup: "unknown", hsab: "soft", mechanism: "unknown" };
-            const surfaces = surfaceStateFor(mineral, pH);
+            const surfaces = surfaceStateFor(mineral, mineralKey, pH);
             const papers = papersFor(mineralKey, collectorKey);
             const switchPaper = papers.find(p => p.mechanismSwitch);
             const switchData = switchPaper ? switchPaper.mechanismSwitch : null;
 
             const surfaceBonds = surfaces.map(s => {
                 const paperForSurface = (switchPaper && switchPaper.mechanismSwitch) ? switchPaper : null;
-                return { ...s, ...bondForSurface(s, collector, pH, paperForSurface, switchData) };
+                return { ...s, ...bondForSurface(s, collector, collectorKey, pH, paperForSurface, switchData) };
             });
 
             let dominant = surfaceBonds.reduce((a, b) => (a.fraction > b.fraction) ? a : b);
@@ -4665,34 +4734,33 @@
                                 </div>`;
             }
 
-            html += `<ul class="mech-list">
-                                <li><span class="mech-label">HSAB match</span>${mineralObj.hsab} surface × ${collectorObj.hsab} collector — ${dominant.hsabMatch ? "match" : "no match"}</li>
-                                <li><span class="mech-label">Hydrophobic tail (E-DLVO)</span>${theory.hydrophobicNote || "No data on file."}</li>
-                                ${theory.doseNote ? `<li><span class="mech-label">Dose effect</span>${theory.doseNote}</li>` : ""}
-                                ${theory.sizeNote ? `<li><span class="mech-label">Particle size</span>${theory.sizeNote}</li>` : ""}
-                            </ul>`;
+            // Inside renderTheoryBody, after the mech-list, add:
+            const relevanceText = dominant.hsabRelevance || "Low";
+            let relevanceColor = "var(--text-dim)";
+            if (relevanceText.includes("High")) relevanceColor = "var(--good)";
+            else if (relevanceText.includes("Moderate")) relevanceColor = "var(--ochre-bright)";
+            else if (relevanceText.includes("Low")) relevanceColor = "var(--warn)";
+            else relevanceColor = "var(--text-dim)";
 
-            const matchText = dominant.hsabMatch ? "✅ <strong>match</strong>" : "❌ <strong>no match</strong>";
-            let hsabExplanation;
-            if (dominant.hsabMatch) {
-                const strengthText = dominant.strength;
-                hsabExplanation = `The ${mineralObj.hsab} surface metal ion (${mineralObj.metalIon}) and the ${collectorObj.hsab} collector head group (${collectorObj.headGroup}) are both ${mineralObj.hsab}. `;
-                if (strengthText.includes("strong") || strengthText === "moderate-to-strong") {
-                    hsabExplanation += `This enables strong ${collectorObj.mechanism.includes("chelation") ? "chelation / covalent" : "electrostatic"} bonding under these conditions.`;
-                } else if (strengthText === "weak-to-moderate") {
-                    hsabExplanation += `This would normally allow moderate bonding, but other factors (pH, dose, or size) reduce it to ${strengthText}.`;
-                } else if (strengthText === "weak") {
-                    hsabExplanation += `However, the current pH (or dose/size) is far from optimal, so the actual bonding is weak despite the HSAB match.`;
-                } else {
-                    hsabExplanation += `The bonding strength at the current conditions is graded as ${strengthText}.`;
-                }
-            } else {
-                hsabExplanation = `The ${mineralObj.hsab} surface metal ion (${mineralObj.metalIon}) does not match the ${collectorObj.hsab} collector head group (${collectorObj.headGroup}). This mismatch reduces the likelihood of strong chemisorption or chelation, favoring weaker electrostatic or physisorption interactions.`;
-            }
             html += `<div class="theory-explanation">
-                                <div class="exp-title">🧪 HSAB Rationale</div>
-                                <div class="exp-body">HSAB (Hard-Soft Acid-Base) theory predicts that <strong>hard acids prefer hard bases</strong> (ionic/electrostatic bonds) and <strong>soft acids prefer soft bases</strong> (covalent bonds). Here, the surface metal ion (${mineralObj.metalIon}) is a <strong>${mineralObj.hsab}</strong> acid, and the collector head group (${collectorObj.headGroup}) is a <strong>${collectorObj.hsab}</strong> base. This gives a <span class="highlight">${matchText}</span>. ${hsabExplanation}</div>
-                            </div>`;
+    <div class="exp-title">🧪 HSAB Relevance</div>
+    <div class="exp-body">
+        HSAB (Hard-Soft Acid-Base) theory provides a <strong>qualitative</strong> guide to adsorption preference. 
+        Hard acids prefer hard bases (ionic/electrostatic); soft acids prefer soft bases (covalent). 
+        Here, the surface metal site (${mineralObj.metalIon}) is <strong>${mineralObj.hsab}</strong> and the collector head group (${collectorObj.headGroup}) is <strong>${collectorObj.hsab}</strong>.
+        <br><br>
+        <span style="color:${relevanceColor}; font-weight:600;">HSAB relevance: ${relevanceText}</span>
+        ${dominant.hsabRelevance.includes("Not applicable") ?
+                    " — this collector binds primarily through electrostatics or hydrophobic forces, not HSAB matching." :
+                    " — this indicates whether the acid–base hard/soft compatibility supports the proposed bonding mechanism."
+                }
+        <br><br>
+        ${relevanceText.includes("High") ? "Strong acid–base compatibility reinforces the predicted bond strength." :
+                    relevanceText.includes("Moderate") ? "Borderline surface metal allows some interaction with both hard and soft collectors, but with reduced selectivity." :
+                        relevanceText.includes("Low") ? "Mismatched acid–base properties suggest weaker or non-specific adsorption." :
+                            "HSAB is not the driving force for this interaction."}
+    </div>
+</div>`;
 
             const baseHydrophobicNote = theory.hydrophobicNote || "No specific chain-length data on file.";
 
@@ -5306,12 +5374,6 @@
             const doseData = doseRangeFor(minKey, colKey);
             const sizeData = particleSizeRangeFor(minKey, colKey);
 
-            els.collectorDoseUnit.textContent = "g/t (default)";
-            els.collectorDoseNote.textContent = "Collector dose slider removed.";
-            els.collectorDoseNote.className = "slider-note warn";
-            els.particleSizeUnit.textContent = "µm (default)";
-            els.particleSizeNote.textContent = "Particle size slider removed.";
-            els.particleSizeNote.className = "slider-note warn";
 
             const papersWithPH = papers.filter(p => p.testedPH !== null && p.testedPH !== undefined);
             let aggPH = null;

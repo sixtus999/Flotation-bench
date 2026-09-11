@@ -4364,12 +4364,44 @@
             return order[idx];
         }
 
+        // S1 helper: grade strength from pH-PZC distance, handling null PZC safely.
+        // tiers is an array of [threshold, tierName] in ascending threshold order.
+        function gradeFromPzcDelta(pzcDelta, tiers, contextLabel) {
+            if (pzcDelta === null) {
+                return {
+                    strength: "weak-to-moderate",
+                    reasoning: "No PZC value on file for this surface, so the pH-PZC distance term cannot be computed. Falling back to the conservative default tier weak-to-moderate (" + contextLabel + ")."
+                };
+            }
+            for (const pair of tiers) {
+                const threshold = pair[0];
+                const tier = pair[1];
+                if (pzcDelta <= threshold) {
+                    return {
+                        strength: tier,
+                        reasoning: "Surface PZC distance is " + pzcDelta.toFixed(2) + " pH units, which falls in the '" + tier + "' band (threshold " + threshold + ") (" + contextLabel + ")."
+                    };
+                }
+            }
+            return {
+                strength: "weak",
+                reasoning: "PZC distance " + pzcDelta.toFixed(2) + " is beyond all bands, so weak (" + contextLabel + ")."
+            };
+        }
+
         function bondForSurface(surface, collector, collectorKey, pH, paper, mechanismSwitch) {
             const collectorCharge = collector.charge === "anionic" ? "negative" : "positive";
             const electrostaticFavorable = (surface.chargeSign !== "neutral" && surface.chargeSign === collectorCharge);
-            const pzcDelta = (surface.pzc !== null) ? Math.abs(pH - surface.pzc) : 0;
 
-            // ----- HSAB relevance (not a simple match) -----
+            // S1: null PZC means no pH-dependent electrostatic term.
+            const hasPZC = (surface.pzc !== null && surface.pzc !== undefined);
+            const pzcDelta = hasPZC ? Math.abs(pH - surface.pzc) : null;
+            const reasoning = [];
+            if (!hasPZC) {
+                reasoning.push("Surface has no PZC on file, so pH-dependent electrostatic distance is undefined for this face.");
+            }
+
+            // HSAB relevance (unchanged from original).
             let hsabRelevance = "Low";
             if (collector.mechanism === "electrostatic") {
                 hsabRelevance = "Not applicable (electrostatic-driven)";
@@ -4380,12 +4412,7 @@
             } else if (surface.hsab === "soft" && collector.hsab === "soft") {
                 hsabRelevance = "High";
             } else if (surface.hsab === "borderline") {
-                // borderline accepts both hard and soft, but moderately
-                if (collector.hsab === "hard" || collector.hsab === "soft") {
-                    hsabRelevance = "Moderate";
-                } else {
-                    hsabRelevance = "Low";
-                }
+                hsabRelevance = (collector.hsab === "hard" || collector.hsab === "soft") ? "Moderate" : "Low";
             } else if (surface.hsab === "hard" && collector.hsab === "soft") {
                 hsabRelevance = "Low";
             } else if (surface.hsab === "soft" && collector.hsab === "hard") {
@@ -4394,86 +4421,83 @@
                 hsabRelevance = "Low";
             }
 
-            // ----- Bond strength determination -----
             let bondMode, strength = "weak", usedTestedPH = false, mechanismSwitched = false;
             const crossoverPH = (mechanismSwitch && mechanismSwitch.crossoverPH !== null) ? mechanismSwitch.crossoverPH : 7;
             const isAcidicSwitch = (mechanismSwitch && mechanismSwitch.type === "chemisorption-to-electrostatic" && pH < crossoverPH);
 
-            // 1. Chelation branch (hydroxamate vs fatty acid vs others)
+            // 1. Chelation branch.
             if (collector.mechanism.includes("chelation") && !isAcidicSwitch) {
                 if (collectorKey === "hydroxamate") {
                     bondMode = "chemisorption (strong chelation)";
                     if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
                         usedTestedPH = true;
                         const pHdiff = Math.abs(pH - paper.testedPH);
-                        const [low, high] = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
-                        const range = Math.max((high - low) / 2, 0.5);
+                        const rng = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
+                        const range = Math.max((rng[1] - rng[0]) / 2, 0.5);
                         if (pHdiff <= 0.5 * range) strength = "strong";
-                        else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "moderate-to-strong";
+                        else if (pHdiff <= range || (pH >= rng[0] && pH <= rng[1])) strength = "moderate-to-strong";
                         else if (pHdiff <= 2 * range) strength = "weak-to-moderate";
                         else strength = "weak";
+                        reasoning.push("Graded against paper tested pH " + paper.testedPH + " (range " + rng[0] + "-" + rng[1] + ").");
                     } else {
-                        if (pzcDelta <= 1.0) strength = "strong";
-                        else if (pzcDelta <= 2.5) strength = "moderate-to-strong";
-                        else if (pzcDelta <= 4.0) strength = "weak-to-moderate";
-                        else strength = "weak";
+                        const g = gradeFromPzcDelta(pzcDelta, [[1.0, "strong"], [2.5, "moderate-to-strong"], [4.0, "weak-to-moderate"], [999, "weak"]], "hydroxamate chelation fallback");
+                        strength = g.strength;
+                        reasoning.push(g.reasoning);
                     }
                 } else if (collectorKey === "fatty_acid") {
                     bondMode = "chemisorption (weak chelation) + electrostatic";
                     if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
                         usedTestedPH = true;
                         const pHdiff = Math.abs(pH - paper.testedPH);
-                        const [low, high] = paper.testedPHRange || [paper.testedPH - 1.5, paper.testedPH + 1.5];
-                        const range = Math.max((high - low) / 2, 0.8);
+                        const rng = paper.testedPHRange || [paper.testedPH - 1.5, paper.testedPH + 1.5];
+                        const range = Math.max((rng[1] - rng[0]) / 2, 0.8);
                         if (pHdiff <= 0.5 * range) strength = "moderate-to-strong";
-                        else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "weak-to-moderate";
+                        else if (pHdiff <= range || (pH >= rng[0] && pH <= rng[1])) strength = "weak-to-moderate";
                         else strength = "weak";
+                        reasoning.push("Graded against paper tested pH " + paper.testedPH + ".");
                     } else {
-                        if (pzcDelta <= 1.5) strength = "moderate-to-strong";
-                        else if (pzcDelta <= 3.5) strength = "weak-to-moderate";
-                        else if (pzcDelta <= 5.0) strength = "weak";
-                        else strength = "weak";
+                        const g = gradeFromPzcDelta(pzcDelta, [[1.5, "moderate-to-strong"], [3.5, "weak-to-moderate"], [5.0, "weak"], [999, "weak"]], "fatty-acid fallback");
+                        strength = g.strength;
+                        reasoning.push(g.reasoning);
                     }
                 } else {
-                    // other chelators (e.g., hydroxamate not explicitly caught? but we have only those two)
                     bondMode = "chemisorption (chelation)";
                     if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
                         usedTestedPH = true;
                         const pHdiff = Math.abs(pH - paper.testedPH);
-                        const [low, high] = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
-                        const range = Math.max((high - low) / 2, 0.5);
+                        const rng = paper.testedPHRange || [paper.testedPH - 1, paper.testedPH + 1];
+                        const range = Math.max((rng[1] - rng[0]) / 2, 0.5);
                         if (pHdiff <= 0.6 * range) strength = "moderate-to-strong";
-                        else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "weak-to-moderate";
+                        else if (pHdiff <= range || (pH >= rng[0] && pH <= rng[1])) strength = "weak-to-moderate";
                         else strength = "weak";
                     } else {
-                        if (pzcDelta <= 1.5) strength = "moderate-to-strong";
-                        else if (pzcDelta <= 3.5) strength = "weak-to-moderate";
-                        else strength = "weak";
+                        const g = gradeFromPzcDelta(pzcDelta, [[1.5, "moderate-to-strong"], [3.5, "weak-to-moderate"], [999, "weak"]], "generic chelation fallback");
+                        strength = g.strength;
+                        reasoning.push(g.reasoning);
                     }
                 }
             }
-            // 2. Covalent chemisorption (xanthate, dithiophosphate)
+            // 2. Covalent chemisorption.
             else if (collector.mechanism === "covalent chemisorption" && !isAcidicSwitch) {
                 bondMode = "covalent chemisorption";
                 if (paper && paper.testedPH !== null && paper.testedPH !== undefined) {
                     usedTestedPH = true;
                     const pHdiff = Math.abs(pH - paper.testedPH);
-                    const [low, high] = paper.testedPHRange || [paper.testedPH - 2, paper.testedPH + 2];
-                    const range = Math.max((high - low) / 2, 1);
+                    const rng = paper.testedPHRange || [paper.testedPH - 2, paper.testedPH + 2];
+                    const range = Math.max((rng[1] - rng[0]) / 2, 1);
                     if (pHdiff <= 0.6 * range) strength = "strong";
-                    else if (pHdiff <= range || (pH >= low && pH <= high)) strength = "moderate-to-strong";
+                    else if (pHdiff <= range || (pH >= rng[0] && pH <= rng[1])) strength = "moderate-to-strong";
                     else strength = "weak-to-moderate";
+                    reasoning.push("Graded against paper tested pH " + paper.testedPH + ".");
                 } else {
-                    if (pzcDelta <= 1.0) strength = "strong";
-                    else if (pzcDelta <= 2.5) strength = "moderate-to-strong";
-                    else if (pzcDelta <= 4.0) strength = "weak-to-moderate";
-                    else strength = "weak";
+                    const g = gradeFromPzcDelta(pzcDelta, [[1.0, "strong"], [2.5, "moderate-to-strong"], [4.0, "weak-to-moderate"], [999, "weak"]], "covalent chemisorption fallback");
+                    strength = g.strength;
+                    reasoning.push(g.reasoning);
                 }
             }
-            // 3. Hydrophobic attraction (kerosene)
+            // 3. Hydrophobic attraction.
             else if (collector.mechanism === "hydrophobic attraction") {
                 bondMode = "hydrophobic attraction (no chemical bond)";
-                // existing logic (keep as is)
                 if (surface.label === "basal" && surface.chargeSign === "negative") {
                     strength = "moderate-to-strong";
                 } else if (collector.name === "Kerosene/Diesel") {
@@ -4483,6 +4507,7 @@
                 }
                 if (pH < 3 || pH > 11) {
                     strength = strengthTierDown(strength, 1);
+                    reasoning.push("Extreme pH (outside 3-11) reduced the hydrophobic tier by one step.");
                 }
                 if (surface.chargeSign === "positive" || surface.chargeSign === "negative") {
                     if (strength === "moderate-to-strong") strength = "moderate";
@@ -4490,25 +4515,39 @@
                 }
                 if (surface.pzc !== null && surface.pzc >= 8 && surface.hsab === "hard") {
                     strength = "weak-to-moderate";
+                    reasoning.push("High PZC (>= 8) on a hard surface pulled strength down to weak-to-moderate.");
                 }
             }
-            // 4. Electrostatic (amine, sulfonate) — bypass HSAB
+            // 4. Electrostatic.
             else if (electrostaticFavorable) {
                 bondMode = "electrostatic (physisorption)";
-                strength = (pzcDelta > 2) ? "moderate" : "weak-to-moderate";
+                if (pzcDelta === null) {
+                    strength = "weak-to-moderate";
+                    reasoning.push("Electrostatic sign match is favorable, but no PZC on file means the pH-PZC distance is undefined. Defaulting to weak-to-moderate.");
+                } else {
+                    strength = (pzcDelta > 2) ? "moderate" : "weak-to-moderate";
+                    reasoning.push("Electrostatic sign match; PZC distance " + pzcDelta.toFixed(2) + " gives tier '" + strength + "'.");
+                }
                 if (isAcidicSwitch) mechanismSwitched = true;
             }
-            // 5. Fallback
+            // 5. Fallback.
             else {
                 bondMode = "unfavorable / minimal adsorption";
                 strength = "weak";
+                reasoning.push("No favorable branch matched. The collector-surface pair has no driving force under this model.");
                 if (isAcidicSwitch && !electrostaticFavorable) mechanismSwitched = true;
             }
 
-            // Apply dose/size penalties (existing logic)
-            // ... (keep your doseModifier and particleSizeModifier calls if any)
-
-            return { bondMode, strength, electrostaticFavorable, hsabRelevance, usedTestedPH, pzcDelta, mechanismSwitched };
+            return {
+                bondMode: bondMode,
+                strength: strength,
+                electrostaticFavorable: electrostaticFavorable,
+                hsabRelevance: hsabRelevance,
+                usedTestedPH: usedTestedPH,
+                pzcDelta: pzcDelta,
+                mechanismSwitched: mechanismSwitched,
+                reasoning: reasoning
+            };
         }
 
         // ================================================================
